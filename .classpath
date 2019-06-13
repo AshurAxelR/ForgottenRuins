@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/XRBEngine2"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ZoomUI"/>
+	<classpathentry kind="lib" path="../XRBEngine2/lib/joml-1.9.14.jar" sourcepath="../XRBEngine2/lib_src/joml-1.9.14-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/XRBEngine2/lib_src/joml-1.9.14-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="../XRBEngine2/lib/lwjgl-glfw.jar" sourcepath="../XRBEngine2/lib_src/lwjgl-glfw-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/XRBEngine2/lib_src/lwjgl-glfw-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="../XRBEngine2/lib/lwjgl-opengl.jar" sourcepath="../XRBEngine2/lib_src/lwjgl-opengl-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/XRBEngine2/lib_src/lwjgl-opengl-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="../XRBEngine2/lib/lwjgl.jar" sourcepath="../XRBEngine2/lib_src/lwjgl-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/XRBEngine2/lib_src/lwjgl-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
