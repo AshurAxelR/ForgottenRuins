@@ -13,10 +13,14 @@ public class MapBuilder extends AdvancedMeshBuilder {
 	public final WorldMap map;
 	public final MapTextureAtlas atlas;
 	
-	public MapBuilder(WorldMap map, MapTextureAtlas atlas) {
+	public final int cx, cz;
+	
+	private MapBuilder(WorldMap map, MapTextureAtlas atlas, int cx, int cz) {
 		super(MapShader.vertexInfo, null);
 		this.map = map;
 		this.atlas = atlas;
+		this.cx = cx;
+		this.cz = cz;
 		setCustomAttrib("in_Light", 0);
 	}
 
@@ -207,9 +211,13 @@ public class MapBuilder extends AdvancedMeshBuilder {
 	
 	@Override
 	public StaticMesh create() {
+		int xmin = cx*chunkSize;
+		int zmin = cz*chunkSize;
+		int xmax = xmin + chunkSize;
+		int zmax = zmin + chunkSize;
 		for(int y=0; y<WorldMap.height-1; y++)
-			for(int x=0; x<WorldMap.size; x++)
-				for(int z=0; z<WorldMap.size; z++) {
+			for(int x=xmin; x<xmax; x++)
+				for(int z=zmin; z<zmax; z++) {
 					switch(map.map[x][z][y].type) {
 						case solid: {
 							if(map.map[x][z][y+1].type==CellType.empty)
@@ -238,5 +246,17 @@ public class MapBuilder extends AdvancedMeshBuilder {
 				}
 		return super.create();
 	}
-
+	
+	public static final int chunkSize = 16;
+	
+	public static StaticMesh[] createChunks(WorldMap map, MapTextureAtlas atlas) {
+		int s = WorldMap.size / chunkSize;
+		StaticMesh[] meshes = new StaticMesh[s*s];
+		for(int cx=0; cx<s; cx++)
+			for(int cz=0; cz<s; cz++) {
+				meshes[cx*s+cz] = new MapBuilder(map, atlas, cx, cz).create();
+			}
+		return meshes;
+	}
+	
 }

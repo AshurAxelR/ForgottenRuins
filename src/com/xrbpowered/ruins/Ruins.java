@@ -14,7 +14,6 @@ import com.xrbpowered.gl.res.mesh.FastMeshBuilder;
 import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.gl.scene.CameraActor;
-import com.xrbpowered.gl.scene.StaticMeshActor;
 import com.xrbpowered.gl.ui.common.UIFpsOverlay;
 import com.xrbpowered.gl.ui.pane.UIOffscreen;
 
@@ -22,14 +21,12 @@ public class Ruins extends UIClient {
 
 	private MapShader shader;
 	private MapTextureAtlas atlas;
-	private StaticMesh mesh;
+	private StaticMesh[] mapMeshes;
 	private CameraActor camera = null; 
-	private StaticMeshActor meshActor;
 	private PlayerController controller;
 	
-	private StaticMesh ground;
+	private StaticMesh groundMesh;
 	private Texture groundtexture;
-	private StaticMeshActor groundActor;
 	
 	private PlayerActor player;
 	
@@ -68,8 +65,7 @@ public class Ruins extends UIClient {
 				controller.setMouseLook(true);
 
 				groundtexture = new Texture("ground.png", true, false);
-				ground = FastMeshBuilder.plane(256f, 4, 128, MapShader.vertexInfo, null);
-				groundActor = StaticMeshActor.make(ground, shader, groundtexture);
+				groundMesh = FastMeshBuilder.plane(256f, 4, 128, MapShader.vertexInfo, null);
 				
 				createWorldResources();
 				
@@ -91,12 +87,23 @@ public class Ruins extends UIClient {
 			@Override
 			protected void renderBuffer(RenderTarget target) {
 				super.renderBuffer(target);
+				
 				shader.setCamera(camera);
+				shader.use();
 				GL11.glEnable(GL11.GL_CULL_FACE);
+				
 				shader.setLightScale(0.1f);
-				meshActor.draw();
+				atlas.getTexture().bind(0);
+				for(StaticMesh mesh : mapMeshes) {
+					if(mesh!=null)
+						mesh.draw();
+				}
+				
 				shader.setLightScale(0f);
-				groundActor.draw();
+				groundtexture.bind(0);
+				groundMesh.draw();
+				
+				shader.unuse();
 				GL11.glDisable(GL11.GL_CULL_FACE);
 			}
 		};
@@ -107,8 +114,7 @@ public class Ruins extends UIClient {
 	private void createWorldResources() {
 		WorldMap map = new WorldMap();
 		map.generate(new Random());
-		mesh = new MapBuilder(map, atlas).create();
-		meshActor = StaticMeshActor.make(mesh, shader, atlas.getTexture());
+		mapMeshes = MapBuilder.createChunks(map, atlas);
 
 		controller.collider.map = map;
 		player.position.x = map.startx * 2f;
@@ -120,7 +126,11 @@ public class Ruins extends UIClient {
 	}
 	
 	private void releaseWorldResources() {
-		mesh.release();
+		for(StaticMesh mesh : mapMeshes) {
+			if(mesh!=null)
+				mesh.release();
+		}
+		mapMeshes = null;
 	}
 	
 	@Override

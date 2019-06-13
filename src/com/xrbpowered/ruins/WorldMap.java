@@ -10,7 +10,7 @@ public class WorldMap {
 
 	public static final int passHeight = 3; // change createPass/Ramp if you change this
 	
-	public static final int size = 32;
+	public static final int size = 64;
 	public static final int height = 32;
 	
 	public enum CellType {
@@ -54,11 +54,19 @@ public class WorldMap {
 		map = new Cell[size][size][height];
 		for(int x=0; x<size; x++)
 			for(int z=0; z<size; z++) {
-				CellType type = (x==0 || z==0 || x==size-1 || z==size-1) ? CellType.empty : CellType.undefined; 
+				CellType type = isEdge(x, z) ? CellType.empty : CellType.undefined; 
 				for(int y=0; y<height; y++) {
 					map[x][z][y] = new Cell(type);
 				}
 			}
+	}
+	
+	public static boolean isEdge(int x, int z) {
+		return (x==0 || z==0 || x==size-1 || z==size-1);
+	}
+
+	public static boolean isInside(int x, int z) {
+		return (x>=0 && z>=0 && x<size && z<size);
 	}
 
 	private void fillColumn(int x, int z, CellType type) {
@@ -77,6 +85,13 @@ public class WorldMap {
 		}
 	}
 	
+	private class ColInfo {
+		public int height = -1;
+		public boolean adjacent = false;
+		//public boolean undefined = true;
+	}
+	
+	private ColInfo[][] colInfo;
 	private LinkedList<Token> tokens;
 	private int totalPasses = 0;
 
@@ -217,10 +232,8 @@ public class WorldMap {
 	private void createRandom(Random random, int x, int z, int y, Direction d) {
 		if(map[x][z][y].type!=CellType.undefined || map[x][z][y].preferBlock)
 			return;
-		if(x==0 || z==0 || x==size-1 || z==size-1) {
-			System.out.printf("Nope! %d,%d,%d=%s\n", x, z, y, map[x][z][y].type.name());
+		if(x==0 || z==0 || x==size-1 || z==size-1)
 			return;
-		}
 		int r = random.nextInt(6);
 		if(r==0) {
 			boolean up = random.nextInt(7)<4;
@@ -249,6 +262,12 @@ public class WorldMap {
 	}
 	
 	public void generate(Random random) {
+		colInfo = new ColInfo[size][size];
+		for(int x=0; x<size; x++)
+			for(int z=0; z<size; z++) {
+				colInfo[x][z] = new ColInfo();
+			}
+		
 		startx = size/2;
 		startz = 1;
 		for(int x=-2; x<=2; x++)
@@ -258,8 +277,6 @@ public class WorldMap {
 		tokens = new LinkedList<>();
 		tokens.add(new Token(startx, startz, 1));
 		processTokens(random);
-		
-		System.out.println("Total passes: "+totalPasses);
 		
 		for(int x=0; x<size; x++)
 			for(int z=0; z<size; z++) {
@@ -271,9 +288,30 @@ public class WorldMap {
 					else if(map[x][z][y].type==CellType.solid) {
 						type = CellType.solid;
 						light = 0f;
+						colInfo[x][z].height = y;
 					}
 					map[x][z][y].light = light;
 				}
+				// colInfo[x][z].undefined = false;
 			}
+		
+		int coverage = 0;
+		int maxCoverage = size*size;
+		for(int x=0; x<size; x++)
+			for(int z=0; z<size; z++) {
+				boolean adj = false;
+				for(Direction d : Direction.values()) {
+					if(!isInside(x+d.dx, z+d.dz))
+						continue;
+					if(colInfo[x+d.dx][z+d.dz].height>=0) {
+						adj = true;
+						break;
+					}
+				}
+				colInfo[x][z].adjacent = adj;
+				if(colInfo[x][z].adjacent)
+					coverage++;
+			}
+		System.out.printf("Total passes: %d, coverage: %d/%d (%.1f%%)\n", totalPasses, coverage, maxCoverage, coverage*100f/(float)maxCoverage);
 	}
 }

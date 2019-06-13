@@ -13,7 +13,7 @@ public class PlayerController extends WalkController {
 	
 	public final MapCollider collider = new MapCollider();
 
-	public float jumpVelocity = 0.085f;
+	public float jumpVelocity = 0.075f; // 0.09f;
 	
 	private boolean jumpReset = true;
 	private boolean inAir = false;
@@ -27,7 +27,7 @@ public class PlayerController extends WalkController {
 	protected void updateMove(Vector3f move) {
 		super.updateMove(move);
 		if(inAir)
-			move.mul(0.01f);
+			move.mul(0.015f);
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class PlayerController extends WalkController {
 				jumpReset = false;
 			}
 		}
-		else {
+		else if(!inAir) {
 			jumpReset = true;
 		}
 	}
@@ -65,6 +65,9 @@ public class PlayerController extends WalkController {
 			if(inAir && !collider.falling && ny>actor.position.y) {
 				inAir = false;
 				// TODO fall damage
+				int damage = Math.round(Math.max((-velocity.y*velocity.y*velocity.y*1000f-7f)*6.5f, 0));
+				if(damage>0)
+					System.out.printf("Hit at velocity %.3f (Damage %d%%)\n", velocity.y, damage);
 				velocity.y = 0f;
 			}
 			if(collider.falling) {
@@ -74,7 +77,7 @@ public class PlayerController extends WalkController {
 				actor.position.y = ny;
 			}
 			else {
-				velocity.y -= 0.475f*dt;
+				velocity.y -= 0.375f*dt;
 			}
 		}
 	}

@@ -5,10 +5,10 @@ import java.awt.Color;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL20;
 
-import com.xrbpowered.gl.res.shader.ActorShader;
+import com.xrbpowered.gl.res.shader.CameraShader;
 import com.xrbpowered.gl.res.shader.VertexInfo;
 
-public class MapShader extends ActorShader {
+public class MapShader extends CameraShader {
 	
 	public static final VertexInfo vertexInfo = new VertexInfo()
 			.addAttrib("in_Position", 3)
@@ -50,9 +50,9 @@ public class MapShader extends ActorShader {
 	}
 
 	public void setLightScale(float light) {
-		GL20.glUseProgram(pId);
+		//GL20.glUseProgram(pId);
 		GL20.glUniform1f(GL20.glGetUniformLocation(pId, "lightScale"), light);
-		GL20.glUseProgram(0);
+		//GL20.glUseProgram(0);
 	}
 
 	private static MapShader instance = null;
@@ -71,5 +71,4 @@ public class MapShader extends ActorShader {
 		}
 	}
 	
-
 }
