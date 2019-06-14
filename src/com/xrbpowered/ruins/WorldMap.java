@@ -5,14 +5,13 @@ import java.util.Random;
 
 public class WorldMap {
 
-	public static final float gridw = 2f;
-	public static final float gridh = 1f;
-
 	public static final int passHeight = 3; // change createPass/Ramp if you change this
 	
 	public static final int size = 64;
 	public static final int height = 32;
-	
+
+	public static final int airReserve = 24;
+
 	public enum CellType {
 		undefined, empty, solid, ramp
 	}
@@ -25,13 +24,13 @@ public class WorldMap {
 			this.dz = dz;
 		}
 		public Direction opposite() {
-			switch(this) {
-				case north: return south;
-				case south: return north;
-				case east: return west;
-				case west: return east;
-				default: return null;
-			}
+			return values()[(ordinal()+2) % 4];
+		}
+		public Direction cw() {
+			return values()[(ordinal()+1) % 4];
+		}
+		public Direction ccw() {
+			return values()[(ordinal()+3) % 4];
 		}
 	}
 	
@@ -39,8 +38,10 @@ public class WorldMap {
 		public CellType type;
 		public Direction dir = null;
 		public float light;
+		public boolean canHaveObject = false;
 		
 		public boolean preferBlock = false; // FIXME generator only
+		public Token token = null;
 		
 		public Cell(CellType type) {
 			this.type = type;
@@ -76,7 +77,7 @@ public class WorldMap {
 	}
 
 	private class Token {
-		int x, z, y;
+		public int x, z, y;
 		public Token(int x, int z, int y) {
 			this.x = x;
 			this.z = z;
@@ -150,7 +151,9 @@ public class WorldMap {
 				if(c1!=null) {
 					Cell c2 = set(x, z, y+2, CellType.empty);
 					if(c2!=null) {
-						tokens.add(new Token(x, z, y));
+						Token t = new Token(x, z, y);
+						tokens.add(t);
+						map[x][z][y].token = t;
 						return true;
 					}
 					reset(x, z, y+1, c1);
@@ -175,7 +178,7 @@ public class WorldMap {
 					if(c1!=null) {
 						Cell c2 = set(x, z, y+3, CellType.empty);
 						if(c2!=null) {
-							if(random.nextInt(6)==0 && createRampUp(random, x+d.dx, z+d.dz, y+1, d))
+							if(random.nextInt(5)==0 && createRampUp(random, x+d.dx, z+d.dz, y+1, d))
 								return true;
 							if(createPass(x+d.dx, z+d.dz, y+1))
 								return true;
@@ -205,7 +208,7 @@ public class WorldMap {
 					if(c1!=null) {
 						Cell c2 = set(x, z, y+2, CellType.empty);
 						if(c2!=null) {
-							if(random.nextInt(6)==0 && createRampDown(random, x+d.dx, z+d.dz, y-1, d))
+							if(random.nextInt(5)==0 && createRampDown(random, x+d.dx, z+d.dz, y-1, d))
 								return true;
 							if(createPass(x+d.dx, z+d.dz, y-1))
 								return true;
@@ -229,36 +232,103 @@ public class WorldMap {
 			return createRampDown(random, x, z, y, d);
 	}
 	
-	private void createRandom(Random random, int x, int z, int y, Direction d) {
+	private boolean createRandom(Random random, int x, int z, int y, Direction d) {
 		if(map[x][z][y].type!=CellType.undefined || map[x][z][y].preferBlock)
-			return;
+			return false;
 		if(x==0 || z==0 || x==size-1 || z==size-1)
-			return;
-		int r = random.nextInt(6);
+			return false;
+		int r = random.nextInt(7);
 		if(r==0) {
 			boolean up = random.nextInt(7)<4;
 			if(createRamp(random, x, z, y, d, up))
-				return;
+				return true;
 			if(createRamp(random, x, z, y, d, !up))
-				return;
+				return true;
 		}
-		if(r<3 || tokens.isEmpty()){
+		if(r<4 || tokens.isEmpty()){
 			if(createPass(x, z, y))
-				return;
+				return true;
 		}
-		if(r==3) {
+		if(r==4) {
 			map[x][z][y].preferBlock = true;
-			return;
+			return false;
 		}
+		return false;
 	}
 	
 	private void processTokens(Random random) {
 		while(!tokens.isEmpty()) {
 			Token t = random.nextInt(3)==0 ? tokens.removeLast() : tokens.removeFirst();
+			boolean pass = false;
 			for(Direction d : Direction.values()) {
-				createRandom(random, t.x+d.dx, t.z+d.dz, t.y, d);
+				pass |= createRandom(random, t.x+d.dx, t.z+d.dz, t.y, d);
 			}
+			if(!pass)
+				map[t.x][t.z][t.y].canHaveObject = true;
 		}
+	}
+	
+	private void filterCanHaveObjects() {
+		for(int x=1; x<size-1; x++)
+			for(int z=1; z<size-1; z++)
+				for(int y=1; y<height-1; y++) {
+					Cell cell = map[x][z][y];
+					if(!cell.canHaveObject)
+						continue;
+					int passes = 0;
+					int objects = 0;
+					boolean ramp = false;
+					Direction passd = null;
+					boolean oppositePass = false;
+					for(Direction d : Direction.values()) {
+						Cell adj = map[x+d.dx][z+d.dz][y];
+						boolean pass = false;
+						if(adj.canHaveObject)
+							objects++;
+						if(adj.token!=null)
+							pass = true;
+						else if(adj.type==CellType.ramp && adj.dir==d) {
+							pass = true;
+							ramp = true;
+						}
+						else {
+							adj = map[x+d.dx][z+d.dz][y-1];
+							if(adj.type==CellType.ramp && adj.dir==d.opposite()) {
+								pass = true;
+								ramp = true;
+							}
+						}
+						if(pass) {
+							passes++;
+							if(passd==d.opposite())
+								oppositePass = true;
+							passd = d;
+						}
+					}
+					if(passes>1) {
+						if(!ramp && !(oppositePass && passes-objects==2)) {
+							boolean all = true;
+							for(Direction d : Direction.values()) {
+								Direction cw = d.cw();
+								if(map[x+d.dx][z+d.dz][y].token!=null &&
+										map[x+cw.dx][z+cw.dz][y].token!=null) {
+									Cell diag = map[x+d.dx+cw.dx][z+d.dz+cw.dz][y];
+									if(diag.token==null || diag.canHaveObject)
+										all = false;
+								}
+							}
+							if(all) {
+								cell.canHaveObject = true;
+								continue;
+							}
+						}
+						cell.canHaveObject = false;
+						continue;
+					}
+					else {
+						cell.canHaveObject = true;
+					}
+				}
 	}
 	
 	public void generate(Random random) {
@@ -267,17 +337,30 @@ public class WorldMap {
 			for(int z=0; z<size; z++) {
 				colInfo[x][z] = new ColInfo();
 			}
+		for(int i=0; i<airReserve; i++) {
+			for(int j=i; j<size-i; j++) {
+				for(int y=height-1; y>=height-(airReserve-i); y--) {
+					map[i][j][y].type = CellType.empty;
+					map[size-1-i][j][y].type = CellType.empty;
+					map[j][i][y].type = CellType.empty;
+					map[j][size-1-i][y].type = CellType.empty;
+				}
+			}
+		}
 		
 		startx = size/2;
 		startz = 1;
 		for(int x=-2; x<=2; x++)
 			fillColumn(startx+x, startz, CellType.empty);
 		map[startx][startz][0].type = CellType.solid;
+		map[startx][startz][1].canHaveObject = true;
 		
 		tokens = new LinkedList<>();
 		tokens.add(new Token(startx, startz, 1));
 		processTokens(random);
-		
+
+		filterCanHaveObjects();
+
 		for(int x=0; x<size; x++)
 			for(int z=0; z<size; z++) {
 				CellType type = CellType.empty;

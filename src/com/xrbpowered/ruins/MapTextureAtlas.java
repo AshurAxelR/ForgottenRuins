@@ -11,7 +11,7 @@ public class MapTextureAtlas {
 	public static final int size = 2;
 	public static final float dtile = 1f/(float)size;
 	
-	private static class Tile {
+	public static class Tile {
 		public int u, v;
 		public Tile(int u, int v) {
 			this.u = u;
@@ -25,12 +25,12 @@ public class MapTextureAtlas {
 		}
 	}
 	
-	private static class Versions extends ArrayList<Tile> {
+	public static class Versions extends ArrayList<Tile> {
 		public void add(int u, int v) {
 			add(new Tile(u, v));
 		}
 		
-		/*public void addLine(int u1, int u2, int v) {
+		public void addLine(int u1, int u2, int v) {
 			for(int u=u1; u<=u2; u++)
 				add(u, v);
 		}
@@ -39,20 +39,26 @@ public class MapTextureAtlas {
 			for(int u=u1; u<=u2; u++)
 				for(int v=v1; u<=v2; v++)
 					add(u, v);
-		}*/
+		}
 
 		public Tile get(long s) {
 			return super.get((int)s % size());
 		}
 	}
 	
-	private static Versions top;
-	private static Versions bottom;
-	private static Versions side;
-	private static Versions rampTop;
-	private static Versions rampSide;
+	public Versions top;
+	public Versions bottom;
+	public Versions side;
+	public Versions rampTop;
+	public Versions rampSide;
+
+	public Tile start;
 	
-	static {
+	private Texture texture;
+	
+	public MapTextureAtlas() {
+		texture = new Texture("map.png", false, false);
+		
 		top = new Versions();
 		top.add(0, 0);
 		
@@ -63,16 +69,12 @@ public class MapTextureAtlas {
 		side.add(1, 0);
 
 		rampTop = new Versions();
-		rampTop.add(0, 0);
+		rampTop.add(0, 1);
 		
 		rampSide = new Versions();
 		rampSide.add(1, 0);
-	}
-	
-	private Texture texture;
-	
-	public MapTextureAtlas() {
-		texture = new Texture("map.png", false, false);
+		
+		start = new Tile(1, 1);
 	}
 	
 	public Texture getTexture() {
