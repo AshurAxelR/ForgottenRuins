@@ -43,16 +43,20 @@ public class MapBuilder extends AdvancedMeshBuilder {
 		return face;
 	}
 	
-	protected void addTop(int x, int z, int y, float light) {
+	protected void addTop(int x, int z, int y, MapTextureAtlas.Tile t, float light) {
 		x *= 2;
 		z *= 2;
-		long s = 0;
 		Vector3f norm = new Vector3f(0, 1, 0);
 		Face face = newQuad(norm, light);
-		face.vertices[0].setPosition(x-1, y+1, z-1).setTexCoord(atlas.top(s, 0, 0));
-		face.vertices[1].setPosition(x-1, y+1, z+1).setTexCoord(atlas.top(s, 0, 1));
-		face.vertices[2].setPosition(x+1, y+1, z+1).setTexCoord(atlas.top(s, 1, 1));
-		face.vertices[3].setPosition(x+1, y+1, z-1).setTexCoord(atlas.top(s, 1, 0));
+		face.vertices[0].setPosition(x-1, y+1, z-1).setTexCoord(t.uv(0, 0));
+		face.vertices[1].setPosition(x-1, y+1, z+1).setTexCoord(t.uv(0, 1));
+		face.vertices[2].setPosition(x+1, y+1, z+1).setTexCoord(t.uv(1, 1));
+		face.vertices[3].setPosition(x+1, y+1, z-1).setTexCoord(t.uv(1, 0));
+	}
+
+	protected void addTop(int x, int z, int y, float light) {
+		long s = 0;
+		addTop(x, z, y, atlas.top.get(s), light);
 	}
 
 	protected void addBottom(int x, int z, int y) {
@@ -220,8 +224,12 @@ public class MapBuilder extends AdvancedMeshBuilder {
 				for(int z=zmin; z<zmax; z++) {
 					switch(map.map[x][z][y].type) {
 						case solid: {
-							if(map.map[x][z][y+1].type==CellType.empty)
-								addTop(x, z, y, map.map[x][z][y+1].light);
+							if(map.map[x][z][y+1].type==CellType.empty) {
+								if(map.map[x][z][y+1].canHaveObject)
+									addTop(x, z, y, atlas.start, map.map[x][z][y+1].light);
+								else
+									addTop(x, z, y, map.map[x][z][y+1].light);
+							}
 							if(y>0 && map.map[x][z][y-1].type==CellType.empty)
 								addBottom(x, z, y);
 							for(Direction d : Direction.values()) {
