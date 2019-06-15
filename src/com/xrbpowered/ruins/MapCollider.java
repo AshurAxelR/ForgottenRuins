@@ -44,6 +44,7 @@ public class MapCollider {
 		int my = mapy(pos.y);
 		if(map(mx, mz, my).type==CellType.solid) {
 			return mx*2f - sv*(1+r);
+			//return Math.signum(pos.x+vx-2f*mx)*(1+r)+2f*mx;
 		}
 		else
 			return pos.x + vx;
@@ -58,6 +59,7 @@ public class MapCollider {
 		int my = mapy(pos.y);
 		if(map(mx, mz, my).type==CellType.solid) {
 			return mz*2f - sv*(1+r);
+			//return Math.signum(pos.z+vz-2f*mz)*(1+r)+2f*mz;
 		}
 		else
 			return pos.z + vz;
