@@ -1,5 +1,6 @@
 package com.xrbpowered.ruins;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -50,6 +51,8 @@ public class WorldMap {
 	
 	public final Cell[][][] map;
 	public int startx, startz;
+	
+	public ArrayList<CellObject> cellObjects = new ArrayList<>();
 	
 	public WorldMap() {
 		map = new Cell[size][size][height];
@@ -268,67 +271,73 @@ public class WorldMap {
 		}
 	}
 	
+	private boolean filterCanHaveObject(int x, int z, int y) {
+		Cell cell = map[x][z][y];
+		if(!cell.canHaveObject)
+			return false;
+		int passes = 0;
+		int objects = 0;
+		boolean ramp = false;
+		Direction passd = null;
+		boolean oppositePass = false;
+		for(Direction d : Direction.values()) {
+			Cell adj = map[x+d.dx][z+d.dz][y];
+			boolean pass = false;
+			if(adj.canHaveObject)
+				objects++;
+			if(adj.token!=null)
+				pass = true;
+			else if(adj.type==CellType.ramp && adj.dir==d) {
+				pass = true;
+				ramp = true;
+			}
+			else {
+				adj = map[x+d.dx][z+d.dz][y-1];
+				if(adj.type==CellType.ramp && adj.dir==d.opposite()) {
+					pass = true;
+					ramp = true;
+				}
+			}
+			if(pass) {
+				passes++;
+				if(passd==d.opposite())
+					oppositePass = true;
+				passd = d;
+			}
+		}
+		if(passes>1) {
+			if(!ramp && !(oppositePass && passes-objects<=2)) {
+				boolean all = true;
+				for(Direction d : Direction.values()) {
+					Direction cw = d.cw();
+					if(map[x+d.dx][z+d.dz][y].token!=null &&
+							map[x+cw.dx][z+cw.dz][y].token!=null) {
+						Cell diag = map[x+d.dx+cw.dx][z+d.dz+cw.dz][y];
+						if(diag.token==null || diag.canHaveObject)
+							all = false;
+					}
+				}
+				if(all)
+					return true;
+			}
+			return false;
+		}
+		return true;
+	}
+	
 	private void filterCanHaveObjects() {
+		int count = 0;
 		for(int x=1; x<size-1; x++)
 			for(int z=1; z<size-1; z++)
 				for(int y=1; y<height-1; y++) {
 					Cell cell = map[x][z][y];
-					if(!cell.canHaveObject)
-						continue;
-					int passes = 0;
-					int objects = 0;
-					boolean ramp = false;
-					Direction passd = null;
-					boolean oppositePass = false;
-					for(Direction d : Direction.values()) {
-						Cell adj = map[x+d.dx][z+d.dz][y];
-						boolean pass = false;
-						if(adj.canHaveObject)
-							objects++;
-						if(adj.token!=null)
-							pass = true;
-						else if(adj.type==CellType.ramp && adj.dir==d) {
-							pass = true;
-							ramp = true;
-						}
-						else {
-							adj = map[x+d.dx][z+d.dz][y-1];
-							if(adj.type==CellType.ramp && adj.dir==d.opposite()) {
-								pass = true;
-								ramp = true;
-							}
-						}
-						if(pass) {
-							passes++;
-							if(passd==d.opposite())
-								oppositePass = true;
-							passd = d;
-						}
-					}
-					if(passes>1) {
-						if(!ramp && !(oppositePass && passes-objects==2)) {
-							boolean all = true;
-							for(Direction d : Direction.values()) {
-								Direction cw = d.cw();
-								if(map[x+d.dx][z+d.dz][y].token!=null &&
-										map[x+cw.dx][z+cw.dz][y].token!=null) {
-									Cell diag = map[x+d.dx+cw.dx][z+d.dz+cw.dz][y];
-									if(diag.token==null || diag.canHaveObject)
-										all = false;
-								}
-							}
-							if(all) {
-								cell.canHaveObject = true;
-								continue;
-							}
-						}
-						cell.canHaveObject = false;
-						continue;
-					}
-					else {
-						cell.canHaveObject = true;
+					cell.canHaveObject = filterCanHaveObject(x, z, y);
+					if(cell.canHaveObject) {
+						cellObjects.add(new CellObject().setLocation(x, z, y));
+						count++;
 					}
 				}
+		System.out.printf("canHaveObject count: %d\n", count);
 	}
 	
 	public void generate(Random random) {
@@ -353,7 +362,7 @@ public class WorldMap {
 		for(int x=-2; x<=2; x++)
 			fillColumn(startx+x, startz, CellType.empty);
 		map[startx][startz][0].type = CellType.solid;
-		map[startx][startz][1].canHaveObject = true;
+		//map[startx][startz][1].canHaveObject = true;
 		
 		tokens = new LinkedList<>();
 		tokens.add(new Token(startx, startz, 1));

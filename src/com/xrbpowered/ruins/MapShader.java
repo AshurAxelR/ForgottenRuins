@@ -18,7 +18,7 @@ public class MapShader extends CameraShader {
 	
 	public static final String[] SAMLER_NAMES = {"texDiffuse"};
 	
-	private MapShader() {
+	public MapShader() {
 		super(vertexInfo, "map_v.glsl", "map_f.glsl");
 	}
 	
@@ -50,25 +50,7 @@ public class MapShader extends CameraShader {
 	}
 
 	public void setLightScale(float light) {
-		//GL20.glUseProgram(pId);
 		GL20.glUniform1f(GL20.glGetUniformLocation(pId, "lightScale"), light);
-		//GL20.glUseProgram(0);
-	}
-
-	private static MapShader instance = null;
-	
-	public static MapShader getInstance() {
-		if(instance==null) {
-			instance = new MapShader();
-		}
-		return instance;
-	}
-	
-	public static void destroyInstance() {
-		if(instance!=null) {
-			instance.release();
-			instance = null;
-		}
 	}
 	
 }
