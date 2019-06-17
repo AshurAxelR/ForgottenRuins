@@ -1,16 +1,17 @@
-package com.xrbpowered.ruins;
+package com.xrbpowered.ruins.entity;
 
 import org.joml.Vector3f;
 
-import com.xrbpowered.ruins.WorldMap.Cell;
-import com.xrbpowered.ruins.WorldMap.CellType;
-import com.xrbpowered.ruins.WorldMap.Direction;
+import com.xrbpowered.ruins.world.Direction;
+import com.xrbpowered.ruins.world.Tile;
+import com.xrbpowered.ruins.world.TileType;
+import com.xrbpowered.ruins.world.World;
 
-public class MapCollider {
+public class PlayerCollider {
 
 	public float r = 0.3f;
 	
-	public WorldMap map = null;
+	public World world = null;
 
 	public int mapx(float x) {
 		return Math.round(x/2f);
@@ -27,22 +28,22 @@ public class MapCollider {
 		return my;
 	}
 	
-	private static Cell emptyCell = new Cell(CellType.empty);
+	private static Tile emptyCell = new Tile(TileType.empty);
 
-	public Cell map(int mx, int mz, int my) {
-		if(mx<0 || mx>=WorldMap.size || mz<0 || mz>=WorldMap.size || my>=WorldMap.height)
+	public Tile map(int mx, int mz, int my) {
+		if(mx<0 || mx>=World.size || mz<0 || mz>=World.size || my>=World.height)
 			return emptyCell;
-		return map.map[mx][mz][my];
+		return world.map[mx][mz][my];
 	}
 
-	public float clipx(Vector3f pos, float vx) {
+	public float clipx(Vector3f pos, float vx, float dy) {
 		float sv = Math.signum(vx);
 		if(sv==0)
 			return pos.x;
 		int mx = mapx(pos.x+vx+r*sv);
 		int mz = mapz(pos.z);
-		int my = mapy(pos.y);
-		if(map(mx, mz, my).type==CellType.solid) {
+		int my = mapy(pos.y+dy);
+		if(map(mx, mz, my).type==TileType.solid) {
 			return mx*2f - sv*(1+r);
 			//return Math.signum(pos.x+vx-2f*mx)*(1+r)+2f*mx;
 		}
@@ -50,14 +51,14 @@ public class MapCollider {
 			return pos.x + vx;
 	}
 
-	public float clipz(Vector3f pos, float vz) {
+	public float clipz(Vector3f pos, float vz, float dy) {
 		float sv = Math.signum(vz);
 		if(sv==0)
 			return pos.z;
 		int mx = mapx(pos.x);
 		int mz = mapz(pos.z+vz+r*sv);
-		int my = mapy(pos.y);
-		if(map(mx, mz, my).type==CellType.solid) {
+		int my = mapy(pos.y+dy);
+		if(map(mx, mz, my).type==TileType.solid) {
 			return mz*2f - sv*(1+r);
 			//return Math.signum(pos.z+vz-2f*mz)*(1+r)+2f*mz;
 		}
@@ -82,15 +83,15 @@ public class MapCollider {
 		if(my<=0)
 			return 0; // TODO sink
 		
-		Cell cell = map(mx, mz, my);
-		Cell celld = map(mx, mz, my-1);
-		if(cell.type==CellType.ramp) {
+		Tile cell = map(mx, mz, my);
+		Tile celld = map(mx, mz, my-1);
+		if(cell.type==TileType.ramp) {
 			return my + rampy(pos.x, pos.z, mx, mz, cell.dir);
 		}
-		else if(celld.type==CellType.ramp) {
+		else if(celld.type==TileType.ramp) {
 			return my-1 + rampy(pos.x, pos.z, mx, mz, celld.dir);
 		}
-		else if(celld.type==CellType.solid) {
+		else if(celld.type==TileType.solid) {
 			return my; 
 		}
 		else {

@@ -1,4 +1,4 @@
-package com.xrbpowered.ruins;
+package com.xrbpowered.ruins.render.shader;
 
 import java.awt.Color;
 
@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL20;
 import com.xrbpowered.gl.res.shader.CameraShader;
 import com.xrbpowered.gl.res.shader.VertexInfo;
 
-public class MapShader extends CameraShader {
+public class WallShader extends CameraShader {
 	
 	public static final VertexInfo vertexInfo = new VertexInfo()
 			.addAttrib("in_Position", 3)
@@ -18,11 +18,11 @@ public class MapShader extends CameraShader {
 	
 	public static final String[] SAMLER_NAMES = {"texDiffuse"};
 	
-	public MapShader() {
-		super(vertexInfo, "map_v.glsl", "map_f.glsl");
+	public WallShader() {
+		super(vertexInfo, "wall_v.glsl", "wall_f.glsl");
 	}
 	
-	protected MapShader(String pathVS, String pathFS) {
+	protected WallShader(String pathVS, String pathFS) {
 		super(vertexInfo, pathVS, pathFS);
 	}
 	
