@@ -1,23 +1,26 @@
-package com.xrbpowered.ruins;
+package com.xrbpowered.ruins.render;
 
 import org.joml.Vector3f;
 
 import com.xrbpowered.gl.res.mesh.AdvancedMeshBuilder;
 import com.xrbpowered.gl.res.mesh.StaticMesh;
-import com.xrbpowered.ruins.WorldMap.Cell;
-import com.xrbpowered.ruins.WorldMap.CellType;
-import com.xrbpowered.ruins.WorldMap.Direction;
+import com.xrbpowered.ruins.render.shader.WallShader;
+import com.xrbpowered.ruins.render.texture.TextureAtlas;
+import com.xrbpowered.ruins.world.Direction;
+import com.xrbpowered.ruins.world.Tile;
+import com.xrbpowered.ruins.world.TileType;
+import com.xrbpowered.ruins.world.World;
 
-public class MapBuilder extends AdvancedMeshBuilder {
+public class WallBuilder extends AdvancedMeshBuilder {
 	
-	public final WorldMap map;
-	public final MapTextureAtlas atlas;
+	public final World world;
+	public final TextureAtlas atlas;
 	
 	public final int cx, cz;
 	
-	private MapBuilder(WorldMap map, MapTextureAtlas atlas, int cx, int cz) {
-		super(MapShader.vertexInfo, null);
-		this.map = map;
+	private WallBuilder(World map, TextureAtlas atlas, int cx, int cz) {
+		super(WallShader.vertexInfo, null);
+		this.world = map;
 		this.atlas = atlas;
 		this.cx = cx;
 		this.cz = cz;
@@ -43,7 +46,7 @@ public class MapBuilder extends AdvancedMeshBuilder {
 		return face;
 	}
 	
-	protected void addTop(int x, int z, int y, MapTextureAtlas.Tile t, float light) {
+	protected void addTop(int x, int z, int y, TextureAtlas.Sprite t, float light) {
 		x *= 2;
 		z *= 2;
 		Vector3f norm = new Vector3f(0, 1, 0);
@@ -219,32 +222,32 @@ public class MapBuilder extends AdvancedMeshBuilder {
 		int zmin = cz*chunkSize;
 		int xmax = xmin + chunkSize;
 		int zmax = zmin + chunkSize;
-		for(int y=0; y<WorldMap.height-1; y++)
+		for(int y=0; y<World.height-1; y++)
 			for(int x=xmin; x<xmax; x++)
 				for(int z=zmin; z<zmax; z++) {
-					switch(map.map[x][z][y].type) {
+					switch(world.map[x][z][y].type) {
 						case solid: {
-							if(map.map[x][z][y+1].type==CellType.empty) {
-								if(map.map[x][z][y+1].canHaveObject)
-									addTop(x, z, y, atlas.start, map.map[x][z][y+1].light);
+							if(world.map[x][z][y+1].type==TileType.empty) {
+								if(world.map[x][z][y+1].tileObject!=null)
+									addTop(x, z, y, atlas.start, world.map[x][z][y+1].light);
 								else
-									addTop(x, z, y, map.map[x][z][y+1].light);
+									addTop(x, z, y, world.map[x][z][y+1].light);
 							}
-							if(y>0 && map.map[x][z][y-1].type==CellType.empty)
+							if(y>0 && world.map[x][z][y-1].type==TileType.empty)
 								addBottom(x, z, y);
 							for(Direction d : Direction.values()) {
-								Cell cell = map.map[x+d.dx][z+d.dz][y]; 
-								if(cell.type!=CellType.solid && !(cell.type==CellType.ramp && cell.dir==d.opposite()))
+								Tile cell = world.map[x+d.dx][z+d.dz][y]; 
+								if(cell.type!=TileType.solid && !(cell.type==TileType.ramp && cell.dir==d.opposite()))
 									addSide(x, z, y, d, cell.light);
 							}
 							break;
 						}
 						case ramp: {
-							Direction rampd = map.map[x][z][y].dir;
-							addRampTop(x, z, y, rampd, map.map[x][z][y].light);
+							Direction rampd = world.map[x][z][y].dir;
+							addRampTop(x, z, y, rampd, world.map[x][z][y].light);
 							for(Direction d : Direction.values()) {
-								Cell cell = map.map[x+d.dx][z+d.dz][y]; 
-								if(cell.type==CellType.empty || (cell.type==CellType.ramp && cell.dir!=d))
+								Tile cell = world.map[x+d.dx][z+d.dz][y]; 
+								if(cell.type==TileType.empty || (cell.type==TileType.ramp && cell.dir!=d))
 									addRampSide(x, z, y, d, rampd, cell.light);
 							}
 							break;
@@ -257,12 +260,12 @@ public class MapBuilder extends AdvancedMeshBuilder {
 	
 	public static final int chunkSize = 16;
 	
-	public static StaticMesh[] createChunks(WorldMap map, MapTextureAtlas atlas) {
-		int s = WorldMap.size / chunkSize;
+	public static StaticMesh[] createChunks(World world, TextureAtlas atlas) {
+		int s = World.size / chunkSize;
 		StaticMesh[] meshes = new StaticMesh[s*s];
 		for(int cx=0; cx<s; cx++)
 			for(int cz=0; cz<s; cz++) {
-				meshes[cx*s+cz] = new MapBuilder(map, atlas, cx, cz).create();
+				meshes[cx*s+cz] = new WallBuilder(world, atlas, cx, cz).create();
 			}
 		return meshes;
 	}

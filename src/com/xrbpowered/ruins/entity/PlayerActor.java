@@ -1,4 +1,4 @@
-package com.xrbpowered.ruins;
+package com.xrbpowered.ruins.entity;
 
 import com.xrbpowered.gl.scene.Actor;
 import com.xrbpowered.gl.scene.CameraActor;

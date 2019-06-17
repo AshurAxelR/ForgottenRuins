@@ -1,4 +1,4 @@
-package com.xrbpowered.ruins;
+package com.xrbpowered.ruins.render.texture;
 
 import java.util.ArrayList;
 
@@ -6,14 +6,14 @@ import org.joml.Vector2f;
 
 import com.xrbpowered.gl.res.texture.Texture;
 
-public class MapTextureAtlas {
+public class TextureAtlas {
 
 	public static final int size = 2;
 	public static final float dtile = 1f/(float)size;
 	
-	public static class Tile {
+	public static class Sprite {
 		public int u, v;
-		public Tile(int u, int v) {
+		public Sprite(int u, int v) {
 			this.u = u;
 			this.v = v;
 		}
@@ -25,9 +25,9 @@ public class MapTextureAtlas {
 		}
 	}
 	
-	public static class Versions extends ArrayList<Tile> {
+	public static class Versions extends ArrayList<Sprite> {
 		public void add(int u, int v) {
-			add(new Tile(u, v));
+			add(new Sprite(u, v));
 		}
 		
 		public void addLine(int u1, int u2, int v) {
@@ -41,7 +41,7 @@ public class MapTextureAtlas {
 					add(u, v);
 		}
 
-		public Tile get(long s) {
+		public Sprite get(long s) {
 			return super.get((int)s % size());
 		}
 	}
@@ -52,12 +52,12 @@ public class MapTextureAtlas {
 	public Versions rampTop;
 	public Versions rampSide;
 
-	public Tile start;
+	public Sprite start;
 	
 	private Texture texture;
 	
-	public MapTextureAtlas() {
-		texture = new Texture("map.png", false, false);
+	public TextureAtlas() {
+		texture = new Texture("wall.png", false, false);
 		
 		top = new Versions();
 		top.add(0, 0);
@@ -74,7 +74,7 @@ public class MapTextureAtlas {
 		rampSide = new Versions();
 		rampSide.add(1, 0);
 		
-		start = new Tile(1, 1);
+		start = new Sprite(1, 1);
 	}
 	
 	public Texture getTexture() {

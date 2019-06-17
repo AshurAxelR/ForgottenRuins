@@ -1,11 +1,14 @@
-package com.xrbpowered.ruins;
+package com.xrbpowered.ruins.render.prefab;
 
 import com.xrbpowered.gl.res.mesh.ObjMeshLoader;
 import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.res.shader.InstanceBuffer;
 import com.xrbpowered.gl.res.shader.Shader;
+import com.xrbpowered.ruins.render.shader.WallShader;
+import com.xrbpowered.ruins.world.World;
+import com.xrbpowered.ruins.world.obj.TileObject;
 
-public class CellObjectMesh {
+public class PrefabComponent {
 
 	public static final int MAX_INSTANCES = 8192;
 	private static int startAttrib = 3;
@@ -15,17 +18,17 @@ public class CellObjectMesh {
 	private int instCount;
 	private InstanceBuffer instBuffer;
 	
-	public CellObjectMesh(String path) {
-		this.mesh = ObjMeshLoader.loadObj(path, 0, 0.5f, MapShader.vertexInfo, null);
+	public PrefabComponent(String path) {
+		this.mesh = ObjMeshLoader.loadObj(path, 0, 1f, WallShader.vertexInfo, null);
 		this.instBuffer = new InstanceBuffer(1, MAX_INSTANCES, startAttrib, new int[] {3, 1, 1});
 	}
 	
-	public void setInstanceData(WorldMap map) {
-		instCount = map.cellObjects.size();
+	public void setInstanceData(World map) {
+		instCount = map.tileObjects.size();
 		float[] instanceData = new float[instCount * 5];
 		int offs = 0;
 		for(int i=0; i<instCount; i++) {
-			CellObject obj = map.cellObjects.get(i);
+			TileObject obj = map.tileObjects.get(i);
 			instanceData[offs+0] = obj.x * 2f;
 			instanceData[offs+1] = obj.y;
 			instanceData[offs+2] = obj.z * 2f;
@@ -49,7 +52,7 @@ public class CellObjectMesh {
 	}
 
 	public static int bindShader(Shader shader, int startAttrib) {
-		CellObjectMesh.startAttrib = startAttrib;
+		PrefabComponent.startAttrib = startAttrib;
 		return InstanceBuffer.bindAttribLocations(shader, startAttrib, ATTRIB_NAMES);
 	}
 }

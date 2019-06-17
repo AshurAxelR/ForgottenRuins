@@ -2,7 +2,6 @@ package com.xrbpowered.ruins;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
@@ -17,11 +16,18 @@ import com.xrbpowered.gl.scene.CameraActor;
 import com.xrbpowered.gl.scene.Controller;
 import com.xrbpowered.gl.ui.common.UIFpsOverlay;
 import com.xrbpowered.gl.ui.pane.UIOffscreen;
+import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.entity.PlayerController;
+import com.xrbpowered.ruins.render.WallBuilder;
+import com.xrbpowered.ruins.render.prefab.PrefabComponent;
+import com.xrbpowered.ruins.render.shader.WallShader;
+import com.xrbpowered.ruins.render.texture.TextureAtlas;
+import com.xrbpowered.ruins.world.World;
 
 public class Ruins extends UIClient {
 
-	private MapShader shader;
-	private MapTextureAtlas atlas;
+	private WallShader shader;
+	private TextureAtlas atlas;
 	private StaticMesh[] mapMeshes;
 	private CameraActor camera = null;
 	
@@ -32,10 +38,11 @@ public class Ruins extends UIClient {
 	private StaticMesh groundMesh;
 	private Texture groundTexture;
 	
-	private MapShader cellObjShader;
-	private CellObjectMesh cellObjMesh;
-	private Texture cellObjTexture;
-	
+	private WallShader cellObjShader;
+	private PrefabComponent cellObjMesh;
+
+	public Texture checker;
+
 	private PlayerActor player;
 	
 	public Ruins() {
@@ -52,31 +59,28 @@ public class Ruins extends UIClient {
 			
 			@Override
 			public void setupResources() {
+				GL11.glEnable(GL11.GL_CULL_FACE);
 				clearColor = new Color(0xe5efee);
 				
 				camera = new CameraActor.Perspective().setRange(0.1f, 80f).setAspectRatio(getWidth(), getHeight());
 				
-				shader = new MapShader();
+				shader = new WallShader();
 				shader.setFog(10, 80, clearColor);
 				shader.setCamera(camera);
 				
-				cellObjShader = new MapShader("cellobj_v.glsl", "map_f.glsl") {
+				cellObjShader = new WallShader("tileobj_v.glsl", "wall_f.glsl") {
 					@Override
 					protected int bindAttribLocations() {
-						//return super.bindAttribLocations();
-						return CellObjectMesh.bindShader(this, super.bindAttribLocations());
+						return PrefabComponent.bindShader(this, super.bindAttribLocations());
 					}
 				};
 				cellObjShader.setFog(10, 80, clearColor);
 				cellObjShader.setCamera(camera);
 				
-				atlas = new MapTextureAtlas();
-				//texture = new Texture("map.png", true, false);
-				//texture = new Texture("checker.png", true, true);
-
-				//mesh = FastMeshBuilder.cube(1f, MapShader.vertexInfo, null);
-				//mesh = ObjMeshLoader.loadObj("test.obj", 0, 1f, MapShader.vertexInfo, null);
+				atlas = new TextureAtlas();
 				
+				checker = new Texture("test/sand32_128.png", true, false);
+
 				player = new PlayerActor();
 				
 				playerController = new PlayerController(input, player);
@@ -87,8 +91,8 @@ public class Ruins extends UIClient {
 				activeController.setMouseLook(true);
 
 				groundTexture = new Texture("ground.png", true, false);
-				groundMesh = FastMeshBuilder.plane(256f, 4, 128, MapShader.vertexInfo, null);
-				cellObjTexture = new Texture(new Color(0xeee3c3));
+				groundMesh = FastMeshBuilder.plane(256f, 4, 128, WallShader.vertexInfo, null);
+				//cellObjTexture = new Texture(new Color(0xeee3c3));
 				
 				createWorldResources();
 				
@@ -111,7 +115,6 @@ public class Ruins extends UIClient {
 			protected void renderBuffer(RenderTarget target) {
 				super.renderBuffer(target);
 				
-				GL11.glEnable(GL11.GL_CULL_FACE);
 				shader.use();
 				
 				shader.setLightScale(0.1f);
@@ -128,12 +131,9 @@ public class Ruins extends UIClient {
 				
 				cellObjShader.use();
 				cellObjShader.setLightScale(0.1f);
-				cellObjTexture.bind(0);
+				checker.bind(0);
 				cellObjMesh.drawInstances();
-				cellObjMesh.mesh.draw();
 				cellObjShader.unuse();
-				
-				GL11.glDisable(GL11.GL_CULL_FACE);
 			}
 		};
 		
@@ -141,16 +141,15 @@ public class Ruins extends UIClient {
 	}
 	
 	private void createWorldResources() {
-		WorldMap map = new WorldMap();
-		map.generate(new Random());
-		mapMeshes = MapBuilder.createChunks(map, atlas);
+		World world = World.createWorld();
+		mapMeshes = WallBuilder.createChunks(world, atlas);
 
-		cellObjMesh = new CellObjectMesh("test.obj");
-		cellObjMesh.setInstanceData(map);
+		cellObjMesh = new PrefabComponent("obelisk.obj");
+		cellObjMesh.setInstanceData(world);
 
-		playerController.collider.map = map;
-		player.position.x = map.startx * 2f;
-		player.position.z = map.startz * 2f;
+		playerController.collider.world = world;
+		player.position.x = world.startx * 2f;
+		player.position.z = world.startz * 2f;
 		player.position.y = 1f; 
 		player.rotation.y = (float) Math.toRadians(-180f);
 		player.camera = camera;

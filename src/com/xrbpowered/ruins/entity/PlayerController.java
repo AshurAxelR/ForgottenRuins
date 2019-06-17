@@ -1,4 +1,4 @@
-package com.xrbpowered.ruins;
+package com.xrbpowered.ruins.entity;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -11,7 +11,7 @@ public class PlayerController extends WalkController {
 
 	public Integer keyJump = VK_SPACE;
 	
-	public final MapCollider collider = new MapCollider();
+	public final PlayerCollider collider = new PlayerCollider();
 
 	public float jumpVelocity = 0.075f; // 0.09f;
 	
@@ -48,17 +48,21 @@ public class PlayerController extends WalkController {
 		}
 	}
 	
+	private static final float[] dyPoints = {0f}; //{0f, 0.7f, 1.4f};
+	
 	@Override
 	protected void applyVelocity(float dt) {
-		if(collider.map==null)
+		if(collider.world==null)
 			return;
 		if(velocity.length()>0) {
-			float nx = collider.clipx(actor.position, velocity.x);
-			float nz = collider.clipz(actor.position, velocity.z);
 			// FIXME corner collision
-			// FIXME upper body collision
-			actor.position.x = nx;
-			actor.position.z = nz;
+			// FIXME upper body collision: velocity is applied multiple times
+			for(float dy : dyPoints) {
+				float nx = collider.clipx(actor.position, velocity.x, dy);
+				float nz = collider.clipz(actor.position, velocity.z, dy);
+				actor.position.x = nx;
+				actor.position.z = nz;
+			}
 
 			actor.position.y += velocity.y;
 			float ny = collider.clipy(actor.position);
