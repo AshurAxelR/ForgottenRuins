@@ -1,54 +1,147 @@
 package com.xrbpowered.ruins.render.prefab;
 
+import java.util.ArrayList;
+
+import org.lwjgl.opengl.GL11;
+
 import com.xrbpowered.gl.res.mesh.ObjMeshLoader;
 import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.res.shader.InstanceBuffer;
 import com.xrbpowered.gl.res.shader.Shader;
+import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.ruins.render.shader.WallShader;
+import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.obj.TileObject;
 
 public class PrefabComponent {
 
-	public static final int MAX_INSTANCES = 8192;
 	private static int startAttrib = 3;
-	private static final String[] ATTRIB_NAMES = {"ins_Position", "ins_RotationY" , "ins_Light"};
+	private static final String[] ATTRIB_NAMES = {"ins_Position", "ins_RotationY" , "ins_Scale" , "ins_Light"};
 
-	public final StaticMesh mesh; 
-	private int instCount;
-	private InstanceBuffer instBuffer;
-	
-	public PrefabComponent(String path) {
-		this.mesh = ObjMeshLoader.loadObj(path, 0, 1f, WallShader.vertexInfo, null);
-		this.instBuffer = new InstanceBuffer(1, MAX_INSTANCES, startAttrib, new int[] {3, 1, 1});
+	public static class InstanceInfo {
+		public float x, z, y;
+		public float rotate = 0f;
+		public float scale = 1f;
+		public float light = 1f;
+		
+		public InstanceInfo(float x, float z, float y, float light) {
+			this.x = x;
+			this.z = z;
+			this.y = y;
+			this.light = light;
+		}
+
+		public InstanceInfo(float x, float z, float y) {
+			this(x, z, y, 1f);
+		}
+
+		public InstanceInfo(World world, TileObject obj, float yoffs) {
+			this.x = obj.x * 2f;
+			this.y = obj.y + yoffs;
+			this.z = obj.z * 2f;
+			this.light = world.map[obj.x][obj.z][obj.y].light;
+		}
+
+		public InstanceInfo(World world, TileObject obj) {
+			this(world, obj, 0f);
+		}
+
+		public InstanceInfo setRotate(float a) {
+			this.rotate = a;
+			return this;
+		}
+
+		public InstanceInfo setRotate(Direction d) {
+			this.rotate = d.ordinal() * (float)Math.PI / 2f;
+			return this;
+		}
+
+		public InstanceInfo setScale(float s) {
+			this.scale = s;
+			return this;
+		}
 	}
 	
-	public void setInstanceData(World map) {
-		instCount = map.tileObjects.size();
-		float[] instanceData = new float[instCount * 5];
-		int offs = 0;
-		for(int i=0; i<instCount; i++) {
-			TileObject obj = map.tileObjects.get(i);
-			instanceData[offs+0] = obj.x * 2f;
-			instanceData[offs+1] = obj.y;
-			instanceData[offs+2] = obj.z * 2f;
-			instanceData[offs+3] = 0;
-			instanceData[offs+4] = map.map[obj.x][obj.z][obj.y].light;
-			offs += 5;
+	public final StaticMesh mesh; 
+	public final Texture texture;
+	
+	private ArrayList<InstanceInfo> instInfo = null;
+	private int instCount;
+	private InstanceBuffer instBuffer = null;
+	
+	public boolean culling = true;
+
+	public PrefabComponent(String meshPath, Texture texture) {
+		this(ObjMeshLoader.loadObj(meshPath, 0, 1f, WallShader.vertexInfo, null), texture);
+	}
+
+	public PrefabComponent(StaticMesh mesh, Texture texture) {
+		this.mesh = mesh;
+		this.texture = texture;
+	}
+	
+	public PrefabComponent setCulling(boolean culling) {
+		this.culling = culling;
+		return this;
+	}
+
+	public void startCreateInstances() {
+		instInfo = new ArrayList<>();
+		instCount = 0;
+	}
+	
+	public void addInstance(InstanceInfo info) {
+		instInfo.add(info);
+		instCount++;
+	}
+	
+	public void finishCreateInstances() {
+		if(instBuffer!=null)
+			releaseInstances();
+		instCount = instInfo.size();
+		if(instCount>0) {
+			instBuffer = new InstanceBuffer(1, instCount, startAttrib, new int[] {3, 1, 1, 1});
+			float[] instanceData = new float[instCount * 6];
+			int offs = 0;
+			for(InstanceInfo info : instInfo) {
+				instanceData[offs+0] = info.x;
+				instanceData[offs+1] = info.y;
+				instanceData[offs+2] = info.z;
+				instanceData[offs+3] = info.rotate;
+				instanceData[offs+4] = info.scale;
+				instanceData[offs+5] = info.light;
+				offs += 6;
+			}
+			instBuffer.updateInstanceData(instanceData, instCount);
 		}
-		instBuffer.updateInstanceData(instanceData, instCount);
+		instInfo = null;
 	}
 	
 	public void drawInstances() {
+		if(instCount==0)
+			return;
+		if(culling)
+			GL11.glEnable(GL11.GL_CULL_FACE);
+		else
+			GL11.glDisable(GL11.GL_CULL_FACE);
 		mesh.enableDraw(null);
+		texture.bind(0);
 		instBuffer.enable();
 		mesh.drawCallInstanced(instCount);
 		instBuffer.disable();
 		mesh.disableDraw();
 	}
 	
+	public void releaseInstances() {
+		instBuffer.release();
+		instBuffer = null;
+		instCount = 0;
+	}
+	
 	public void release() {
 		mesh.release();
+		texture.release();
 	}
 
 	public static int bindShader(Shader shader, int startAttrib) {

@@ -1,9 +1,11 @@
 package com.xrbpowered.ruins.world;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-import com.xrbpowered.ruins.world.obj.TileObject;
+import com.xrbpowered.ruins.world.obj.Obelisk;
+import com.xrbpowered.ruins.world.obj.Palm;
 
 public class WorldGenerator {
 
@@ -12,9 +14,9 @@ public class WorldGenerator {
 	public static final int airReserve = 24;
 
 	private class TileInfo {
-		public boolean canHaveObject = false;
+		public Token objToken = null;
 		public boolean preferBlock = false;
-		public Token token = null;
+		public boolean platform = false;
 	}
 	
 	private class ColInfo {
@@ -23,30 +25,37 @@ public class WorldGenerator {
 		//public boolean undefined = true;
 	}
 	
-	private class Token {
+	public class Token {
 		public int x, z, y;
+		public Direction d;
 		
-		public Token(int x, int z, int y) {
+		public Token(int x, int z, int y, Direction d) {
 			this.x = x;
 			this.z = z;
 			this.y = y;
-			totalPlatforms++;
+			this.d = d;
+		}
+		
+		public long getSeed(World world) {
+			return 0;
 		}
 	}
-
+	
 	public final World world;
 	private final Tile[][][] map;
-	private final Random random = new Random();
+	private final Random random;
 
 	private final TileInfo[][][] info;
 	private final ColInfo[][] colInfo;
 	private final LinkedList<Token> tokens;
+	private final ArrayList<Token> objTokens;
 	
 	private int totalPlatforms = 0;
 
 	public WorldGenerator(World world) {
 		this.world = world;
 		this.map = world.map;
+		this.random = new Random(world.seed);
 		
 		this.info = new TileInfo[size][size][height];
 		for(int x=0; x<size; x++)
@@ -63,6 +72,7 @@ public class WorldGenerator {
 			}
 		
 		this.tokens = new LinkedList<>();
+		this.objTokens = new ArrayList<>();
 	}
 
 	private void fillColumn(int x, int z, TileType type) {
@@ -116,7 +126,7 @@ public class WorldGenerator {
 		return null;
 	}
 
-	private boolean createPass(int x, int z, int y) {
+	private boolean createPass(int x, int z, int y, Direction d) {
 		if(y<1 || y>=height-3)
 			return false;
 		Tile cb = set(x, z, y-1, TileType.solid);
@@ -127,9 +137,10 @@ public class WorldGenerator {
 				if(c1!=null) {
 					Tile c2 = set(x, z, y+2, TileType.empty);
 					if(c2!=null) {
-						Token t = new Token(x, z, y);
+						Token t = new Token(x, z, y, d);
 						tokens.add(t);
-						info[x][z][y].token = t;
+						totalPlatforms++;
+						info[x][z][y].platform = true;
 						return true;
 					}
 					reset(x, z, y+1, c1);
@@ -156,7 +167,7 @@ public class WorldGenerator {
 						if(c2!=null) {
 							if(random.nextInt(5)==0 && createRampUp(random, x+d.dx, z+d.dz, y+1, d))
 								return true;
-							if(createPass(x+d.dx, z+d.dz, y+1))
+							if(createPass(x+d.dx, z+d.dz, y+1, d))
 								return true;
 							reset(x, z, y+3, c2);
 						}
@@ -186,7 +197,7 @@ public class WorldGenerator {
 						if(c2!=null) {
 							if(random.nextInt(5)==0 && createRampDown(random, x+d.dx, z+d.dz, y-1, d))
 								return true;
-							if(createPass(x+d.dx, z+d.dz, y-1))
+							if(createPass(x+d.dx, z+d.dz, y-1, d))
 								return true;
 							reset(x, z, y+2, c2);
 						}
@@ -222,7 +233,7 @@ public class WorldGenerator {
 				return true;
 		}
 		if(r<4 || tokens.isEmpty()){
-			if(createPass(x, z, y))
+			if(createPass(x, z, y, d))
 				return true;
 		}
 		if(r==4) {
@@ -240,14 +251,14 @@ public class WorldGenerator {
 				pass |= createRandom(random, t.x+d.dx, t.z+d.dz, t.y, d);
 			}
 			if(!pass)
-				info[t.x][t.z][t.y].canHaveObject = true;
+				info[t.x][t.z][t.y].objToken = t;
 		}
 	}
 	
-	private boolean filterCanHaveObject(int x, int z, int y) {
+	private Token filterObjectTokens(int x, int z, int y) {
 		TileInfo tilei = info[x][z][y];
-		if(!tilei.canHaveObject)
-			return false;
+		if(tilei.objToken==null)
+			return null;
 		int passes = 0;
 		int objects = 0;
 		boolean ramp = false;
@@ -257,9 +268,9 @@ public class WorldGenerator {
 			Tile adj = map[x+d.dx][z+d.dz][y];
 			TileInfo adji = info[x+d.dx][z+d.dz][y];
 			boolean pass = false;
-			if(adji.canHaveObject)
+			if(adji.objToken!=null)
 				objects++;
-			if(adji.token!=null)
+			if(adji.platform)
 				pass = true;
 			else if(adj.type==TileType.ramp && adj.dir==d) {
 				pass = true;
@@ -284,39 +295,57 @@ public class WorldGenerator {
 				boolean all = true;
 				for(Direction d : Direction.values()) {
 					Direction cw = d.cw();
-					if(info[x+d.dx][z+d.dz][y].token!=null &&
-							info[x+cw.dx][z+cw.dz][y].token!=null) {
+					if(info[x+d.dx][z+d.dz][y].platform &&
+							info[x+cw.dx][z+cw.dz][y].platform) {
 						TileInfo diag = info[x+d.dx+cw.dx][z+d.dz+cw.dz][y];
-						if(diag.token==null || diag.canHaveObject)
+						if(!diag.platform || diag.objToken!=null)
 							all = false;
 					}
 				}
 				if(all)
-					return true;
+					return tilei.objToken;
 			}
-			return false;
+			return null;
 		}
-		return true;
+		return tilei.objToken;
 	}
 	
-	private void filterCanHaveObjects() {
+	private void filterObjectTokens() {
 		for(int x=1; x<size-1; x++)
 			for(int z=1; z<size-1; z++)
 				for(int y=1; y<height-1; y++) {
-					info[x][z][y].canHaveObject = filterCanHaveObject(x, z, y);
+					Token objToken = filterObjectTokens(x, z, y);
+					info[x][z][y].objToken = objToken;
+					if(objToken!=null)
+						objTokens.add(objToken);
 				}
 	}
 
-	private void generateObjects() {
-		for(int x=1; x<size-1; x++)
-			for(int z=1; z<size-1; z++)
-				for(int y=1; y<height-1; y++) {
-					if(info[x][z][y].canHaveObject) {
-						if(colInfo[x][z].height<y) {
-							world.tileObjects.add(new TileObject(world).setLocation(x, z, y));
-						}
-					}
-				}
+	private void generateObjects(Random random) {
+		for(int obeliskCount = 0; obeliskCount<30;) {
+			Token t = objTokens.get(random.nextInt(objTokens.size()));
+			if(colInfo[t.x][t.z].height<t.y) {
+				world.tileObjects.add(new Obelisk(world, t));
+				objTokens.remove(t);
+				obeliskCount++;
+			}
+		}
+		for(int palmCount = 0; palmCount<300;) {
+			Token t = objTokens.get(random.nextInt(objTokens.size()));
+			if(colInfo[t.x][t.z].height<t.y) {
+				world.tileObjects.add(new Palm(world, t));
+				objTokens.remove(t);
+				palmCount++;
+			}
+		}
+		/*for(int i = 0; i<objTokens.size(); i++) {
+			Token t = objTokens.get(i);
+			if(colInfo[t.x][t.z].height<t.y) {
+				world.tileObjects.add(new TileObject(world, t));
+				objTokens.remove(t);
+				i--;
+			}
+		}*/
 	}
 	
 	public boolean generate() {
@@ -338,10 +367,10 @@ public class WorldGenerator {
 		map[world.startx][world.startz][0].type = TileType.solid;
 		//map[startx][startz][1].canHaveObject = true; // TODO add start object
 		
-		tokens.add(new Token(world.startx, world.startz, 1));
+		tokens.add(new Token(world.startx, world.startz, 1, Direction.north));
 		processTokens(random);
 
-		filterCanHaveObjects();
+		filterObjectTokens();
 
 		for(int x=0; x<size; x++)
 			for(int z=0; z<size; z++) {
@@ -362,7 +391,7 @@ public class WorldGenerator {
 				// colInfo[x][z].undefined = false;
 			}
 		
-		generateObjects();
+		generateObjects(random);
 		
 		int coverage = 0;
 		int maxCoverage = size*size;
@@ -384,6 +413,10 @@ public class WorldGenerator {
 		System.out.printf("Total platforms: %d, coverage: %d/%d (%.1f%%)\n",
 				totalPlatforms, coverage, maxCoverage, coverage*100f/(float)maxCoverage);
 		return coverage > maxCoverage/2;
+	}
+	
+	public long nextAttempt() {
+		return random.nextLong();
 	}
 
 }

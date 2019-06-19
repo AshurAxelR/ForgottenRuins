@@ -13,6 +13,7 @@ in vec2 in_TexCoord;
 
 in vec3 ins_Position;
 in float ins_RotationY;
+in float ins_Scale;
 in float ins_Light;
 
 out vec4 pass_Position;
@@ -34,8 +35,16 @@ mat4 rotationYMatrix(float a) {
 	return m;
 }
 
+mat4 scaleMatrix(float s) {
+	mat4 m = mat4(1);
+	m[0][0] = s;
+	m[1][1] = s;
+	m[2][2] = s;
+	return m;
+}
+
 void main(void) {
-	mat4 modelMatrix = translationMatrix(ins_Position) * rotationYMatrix(ins_RotationY);
+	mat4 modelMatrix = translationMatrix(ins_Position) * rotationYMatrix(ins_RotationY) * scaleMatrix(ins_Scale);
 	pass_Position = viewMatrix * modelMatrix * vec4(in_Position, 1);
 	gl_Position = projectionMatrix * pass_Position;
 	

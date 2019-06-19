@@ -20,6 +20,7 @@ import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.entity.PlayerController;
 import com.xrbpowered.ruins.render.WallBuilder;
 import com.xrbpowered.ruins.render.prefab.PrefabComponent;
+import com.xrbpowered.ruins.render.prefab.Prefabs;
 import com.xrbpowered.ruins.render.shader.WallShader;
 import com.xrbpowered.ruins.render.texture.TextureAtlas;
 import com.xrbpowered.ruins.world.World;
@@ -39,7 +40,6 @@ public class Ruins extends UIClient {
 	private Texture groundTexture;
 	
 	private WallShader cellObjShader;
-	private PrefabComponent cellObjMesh;
 
 	public Texture checker;
 
@@ -59,7 +59,6 @@ public class Ruins extends UIClient {
 			
 			@Override
 			public void setupResources() {
-				GL11.glEnable(GL11.GL_CULL_FACE);
 				clearColor = new Color(0xe5efee);
 				
 				camera = new CameraActor.Perspective().setRange(0.1f, 80f).setAspectRatio(getWidth(), getHeight());
@@ -79,7 +78,9 @@ public class Ruins extends UIClient {
 				
 				atlas = new TextureAtlas();
 				
-				checker = new Texture("test/sand32_128.png", true, false);
+				//checker = new Texture("test/sand32_128.png", true, false);
+				//checker = new Texture("palm.png", true, false);
+				checker = new Texture("test/sand64.png", true, false);
 
 				player = new PlayerActor();
 				
@@ -94,6 +95,7 @@ public class Ruins extends UIClient {
 				groundMesh = FastMeshBuilder.plane(256f, 4, 128, WallShader.vertexInfo, null);
 				//cellObjTexture = new Texture(new Color(0xeee3c3));
 				
+				Prefabs.createResources();
 				createWorldResources();
 				
 				super.setupResources();
@@ -115,6 +117,7 @@ public class Ruins extends UIClient {
 			protected void renderBuffer(RenderTarget target) {
 				super.renderBuffer(target);
 				
+				GL11.glEnable(GL11.GL_CULL_FACE);
 				shader.use();
 				
 				shader.setLightScale(0.1f);
@@ -131,8 +134,7 @@ public class Ruins extends UIClient {
 				
 				cellObjShader.use();
 				cellObjShader.setLightScale(0.1f);
-				checker.bind(0);
-				cellObjMesh.drawInstances();
+				Prefabs.drawInstances();
 				cellObjShader.unuse();
 			}
 		};
@@ -141,11 +143,19 @@ public class Ruins extends UIClient {
 	}
 	
 	private void createWorldResources() {
-		World world = World.createWorld();
+		World world = World.createWorld(System.currentTimeMillis());
 		mapMeshes = WallBuilder.createChunks(world, atlas);
 
-		cellObjMesh = new PrefabComponent("obelisk.obj");
-		cellObjMesh.setInstanceData(world);
+		Prefabs.createInstances(world);
+		/*plot = new PrefabComponent("plot.obj", new Texture("test/sand64.png", true, false));
+		plot.setInstanceData(world);
+		palmT = new PrefabComponent("palm_t3.obj", new Texture("palm_t.png", true, false));
+		palmT.setInstanceData(world);
+		palm = new PrefabComponent("palm.obj", new Texture("palm.png", true, false));
+		palm.culling = false;
+		palm.yoffs = 3f;
+		palm.scale = 1.25f;
+		palm.setInstanceData(world);*/
 
 		playerController.collider.world = world;
 		player.position.x = world.startx * 2f;
@@ -157,11 +167,11 @@ public class Ruins extends UIClient {
 	}
 	
 	private void releaseWorldResources() {
+		Prefabs.releaseInstances();
 		for(StaticMesh mesh : mapMeshes) {
 			if(mesh!=null)
 				mesh.release();
 		}
-		cellObjMesh.release();
 	}
 	
 	@Override
