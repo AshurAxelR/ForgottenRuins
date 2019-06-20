@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 
 import com.xrbpowered.gl.client.ClientInput;
 import com.xrbpowered.gl.scene.WalkController;
+import com.xrbpowered.ruins.Ruins;
 
 public class PlayerController extends WalkController {
 
@@ -70,8 +71,10 @@ public class PlayerController extends WalkController {
 				inAir = false;
 				// TODO fall damage
 				int damage = Math.round(Math.max((-velocity.y*velocity.y*velocity.y*1000f-7f)*6.5f, 0));
-				if(damage>0)
+				if(damage>0) {
 					System.out.printf("Hit at velocity %.3f (Damage %d%%)\n", velocity.y, damage);
+					Ruins.flash.flashPain(damage/100f+0.02f);
+				}
 				velocity.y = 0f;
 			}
 			if(collider.falling) {

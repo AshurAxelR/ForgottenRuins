@@ -270,4 +270,42 @@ public class WallBuilder extends AdvancedMeshBuilder {
 		return meshes;
 	}
 	
+	public static StaticMesh createGround(float viewDist) {
+		viewDist *= 0.5f;
+		int s = World.size / chunkSize;
+
+		float[] vdata = new float[(s+3)*(s+3)*9];
+		int offs = 0;
+		for(int cx=-1; cx<=s+1; cx++)
+			for(int cz=-1; cz<=s+1; cz++) {
+				float x = (cx<0) ? -viewDist : (cx>s) ? (cx-1) * chunkSize + viewDist : cx * chunkSize;
+				float z = (cz<0) ? -viewDist : (cz>s) ? (cz-1) * chunkSize + viewDist : cz * chunkSize;
+				vdata[offs+0] = x * 2f;
+				vdata[offs+1] = 0;
+				vdata[offs+2] = z * 2f;
+				vdata[offs+3] = 0;
+				vdata[offs+4] = 1;
+				vdata[offs+5] = 0;
+				vdata[offs+6] = x;
+				vdata[offs+7] = z;
+				vdata[offs+8] = 1;
+				offs += 9;
+			}
+
+		short[] idata = new short[(s+2)*(s+2)*6];
+		offs = 0;
+		for(int cx=0; cx<s+2; cx++)
+			for(int cz=0; cz<s+2; cz++) {
+				idata[offs+0] = (short)((cx+0) * (s+3) + (cz+0));
+				idata[offs+1] = (short)((cx+0) * (s+3) + (cz+1));
+				idata[offs+2] = (short)((cx+1) * (s+3) + (cz+1));
+				idata[offs+3] = (short)((cx+0) * (s+3) + (cz+0));
+				idata[offs+4] = (short)((cx+1) * (s+3) + (cz+1));
+				idata[offs+5] = (short)((cx+1) * (s+3) + (cz+0));
+				offs += 6;
+			}
+		
+		return new StaticMesh(WallShader.vertexInfo, vdata, idata);
+	}
+	
 }
