@@ -9,7 +9,6 @@ import com.xrbpowered.gl.client.UIClient;
 import com.xrbpowered.gl.res.asset.AssetManager;
 import com.xrbpowered.gl.res.asset.FileAssetManager;
 import com.xrbpowered.gl.res.buffer.RenderTarget;
-import com.xrbpowered.gl.res.mesh.FastMeshBuilder;
 import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.gl.scene.CameraActor;
@@ -19,6 +18,7 @@ import com.xrbpowered.gl.ui.pane.UIOffscreen;
 import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.entity.PlayerController;
 import com.xrbpowered.ruins.render.WallBuilder;
+import com.xrbpowered.ruins.render.effects.FlashPane;
 import com.xrbpowered.ruins.render.prefab.PrefabComponent;
 import com.xrbpowered.ruins.render.prefab.Prefabs;
 import com.xrbpowered.ruins.render.shader.WallShader;
@@ -44,6 +44,8 @@ public class Ruins extends UIClient {
 	public Texture checker;
 
 	private PlayerActor player;
+	
+	public static FlashPane flash;
 	
 	public Ruins() {
 		super("Ruins Generator");
@@ -92,7 +94,7 @@ public class Ruins extends UIClient {
 				activeController.setMouseLook(true);
 
 				groundTexture = new Texture("ground.png", true, false);
-				groundMesh = FastMeshBuilder.plane(256f, 4, 128, WallShader.vertexInfo, null);
+				groundMesh = WallBuilder.createGround(80f); //FastMeshBuilder.plane(256f, 4, 128, WallShader.vertexInfo, null);
 				//cellObjTexture = new Texture(new Color(0xeee3c3));
 				
 				Prefabs.createResources();
@@ -139,6 +141,7 @@ public class Ruins extends UIClient {
 			}
 		};
 		
+		flash = new FlashPane(getContainer());
 		new UIFpsOverlay(this);
 	}
 	
@@ -147,15 +150,6 @@ public class Ruins extends UIClient {
 		mapMeshes = WallBuilder.createChunks(world, atlas);
 
 		Prefabs.createInstances(world);
-		/*plot = new PrefabComponent("plot.obj", new Texture("test/sand64.png", true, false));
-		plot.setInstanceData(world);
-		palmT = new PrefabComponent("palm_t3.obj", new Texture("palm_t.png", true, false));
-		palmT.setInstanceData(world);
-		palm = new PrefabComponent("palm.obj", new Texture("palm.png", true, false));
-		palm.culling = false;
-		palm.yoffs = 3f;
-		palm.scale = 1.25f;
-		palm.setInstanceData(world);*/
 
 		playerController.collider.world = world;
 		player.position.x = world.startx * 2f;
