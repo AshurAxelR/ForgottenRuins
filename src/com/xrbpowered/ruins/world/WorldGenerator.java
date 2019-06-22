@@ -21,8 +21,6 @@ public class WorldGenerator {
 	
 	private class ColInfo {
 		public int height = -1;
-		public boolean adjacent = false;
-		//public boolean undefined = true;
 	}
 	
 	public class Token {
@@ -255,6 +253,48 @@ public class WorldGenerator {
 		}
 	}
 	
+	private void fillUndefined() {
+		for(int x=0; x<size; x++)
+			for(int z=0; z<size; z++) {
+				TileType type = TileType.empty;
+				float light = 1f;
+				for(int y=height-1; y>=0; y--) {
+					if(map[x][z][y].type==TileType.undefined)
+						map[x][z][y].type = type;
+					else if(map[x][z][y].type==TileType.solid) {
+						if(type!=TileType.solid) {
+							type = TileType.solid;
+							light = 0f;
+							colInfo[x][z].height = y;
+						}
+					}
+					map[x][z][y].light = light;
+				}
+			}
+	}
+	
+	private float calculateCoverage() {
+		int coverage = 0;
+		int maxCoverage = size*size;
+		for(int x=0; x<size; x++)
+			for(int z=0; z<size; z++) {
+				boolean adj = false;
+				for(Direction d : Direction.values()) {
+					if(!World.isInside(x+d.dx, z+d.dz))
+						continue;
+					if(colInfo[x+d.dx][z+d.dz].height>=0) {
+						adj = true;
+						break;
+					}
+				}
+				if(adj)
+					coverage++;
+			}
+		System.out.printf("Total platforms: %d, coverage: %d/%d (%.1f%%)\n",
+				totalPlatforms, coverage, maxCoverage, coverage*100f/(float)maxCoverage);
+		return coverage / (float)maxCoverage;
+	}
+	
 	private Token filterObjectTokens(int x, int z, int y) {
 		TileInfo tilei = info[x][z][y];
 		if(tilei.objToken==null)
@@ -362,57 +402,26 @@ public class WorldGenerator {
 		
 		world.startx = size/2;
 		world.startz = 1;
-		for(int x=-2; x<=2; x++)
+		for(int x=-2; x<=2; x++) {
 			fillColumn(world.startx+x, world.startz, TileType.empty);
+			for(int z=0; z<size/4; z++)
+				for(int y=2+z; y<height; y++) {
+					map[world.startx+x][world.startz+z][y].type = TileType.empty;
+				}
+		}
 		map[world.startx][world.startz][0].type = TileType.solid;
+		
 		//map[startx][startz][1].canHaveObject = true; // TODO add start object
 		
 		tokens.add(new Token(world.startx, world.startz, 1, Direction.north));
 		processTokens(random);
-
+		fillUndefined();
+		if(calculateCoverage()<0.5f)
+			return false;
+		
 		filterObjectTokens();
-
-		for(int x=0; x<size; x++)
-			for(int z=0; z<size; z++) {
-				TileType type = TileType.empty;
-				float light = 1f;
-				for(int y=height-1; y>=0; y--) {
-					if(map[x][z][y].type==TileType.undefined)
-						map[x][z][y].type = type;
-					else if(map[x][z][y].type==TileType.solid) {
-						if(type!=TileType.solid) {
-							type = TileType.solid;
-							light = 0f;
-							colInfo[x][z].height = y;
-						}
-					}
-					map[x][z][y].light = light;
-				}
-				// colInfo[x][z].undefined = false;
-			}
-		
 		generateObjects(random);
-		
-		int coverage = 0;
-		int maxCoverage = size*size;
-		for(int x=0; x<size; x++)
-			for(int z=0; z<size; z++) {
-				boolean adj = false;
-				for(Direction d : Direction.values()) {
-					if(!World.isInside(x+d.dx, z+d.dz))
-						continue;
-					if(colInfo[x+d.dx][z+d.dz].height>=0) {
-						adj = true;
-						break;
-					}
-				}
-				colInfo[x][z].adjacent = adj;
-				if(colInfo[x][z].adjacent)
-					coverage++;
-			}
-		System.out.printf("Total platforms: %d, coverage: %d/%d (%.1f%%)\n",
-				totalPlatforms, coverage, maxCoverage, coverage*100f/(float)maxCoverage);
-		return coverage > maxCoverage/2;
+		return true;
 	}
 	
 	public long nextAttempt() {

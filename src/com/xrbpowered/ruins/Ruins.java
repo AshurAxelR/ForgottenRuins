@@ -23,6 +23,7 @@ import com.xrbpowered.ruins.render.prefab.PrefabComponent;
 import com.xrbpowered.ruins.render.prefab.Prefabs;
 import com.xrbpowered.ruins.render.shader.WallShader;
 import com.xrbpowered.ruins.render.texture.TextureAtlas;
+import com.xrbpowered.ruins.ui.Hud;
 import com.xrbpowered.ruins.world.World;
 
 public class Ruins extends UIClient {
@@ -43,12 +44,12 @@ public class Ruins extends UIClient {
 
 	public Texture checker;
 
-	private PlayerActor player;
+	private PlayerActor player = new PlayerActor();
 	
 	public static FlashPane flash;
 	
 	public Ruins() {
-		super("Ruins Generator");
+		super("Ruins Generator", 1f);
 		
 		AssetManager.defaultAssets = new FileAssetManager("assets", AssetManager.defaultAssets);
 		
@@ -84,8 +85,6 @@ public class Ruins extends UIClient {
 				//checker = new Texture("palm.png", true, false);
 				checker = new Texture("test/sand64.png", true, false);
 
-				player = new PlayerActor();
-				
 				playerController = new PlayerController(input, player);
 				playerController.moveSpeed = 2.5f;
 				observerController = new Controller(input).setActor(camera);
@@ -142,6 +141,7 @@ public class Ruins extends UIClient {
 		};
 		
 		flash = new FlashPane(getContainer());
+		new Hud(getContainer(), player);
 		new UIFpsOverlay(this);
 	}
 	
@@ -151,6 +151,7 @@ public class Ruins extends UIClient {
 
 		Prefabs.createInstances(world);
 
+		player.reset();
 		playerController.collider.world = world;
 		player.position.x = world.startx * 2f;
 		player.position.z = world.startz * 2f;

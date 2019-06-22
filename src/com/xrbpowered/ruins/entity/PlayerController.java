@@ -6,7 +6,6 @@ import org.joml.Vector3f;
 
 import com.xrbpowered.gl.client.ClientInput;
 import com.xrbpowered.gl.scene.WalkController;
-import com.xrbpowered.ruins.Ruins;
 
 public class PlayerController extends WalkController {
 
@@ -23,12 +22,18 @@ public class PlayerController extends WalkController {
 		super(input);
 		setActor(player);
 	}
+
+	protected boolean isAlive() {
+		return ((PlayerActor) actor).alive;
+	}
 	
 	@Override
 	protected void updateMove(Vector3f move) {
-		super.updateMove(move);
-		if(inAir)
-			move.mul(0.015f);
+		if(isAlive()) {
+			super.updateMove(move);
+			if(inAir)
+				move.mul(0.015f);
+		}
 	}
 
 	@Override
@@ -37,7 +42,7 @@ public class PlayerController extends WalkController {
 			velocity.add(move.mul(moveSpeed * dt));
 		else
 			super.updateVelocity(move, dt);
-		if(input.isKeyDown(keyJump)) {
+		if(isAlive() && input.isKeyDown(keyJump)) {
 			if(jumpReset && !inAir) {
 				velocity.y += jumpVelocity;
 				inAir = true;
@@ -55,6 +60,7 @@ public class PlayerController extends WalkController {
 	protected void applyVelocity(float dt) {
 		if(collider.world==null)
 			return;
+		PlayerActor player = (PlayerActor) actor;
 		if(velocity.length()>0) {
 			// FIXME corner collision
 			// FIXME upper body collision: velocity is applied multiple times
@@ -69,11 +75,10 @@ public class PlayerController extends WalkController {
 			float ny = collider.clipy(actor.position);
 			if(inAir && !collider.falling && ny>actor.position.y) {
 				inAir = false;
-				// TODO fall damage
-				int damage = Math.round(Math.max((-velocity.y*velocity.y*velocity.y*1000f-7f)*6.5f, 0));
-				if(damage>0) {
-					System.out.printf("Hit at velocity %.3f (Damage %d%%)\n", velocity.y, damage);
-					Ruins.flash.flashPain(damage/100f+0.02f);
+				float damage = Math.max((-velocity.y*velocity.y*velocity.y*1000f-7f)*6.5f, 0);
+				if(damage>0f) {
+					player.applyDamage(damage);
+					System.out.printf("Hit at velocity %.3f (Damage %.1f)\n", velocity.y, damage);
 				}
 				velocity.y = 0f;
 			}
