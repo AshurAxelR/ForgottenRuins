@@ -3,7 +3,7 @@
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 
-uniform vec3 lightDirection = normalize(vec3(0.15, -1, 0.3));
+uniform vec3 lightDirection = normalize(vec3(0.15, -0.5, 0.3));
 uniform float ambient = 0.7;
 uniform float lightScale = 0.1;
 
