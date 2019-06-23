@@ -362,7 +362,7 @@ public class WorldGenerator {
 	}
 
 	private void generateObjects(Random random) {
-		for(int obeliskCount = 0; obeliskCount<30;) {
+		for(int obeliskCount = 0; obeliskCount<8;) {
 			Token t = objTokens.get(random.nextInt(objTokens.size()));
 			if(colInfo[t.x][t.z].height<t.y) {
 				world.tileObjects.add(new Obelisk(world, t));

@@ -75,7 +75,7 @@ public class PlayerController extends WalkController {
 			float ny = collider.clipy(actor.position);
 			if(inAir && !collider.falling && ny>actor.position.y) {
 				inAir = false;
-				float damage = Math.max((-velocity.y*velocity.y*velocity.y*1000f-7f)*6.5f, 0);
+				float damage = Math.max((velocity.y*velocity.y*100f-3.7f)*8f, 0);
 				if(damage>0f) {
 					player.applyDamage(damage);
 					System.out.printf("Hit at velocity %.3f (Damage %.1f)\n", velocity.y, damage);

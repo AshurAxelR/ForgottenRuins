@@ -4,12 +4,10 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import com.xrbpowered.gl.res.mesh.ObjMeshLoader;
 import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.res.shader.InstanceBuffer;
 import com.xrbpowered.gl.res.shader.Shader;
 import com.xrbpowered.gl.res.texture.Texture;
-import com.xrbpowered.ruins.render.shader.WallShader;
 import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.obj.TileObject;
@@ -65,6 +63,7 @@ public class PrefabComponent {
 	
 	public final StaticMesh mesh; 
 	public final Texture texture;
+	public Texture glowTexture = null;
 	
 	private ArrayList<InstanceInfo> instInfo = null;
 	private int instCount;
@@ -72,13 +71,18 @@ public class PrefabComponent {
 	
 	public boolean culling = true;
 
-	public PrefabComponent(String meshPath, Texture texture) {
-		this(ObjMeshLoader.loadObj(meshPath, 0, 1f, WallShader.vertexInfo, null), texture);
-	}
-
 	public PrefabComponent(StaticMesh mesh, Texture texture) {
 		this.mesh = mesh;
 		this.texture = texture;
+	}
+	
+	public PrefabComponent setGlow(Texture glow) {
+		this.glowTexture = glow;
+		return this;
+	}
+	
+	public boolean hasGlow() {
+		return glowTexture!=null;
 	}
 	
 	public PrefabComponent setCulling(boolean culling) {
@@ -127,6 +131,8 @@ public class PrefabComponent {
 			GL11.glDisable(GL11.GL_CULL_FACE);
 		mesh.enableDraw(null);
 		texture.bind(0);
+		if(hasGlow())
+			glowTexture.bind(1);
 		instBuffer.enable();
 		mesh.drawCallInstanced(instCount);
 		instBuffer.disable();
