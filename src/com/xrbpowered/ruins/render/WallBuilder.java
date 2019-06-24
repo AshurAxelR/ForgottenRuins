@@ -260,14 +260,15 @@ public class WallBuilder extends AdvancedMeshBuilder {
 	
 	public static final int chunkSize = 16;
 	
-	public static StaticMesh[] createChunks(World world, TextureAtlas atlas) {
+	public static WallChunk[] createChunks(World world, TextureAtlas atlas) {
 		int s = World.size / chunkSize;
-		StaticMesh[] meshes = new StaticMesh[s*s];
+		WallChunk[] chunks = new WallChunk[s*s];
 		for(int cx=0; cx<s; cx++)
 			for(int cz=0; cz<s; cz++) {
-				meshes[cx*s+cz] = new WallBuilder(world, atlas, cx, cz).create();
+				StaticMesh mesh = new WallBuilder(world, atlas, cx, cz).create();
+				chunks[cx*s+cz] = new WallChunk(mesh, cx, cz);
 			}
-		return meshes;
+		return chunks;
 	}
 	
 	public static StaticMesh createGround(float viewDist) {
