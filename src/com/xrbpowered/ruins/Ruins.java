@@ -17,6 +17,7 @@ import com.xrbpowered.gl.ui.common.UIFpsOverlay;
 import com.xrbpowered.gl.ui.pane.UIOffscreen;
 import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.render.WallBuilder;
+import com.xrbpowered.ruins.render.WallChunk;
 import com.xrbpowered.ruins.render.effects.FlashPane;
 import com.xrbpowered.ruins.render.prefab.Prefabs;
 import com.xrbpowered.ruins.render.shader.ShaderEnvironment;
@@ -27,10 +28,12 @@ import com.xrbpowered.ruins.world.World;
 
 public class Ruins extends UIClient {
 
+	// settings
+	public static float renderScale = 2f; 
+	
+	private WallChunk[] walls;
 	private WallShader shader;
 	private TextureAtlas atlas;
-	private StaticMesh[] mapMeshes;
-	//private CameraActor camera = null;
 	
 	private Controller observerController;
 	private Controller activeController;
@@ -38,8 +41,6 @@ public class Ruins extends UIClient {
 	private StaticMesh groundMesh;
 	private Texture groundTexture;
 	
-	//private WallShader tileObjShader;
-
 	public Texture checker;
 
 	private PlayerActor player = new PlayerActor(input);
@@ -48,11 +49,11 @@ public class Ruins extends UIClient {
 	public static FlashPane flash;
 	
 	public Ruins() {
-		super("Ruins Generator", 1f);
+		super("Ruins Generator");
 		
 		AssetManager.defaultAssets = new FileAssetManager("assets", AssetManager.defaultAssets);
 		
-		new UIOffscreen(getContainer()) {
+		new UIOffscreen(getContainer(), renderScale) {
 			@Override
 			public void setSize(float width, float height) {
 				super.setSize(width, height);
@@ -111,11 +112,14 @@ public class Ruins extends UIClient {
 				shader.use();
 				
 				atlas.getTexture().bind(0);
-				for(StaticMesh mesh : mapMeshes) {
-					if(mesh!=null)
-						mesh.draw();
-				}
-				
+				WallChunk.zsort(walls, player.camera);
+				for(WallChunk wall : walls)
+					wall.drawVisible();
+
+				/*System.out.printf("Camera(%.1f, %.1f) Chunk(%.1f, %.1f, R=%.1f) :: Z=%.1f\n",
+						player.camera.position.x, player.camera.position.z,
+						wall0.pivot.x, wall0.pivot.z, WallChunk.radius, wall0.getCameraZ());*/
+
 				groundTexture.bind(0);
 				groundMesh.draw();
 				shader.unuse();
@@ -131,7 +135,7 @@ public class Ruins extends UIClient {
 	
 	private void createWorldResources() {
 		World world = World.createWorld(System.currentTimeMillis());
-		mapMeshes = WallBuilder.createChunks(world, atlas);
+		walls = WallBuilder.createChunks(world, atlas);
 
 		Prefabs.createInstances(world);
 
@@ -140,10 +144,8 @@ public class Ruins extends UIClient {
 	
 	private void releaseWorldResources() {
 		Prefabs.releaseInstances();
-		for(StaticMesh mesh : mapMeshes) {
-			if(mesh!=null)
-				mesh.release();
-		}
+		for(WallChunk wall : walls)
+			wall.release();
 	}
 	
 	@Override
