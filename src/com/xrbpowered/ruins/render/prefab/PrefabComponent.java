@@ -141,7 +141,8 @@ public class PrefabComponent {
 	}
 	
 	public void releaseInstances() {
-		instBuffer.release();
+		if(instBuffer!=null)
+			instBuffer.release();
 		instBuffer = null;
 		instCount = 0;
 	}

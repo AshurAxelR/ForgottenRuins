@@ -18,7 +18,7 @@ public class Obelisk extends TileObject {
 
 	@Override
 	public Prefab getPrefab() {
-		return Prefabs.obelisk;
+		return visited ? Prefabs.obeliskGlow : Prefabs.obelisk;
 	}
 	
 	@Override
@@ -26,6 +26,7 @@ public class Obelisk extends TileObject {
 		if(visited==false) {
 			visited = true;
 			System.out.printf("New obelisk! Visited %d of %d.\n", system.countVisited(), system.countTotal());
+			Prefabs.updateAllInstances(world);
 		}
 		else {
 			System.out.println("Already visited...");
