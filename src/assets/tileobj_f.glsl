@@ -1,4 +1,4 @@
- #version 150 core
+#version 150 core
 
 uniform mat4 viewMatrix;
 
@@ -12,6 +12,7 @@ uniform vec4 fogColor = vec4(0.4, 0.6, 0.9, 1);
 in vec4 pass_Position;
 in vec2 pass_TexCoord;
 in float pass_Light;
+in float pass_Highlight;
 
 out vec4 out_Color;
 
@@ -26,5 +27,5 @@ void main(void) {
 		out_Color = mix(out_Color, fogColor, clamp((viewDist - fogNear) / (fogFar - fogNear), 0, 1));
 	}
 	
-	out_Color += texture(texGlow, pass_TexCoord);
+	out_Color += texture(texGlow, pass_TexCoord) + pass_Highlight;
 }

@@ -1,4 +1,4 @@
- #version 150 core
+#version 150 core
 
 uniform vec4 color = vec4(0, 0, 0, 1);
 uniform float alpha = 1;

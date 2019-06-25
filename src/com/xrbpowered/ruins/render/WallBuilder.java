@@ -258,7 +258,7 @@ public class WallBuilder extends AdvancedMeshBuilder {
 		return super.create();
 	}
 	
-	public static final int chunkSize = 16;
+	public static final int chunkSize = 8;
 	
 	public static WallChunk[] createChunks(World world, TextureAtlas atlas) {
 		int s = World.size / chunkSize;
