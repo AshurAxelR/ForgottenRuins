@@ -11,6 +11,8 @@ public class Prefab {
 	protected final Random random = new Random();
 	public final PrefabComponent[] components;
 
+	public PrefabComponent interactionComponent = null;
+	
 	public Prefab() {
 		this.components = null;
 	}
@@ -19,9 +21,18 @@ public class Prefab {
 		this.components = comp;
 	}
 
+	public Prefab(boolean interactive, PrefabComponent... comp) {
+		this.components = comp;
+		if(interactive)
+			interactionComponent = comp[0];
+	}
+	
 	public void addInstance(World world, TileObject obj) {
-		for(PrefabComponent comp : components)
-			comp.addInstance(new InstanceInfo(world, obj));
+		for(PrefabComponent comp : components) {
+			int index = comp.addInstance(new InstanceInfo(world, obj));
+			if(comp==interactionComponent)
+				obj.intractionComponentIndex = index;
+		}
 	}
 	
 }

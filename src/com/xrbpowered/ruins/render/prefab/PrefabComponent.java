@@ -1,5 +1,6 @@
 package com.xrbpowered.ruins.render.prefab;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
@@ -95,9 +96,10 @@ public class PrefabComponent {
 		instCount = 0;
 	}
 	
-	public void addInstance(InstanceInfo info) {
+	public int addInstance(InstanceInfo info) {
 		instInfo.add(info);
 		instCount++;
+		return instCount-1;
 	}
 	
 	public void finishCreateInstances() {
@@ -131,8 +133,7 @@ public class PrefabComponent {
 			GL11.glDisable(GL11.GL_CULL_FACE);
 		mesh.enableDraw(null);
 		texture.bind(0);
-		if(hasGlow())
-			glowTexture.bind(1);
+		(hasGlow() ? glowTexture : getBlack()).bind(1);
 		instBuffer.enable();
 		mesh.drawCallInstanced(instCount);
 		instBuffer.disable();
@@ -148,8 +149,20 @@ public class PrefabComponent {
 	public void release() {
 		mesh.release();
 		texture.release();
+		if(black!=null) {
+			black.release();
+			black = null;
+		}
 	}
 
+	private static Texture black = null;
+	
+	private static Texture getBlack() {
+		if(black==null)
+			black = new Texture(Color.BLACK);
+		return black;
+	}
+	
 	public static int bindShader(Shader shader, int startAttrib) {
 		PrefabComponent.startAttrib = startAttrib;
 		return InstanceBuffer.bindAttribLocations(shader, startAttrib, ATTRIB_NAMES);

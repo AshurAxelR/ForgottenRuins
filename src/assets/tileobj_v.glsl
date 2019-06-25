@@ -1,4 +1,4 @@
- #version 150 core
+#version 150 core
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
@@ -6,6 +6,8 @@ uniform mat4 viewMatrix;
 uniform vec3 lightDirection = normalize(vec3(0.15, -1, 0.3));
 uniform float ambient = 0.7;
 uniform float lightScale = 0.1;
+
+uniform int highlightInstance = -1;
 
 in vec3 in_Position;
 in vec3 in_Normal;
@@ -19,6 +21,7 @@ in float ins_Light;
 out vec4 pass_Position;
 out vec2 pass_TexCoord;
 out float pass_Light;
+out float pass_Highlight;
 
 mat4 translationMatrix(vec3 t) {
 	mat4 m = mat4(1);
@@ -54,4 +57,6 @@ void main(void) {
 	
 	pass_TexCoord = in_TexCoord;
 	pass_Light = diffuse*(1-ambient-lightScale) + ambient + ins_Light*lightScale;
+	
+	pass_Highlight = (gl_InstanceID==highlightInstance) ? 0.075 : 0;
 }

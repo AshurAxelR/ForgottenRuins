@@ -2,6 +2,8 @@ package com.xrbpowered.ruins.render.prefab;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL20;
+
 import com.xrbpowered.gl.res.mesh.ObjMeshLoader;
 import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.res.texture.Texture;
@@ -15,6 +17,8 @@ import com.xrbpowered.ruins.world.obj.TileObject;
 public class Prefabs {
 
 	private static class PrefabShader extends WallShader {
+		private int highlightInstanceLocation;
+		
 		public PrefabShader(String pathVS, String pathFS, ShaderEnvironment env, CameraActor camera) {
 			super(pathVS, pathFS);
 			setEnvironment(env);
@@ -22,35 +26,45 @@ public class Prefabs {
 		}
 		
 		@Override
+		protected void storeUniformLocations() {
+			super.storeUniformLocations();
+			highlightInstanceLocation = GL20.glGetUniformLocation(pId, "highlightInstance");
+		}
+		
+		@Override
+		protected String[] listSamplerNames() {
+			return new String[] {"texDiffuse", "texGlow"};
+		}
+		
+		@Override
 		protected int bindAttribLocations() {
 			return PrefabComponent.bindShader(this, super.bindAttribLocations());
+		}
+		
+		public void updateHighlight(int index) {
+			GL20.glUniform1i(highlightInstanceLocation, index);
 		}
 	}
 	
 	private static PrefabShader shader;
-	private static PrefabShader glowShader;
 	
 	private static ArrayList<PrefabComponent> components = null; 
 	
 	public static Prefab palm;
 	public static Prefab obelisk;
 	
+	public static PrefabComponent pickedComponent = null; 
+	public static int pickedComponentIndex = -1; 
+	
 	public static void createResources(ShaderEnvironment env, CameraActor camera) {
-		shader = new PrefabShader("tileobj_v.glsl", "wall_f.glsl", env, camera);
-		glowShader = new PrefabShader("tileobj_v.glsl", "tileobj_glow_f.glsl", env, camera) {
-			@Override
-			protected String[] listSamplerNames() {
-				return new String[] {"texDiffuse", "texGlow"};
-			}
-		};
-		
+		shader = new PrefabShader("tileobj_v.glsl", "tileobj_f.glsl", env, camera);
 		components = new ArrayList<>();
 		
 		final PrefabComponent plot = add(new PrefabComponent(mesh("plot.obj"), texture("test/sand64.png")));
 		final PrefabComponent palmT = add(new PrefabComponent(mesh("palm_t3.obj"), texture("palm_t.png")));
 		final PrefabComponent palm = add(new PrefabComponent(mesh("palm.obj"), texture("palm.png")).setCulling(false));
 		
-		Prefabs.obelisk = new Prefab(add(new PrefabComponent(mesh("obelisk.obj"), texture("obelisk.png")).setGlow(texture("obelisk_glow.png"))));
+		Prefabs.obelisk = new Prefab(true, add(new PrefabComponent(mesh("obelisk.obj"), texture("obelisk.png")).setGlow(texture("obelisk_glow.png"))));
 		
 		Prefabs.palm = new Prefab() {
 			@Override
@@ -99,16 +113,10 @@ public class Prefabs {
 	public static void drawInstances() {
 		shader.use();
 		for(PrefabComponent comp : components) {
-			if(!comp.hasGlow())
-				comp.drawInstances();
+			shader.updateHighlight(comp==pickedComponent ? pickedComponentIndex : -1);
+			comp.drawInstances();
 		}
 		shader.unuse();
-		glowShader.use();
-		for(PrefabComponent comp : components) {
-			if(comp.hasGlow())
-				comp.drawInstances();
-		}
-		glowShader.unuse();
 	}
 	
 	public static void releaseInstances() {

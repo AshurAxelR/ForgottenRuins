@@ -3,6 +3,7 @@ package com.xrbpowered.ruins;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import com.xrbpowered.gl.client.UIClient;
@@ -16,6 +17,7 @@ import com.xrbpowered.gl.scene.Controller;
 import com.xrbpowered.gl.ui.common.UIFpsOverlay;
 import com.xrbpowered.gl.ui.pane.UIOffscreen;
 import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.render.TileObjectPicker;
 import com.xrbpowered.ruins.render.WallBuilder;
 import com.xrbpowered.ruins.render.WallChunk;
 import com.xrbpowered.ruins.render.effects.FlashPane;
@@ -29,7 +31,7 @@ import com.xrbpowered.ruins.world.World;
 public class Ruins extends UIClient {
 
 	// settings
-	public static float renderScale = 2f; 
+	public static float renderScale = 1f; 
 	
 	private WallChunk[] walls;
 	private WallShader shader;
@@ -40,9 +42,10 @@ public class Ruins extends UIClient {
 	
 	private StaticMesh groundMesh;
 	private Texture groundTexture;
-	
-	public Texture checker;
 
+	private TileObjectPicker pick;
+	
+	private World world;
 	private PlayerActor player = new PlayerActor(input);
 
 	public static ShaderEnvironment environment = new ShaderEnvironment();
@@ -67,34 +70,23 @@ public class Ruins extends UIClient {
 				environment.lightScale = 0.1f;
 				
 				player.camera = new CameraActor.Perspective().setRange(0.1f, 80f).setAspectRatio(getWidth(), getHeight());
+				pick = new TileObjectPicker(player);
 				
 				shader = (WallShader) new WallShader().setEnvironment(environment).setCamera(player.camera);
-				
 				atlas = new TextureAtlas();
 				
-				//checker = new Texture("test/sand32_128.png", true, false);
-				//checker = new Texture("palm.png", true, false);
-				checker = new Texture("test/sand64.png", true, false);
-
 				observerController = new Controller(input).setActor(player.camera);
 				observerController.moveSpeed = 10f;
 				activeController = player.controller;
 				activeController.setMouseLook(true);
 
 				groundTexture = new Texture("ground.png", true, false);
-				groundMesh = WallBuilder.createGround(80f); //FastMeshBuilder.plane(256f, 4, 128, WallShader.vertexInfo, null);
-				//cellObjTexture = new Texture(new Color(0xeee3c3));
+				groundMesh = WallBuilder.createGround(80f);
 				
 				Prefabs.createResources(environment, player.camera);
 				createWorldResources();
 				
 				super.setupResources();
-			}
-			
-			@Override
-			public boolean onMouseDown(float x, float y, Button button, int mods) {
-				activeController.setMouseLook(true);
-				return true;
 			}
 			
 			@Override
@@ -106,19 +98,17 @@ public class Ruins extends UIClient {
 			
 			@Override
 			protected void renderBuffer(RenderTarget target) {
-				super.renderBuffer(target);
+				WallChunk.zsort(walls, player.camera);
 				
 				GL11.glEnable(GL11.GL_CULL_FACE);
+				pick.update(target);
+
+				super.renderBuffer(target);
 				shader.use();
 				
 				atlas.getTexture().bind(0);
-				WallChunk.zsort(walls, player.camera);
 				for(WallChunk wall : walls)
 					wall.drawVisible();
-
-				/*System.out.printf("Camera(%.1f, %.1f) Chunk(%.1f, %.1f, R=%.1f) :: Z=%.1f\n",
-						player.camera.position.x, player.camera.position.z,
-						wall0.pivot.x, wall0.pivot.z, WallChunk.radius, wall0.getCameraZ());*/
 
 				groundTexture.bind(0);
 				groundMesh.draw();
@@ -134,12 +124,13 @@ public class Ruins extends UIClient {
 	}
 	
 	private void createWorldResources() {
-		World world = World.createWorld(System.currentTimeMillis());
+		world = World.createWorld(System.currentTimeMillis());
 		walls = WallBuilder.createChunks(world, atlas);
 
 		Prefabs.createInstances(world);
 
 		player.reset(world);
+		pick.setWorld(world, walls);
 	}
 	
 	private void releaseWorldResources() {
@@ -165,6 +156,16 @@ public class Ruins extends UIClient {
 		}
 		else
 			super.keyPressed(c, code);
+	}
+	
+	@Override
+	public void mouseDown(float x, float y, int button) {
+		activeController.setMouseLook(true);
+		
+		if(button==GLFW.GLFW_MOUSE_BUTTON_RIGHT && pick.pickObject!=null)
+			pick.pickObject.interact();
+		
+		super.mouseDown(x, y, button);
 	}
 	
 	public static void main(String[] args) {
