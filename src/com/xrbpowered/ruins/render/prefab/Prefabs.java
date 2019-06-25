@@ -52,6 +52,7 @@ public class Prefabs {
 	
 	public static Prefab palm;
 	public static Prefab obelisk;
+	public static Prefab obeliskGlow;
 	
 	public static PrefabComponent pickedComponent = null; 
 	public static int pickedComponentIndex = -1; 
@@ -64,7 +65,10 @@ public class Prefabs {
 		final PrefabComponent palmT = add(new PrefabComponent(mesh("palm_t3.obj"), texture("palm_t.png")));
 		final PrefabComponent palm = add(new PrefabComponent(mesh("palm.obj"), texture("palm.png")).setCulling(false));
 		
-		Prefabs.obelisk = new Prefab(true, add(new PrefabComponent(mesh("obelisk.obj"), texture("obelisk.png")).setGlow(texture("obelisk_glow.png"))));
+		StaticMesh obeliskMesh = mesh("obelisk.obj");
+		Texture obeliskTex = texture("obelisk.png");
+		Prefabs.obelisk = new Prefab(true, add(new PrefabComponent(obeliskMesh, obeliskTex)));
+		Prefabs.obeliskGlow = new Prefab(true, add(new PrefabComponent(obeliskMesh, obeliskTex).setGlow(texture("obelisk_glow.png"))));
 		
 		Prefabs.palm = new Prefab() {
 			@Override
@@ -122,6 +126,12 @@ public class Prefabs {
 	public static void releaseInstances() {
 		for(PrefabComponent comp : components)
 			comp.releaseInstances();
+	}
+	
+	public static void updateAllInstances(World world) {
+		// FIXME optimise instance update
+		releaseInstances();
+		createInstances(world);
 	}
 
 }
