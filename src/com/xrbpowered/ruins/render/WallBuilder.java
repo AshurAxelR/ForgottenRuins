@@ -228,7 +228,7 @@ public class WallBuilder extends AdvancedMeshBuilder {
 					switch(world.map[x][z][y].type) {
 						case solid: {
 							if(world.map[x][z][y+1].type==TileType.empty) {
-								if(world.map[x][z][y+1].tileObject!=null)
+								if(world.map[x][z][y+1].canHaveObject)
 									addTop(x, z, y, atlas.start, world.map[x][z][y+1].light);
 								else
 									addTop(x, z, y, world.map[x][z][y+1].light);

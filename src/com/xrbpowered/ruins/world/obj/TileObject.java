@@ -5,7 +5,7 @@ import org.joml.Vector3f;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.World;
-import com.xrbpowered.ruins.world.WorldGenerator;
+import com.xrbpowered.ruins.world.gen.WorldGenerator;
 
 public abstract class TileObject {
 

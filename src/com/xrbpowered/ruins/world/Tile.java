@@ -7,6 +7,7 @@ public class Tile {
 	public Direction dir = null;
 	public float light;
 	
+	public boolean canHaveObject = false;
 	public TileObject tileObject = null;
 	
 	public Tile(TileType type) {

@@ -2,6 +2,7 @@ package com.xrbpowered.ruins.world;
 
 import java.util.ArrayList;
 
+import com.xrbpowered.ruins.world.gen.WorldGenerator;
 import com.xrbpowered.ruins.world.obj.TileObject;
 
 public class World {
@@ -13,7 +14,7 @@ public class World {
 	public final Tile[][][] map;
 	public int startx, startz;
 	
-	public ArrayList<TileObject> tileObjects = new ArrayList<>();
+	public final ArrayList<TileObject> tileObjects = new ArrayList<>();
 	
 	public World(long seed) {
 		this.seed = seed;

@@ -1,11 +1,13 @@
-package com.xrbpowered.ruins.world;
+package com.xrbpowered.ruins.world.gen;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-import com.xrbpowered.ruins.world.obj.Obelisk;
-import com.xrbpowered.ruins.world.obj.Palm;
+import com.xrbpowered.ruins.world.Direction;
+import com.xrbpowered.ruins.world.Tile;
+import com.xrbpowered.ruins.world.TileType;
+import com.xrbpowered.ruins.world.World;
 
 public class WorldGenerator {
 
@@ -19,7 +21,7 @@ public class WorldGenerator {
 		public boolean platform = false;
 	}
 	
-	private class ColInfo {
+	public class ColInfo {
 		public int height = -1;
 	}
 	
@@ -40,15 +42,15 @@ public class WorldGenerator {
 	}
 	
 	public final World world;
-	private final Tile[][][] map;
-	private final Random random;
+	public final Tile[][][] map;
+	public final Random random;
 
-	private final TileInfo[][][] info;
-	private final ColInfo[][] colInfo;
-	private final LinkedList<Token> tokens;
-	private final ArrayList<Token> objTokens;
+	public final TileInfo[][][] info;
+	public final ColInfo[][] colInfo;
+	public final LinkedList<Token> tokens;
+	public final ArrayList<Token> objTokens;
 	
-	private int totalPlatforms = 0;
+	public int totalPlatforms = 0;
 
 	public WorldGenerator(World world) {
 		this.world = world;
@@ -361,34 +363,6 @@ public class WorldGenerator {
 				}
 	}
 
-	private void generateObjects(Random random) {
-		ObeliskSystem obelisks = new ObeliskSystem(world);
-		for(int obeliskCount = 0; obeliskCount<8;) {
-			Token t = objTokens.get(random.nextInt(objTokens.size()));
-			if(colInfo[t.x][t.z].height<t.y) {
-				world.tileObjects.add(new Obelisk(obelisks, t));
-				objTokens.remove(t);
-				obeliskCount++;
-			}
-		}
-		for(int palmCount = 0; palmCount<300;) {
-			Token t = objTokens.get(random.nextInt(objTokens.size()));
-			if(colInfo[t.x][t.z].height<t.y) {
-				world.tileObjects.add(new Palm(world, t));
-				objTokens.remove(t);
-				palmCount++;
-			}
-		}
-		/*for(int i = 0; i<objTokens.size(); i++) {
-			Token t = objTokens.get(i);
-			if(colInfo[t.x][t.z].height<t.y) {
-				world.tileObjects.add(new TileObject(world, t));
-				objTokens.remove(t);
-				i--;
-			}
-		}*/
-	}
-	
 	public boolean generate() {
 		for(int i=0; i<airReserve; i++) {
 			for(int j=i; j<size-i; j++) {
@@ -421,7 +395,7 @@ public class WorldGenerator {
 			return false;
 		
 		filterObjectTokens();
-		generateObjects(random);
+		new TileObjectGenerator(this).generateObjects(random);
 		return true;
 	}
 	
