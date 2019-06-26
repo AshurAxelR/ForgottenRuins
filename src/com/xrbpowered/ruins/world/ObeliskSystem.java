@@ -6,6 +6,8 @@ import com.xrbpowered.ruins.world.obj.Obelisk;
 
 public class ObeliskSystem {
 
+	public static final int maxObelisks = 8;
+	
 	public final World world;
 
 	public ArrayList<Obelisk> obelisks = new ArrayList<>(); 

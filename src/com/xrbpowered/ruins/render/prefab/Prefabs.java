@@ -61,7 +61,7 @@ public class Prefabs {
 		shader = new PrefabShader("tileobj_v.glsl", "tileobj_f.glsl", env, camera);
 		components = new ArrayList<>();
 		
-		final PrefabComponent plot = add(new PrefabComponent(mesh("plot.obj"), texture("test/sand64.png")));
+		final PrefabComponent plot = add(new PrefabComponent(mesh("plot.obj"), texture("plot.png")));
 		final PrefabComponent palmT = add(new PrefabComponent(mesh("palm_t3.obj"), texture("palm_t.png")));
 		final PrefabComponent palm = add(new PrefabComponent(mesh("palm.obj"), texture("palm.png")).setCulling(false));
 		

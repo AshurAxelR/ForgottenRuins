@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.world.obj;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.Prefabs;
 import com.xrbpowered.ruins.world.ObeliskSystem;
-import com.xrbpowered.ruins.world.WorldGenerator.Token;
+import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
 public class Obelisk extends TileObject {
 
