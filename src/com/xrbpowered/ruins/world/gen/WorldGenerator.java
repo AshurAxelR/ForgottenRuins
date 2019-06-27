@@ -15,7 +15,7 @@ public class WorldGenerator {
 	public static final int height = World.height;
 	public static final int airReserve = 24;
 
-	private class TileInfo {
+	public class TileInfo {
 		public Token objToken = null;
 		public boolean preferBlock = false;
 		public boolean platform = false;
@@ -23,6 +23,7 @@ public class WorldGenerator {
 	
 	public class ColInfo {
 		public int height = -1;
+		public int bottom = 0;
 	}
 	
 	public class Token {
@@ -270,6 +271,8 @@ public class WorldGenerator {
 							colInfo[x][z].height = y;
 						}
 					}
+					if(map[x][z][y].type!=TileType.solid)
+						colInfo[x][z].bottom = y;
 					map[x][z][y].light = light;
 				}
 			}
@@ -395,7 +398,7 @@ public class WorldGenerator {
 			return false;
 		
 		filterObjectTokens();
-		new TileObjectGenerator(this).generateObjects(random);
+		new TileObjectGenerator(this, random).generateObjects();
 		return true;
 	}
 	

@@ -107,6 +107,7 @@ public class Ruins extends UIClient {
 				shader.use();
 				
 				atlas.getTexture().bind(0);
+				//GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 				for(WallChunk wall : walls)
 					wall.drawVisible();
 
