@@ -34,4 +34,12 @@ public abstract class TileObject {
 	public void interact() {
 	}
 	
+	public String getPickName() {
+		return null;
+	}
+	
+	public String getActionString() {
+		return "";
+	}
+	
 }

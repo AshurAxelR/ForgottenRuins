@@ -16,6 +16,8 @@ import com.xrbpowered.ruins.world.obj.TileObject;
 
 public class Prefabs {
 
+	public static final String prefabPath = "prefabs/";
+	
 	private static class PrefabShader extends WallShader {
 		private int highlightInstanceLocation;
 		
@@ -62,16 +64,16 @@ public class Prefabs {
 		shader = new PrefabShader("tileobj_v.glsl", "tileobj_f.glsl", env, camera);
 		components = new ArrayList<>();
 		
-		final PrefabComponent plot = add(new PrefabComponent(mesh("plot.obj"), texture("plot.png")));
-		final PrefabComponent palmT = add(new PrefabComponent(mesh("palm_t3.obj"), texture("palm_t.png")));
-		final PrefabComponent palm = add(new PrefabComponent(mesh("palm.obj"), texture("palm.png")).setCulling(false));
+		final PrefabComponent plot = add(new PrefabComponent(mesh("palm/plot.obj"), texture("palm/plot.png")));
+		final PrefabComponent palmT = add(new PrefabComponent(mesh("palm/palm_t3.obj"), texture("palm/palm_t.png")));
+		final PrefabComponent palm = add(new PrefabComponent(mesh("palm/palm.obj"), texture("palm/palm.png")).setCulling(false));
 
-		Prefabs.well = new Prefab(true, add(new PrefabComponent(mesh("well.obj"), texture("well.png"))));
+		Prefabs.well = new Prefab(true, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well.png"))));
 
-		StaticMesh obeliskMesh = mesh("obelisk.obj");
-		Texture obeliskTex = texture("obelisk.png");
+		StaticMesh obeliskMesh = mesh("obelisk/obelisk.obj");
+		Texture obeliskTex = texture("obelisk/obelisk.png");
 		Prefabs.obelisk = new Prefab(true, add(new PrefabComponent(obeliskMesh, obeliskTex)));
-		Prefabs.obeliskGlow = new Prefab(true, add(new PrefabComponent(obeliskMesh, obeliskTex).setGlow(texture("obelisk_glow.png"))));
+		Prefabs.obeliskGlow = new Prefab(true, add(new PrefabComponent(obeliskMesh, obeliskTex).setGlow(texture("obelisk/obelisk_glow.png"))));
 		
 		Prefabs.palm = new Prefab() {
 			@Override
@@ -85,11 +87,11 @@ public class Prefabs {
 	}
 	
 	public static StaticMesh mesh(String path) {
-		return ObjMeshLoader.loadObj(path, 0, 1f, WallShader.vertexInfo, null);
+		return ObjMeshLoader.loadObj(prefabPath+path, 0, 1f, WallShader.vertexInfo, null);
 	}
 	
 	public static Texture texture(String path) {
-		return new Texture(path, true, false);
+		return new Texture(prefabPath+path, true, false);
 	}
 	
 	protected static PrefabComponent add(PrefabComponent comp) {

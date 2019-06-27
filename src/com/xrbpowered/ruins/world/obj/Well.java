@@ -1,5 +1,6 @@
 package com.xrbpowered.ruins.world.obj;
 
+import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.Prefabs;
 import com.xrbpowered.ruins.world.World;
@@ -20,7 +21,18 @@ public class Well extends TileObject {
 	}
 	
 	@Override
+	public String getPickName() {
+		return "Water Well";
+	}
+	
+	@Override
+	public String getActionString() {
+		return "[Right-click to drink]";
+	}
+	
+	@Override
 	public void interact() {
+		world.player.hydration = PlayerActor.baseHydration;
 		System.out.println("Refreshing...");
 	}
 

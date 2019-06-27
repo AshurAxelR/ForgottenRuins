@@ -25,7 +25,8 @@ import com.xrbpowered.ruins.render.prefab.Prefabs;
 import com.xrbpowered.ruins.render.shader.ShaderEnvironment;
 import com.xrbpowered.ruins.render.shader.WallShader;
 import com.xrbpowered.ruins.render.texture.TextureAtlas;
-import com.xrbpowered.ruins.ui.Hud;
+import com.xrbpowered.ruins.ui.UIHud;
+import com.xrbpowered.ruins.ui.UIIcon;
 import com.xrbpowered.ruins.world.World;
 
 public class Ruins extends UIClient {
@@ -43,16 +44,16 @@ public class Ruins extends UIClient {
 	private StaticMesh groundMesh;
 	private Texture groundTexture;
 
-	private TileObjectPicker pick;
-	
 	private World world;
 	private PlayerActor player = new PlayerActor(input);
 
 	public static ShaderEnvironment environment = new ShaderEnvironment();
 	public static FlashPane flash;
+	public static TileObjectPicker pick;
 	
 	public Ruins() {
 		super("Ruins Generator");
+		UIIcon.updatePixelSize(this);
 		
 		AssetManager.defaultAssets = new FileAssetManager("assets", AssetManager.defaultAssets);
 		
@@ -120,12 +121,12 @@ public class Ruins extends UIClient {
 		};
 		
 		flash = new FlashPane(getContainer());
-		new Hud(getContainer(), player);
+		new UIHud(getContainer(), player);
 		new UIFpsOverlay(this);
 	}
 	
 	private void createWorldResources() {
-		world = World.createWorld(System.currentTimeMillis());
+		world = World.createWorld(System.currentTimeMillis(), player);
 		walls = WallBuilder.createChunks(world, atlas);
 
 		Prefabs.createInstances(world);
