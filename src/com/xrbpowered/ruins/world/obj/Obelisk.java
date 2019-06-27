@@ -22,6 +22,16 @@ public class Obelisk extends TileObject {
 	}
 	
 	@Override
+	public String getPickName() {
+		return visited ? "Activated Obelisk" : "Inactive Obelisk";
+	}
+	
+	@Override
+	public String getActionString() {
+		return visited ? "[visited]" : "[Right-click to activate]";
+	}
+	
+	@Override
 	public void interact() {
 		if(visited==false) {
 			visited = true;

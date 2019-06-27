@@ -9,7 +9,9 @@ import com.xrbpowered.ruins.world.World;
 public class PlayerActor extends Actor {
 
 	public static final int baseHealth = 100;
+	public static final int baseHydration = 100;
 	public static final float healthRegen = 0.2f;
+	public static final float hydrationLoss = 0.1f;
 	
 	public static final float cameraHeight = 1.5f;
 	public static final float cameraDeathHeight = 0.3f;
@@ -19,6 +21,7 @@ public class PlayerActor extends Actor {
 	
 	public boolean alive = true;
 	public float health = baseHealth;
+	public float hydration = baseHydration;
 	
 	public PlayerActor(ClientInput input) {
 		controller = new PlayerController(input, this);
@@ -37,6 +40,7 @@ public class PlayerActor extends Actor {
 
 		alive = true;
 		health = baseHealth;
+		hydration = baseHydration;
 		if(Ruins.flash!=null)
 			Ruins.flash.reset();
 	}
@@ -78,7 +82,12 @@ public class PlayerActor extends Actor {
 	}
 	
 	public void updateTime(float dt) {
-		updateHealth(healthRegen*dt);
+		if(alive) {
+			hydration -= hydrationLoss*dt;
+			if(hydration<0f)
+				hydration = 0f;
+		}
+		updateHealth(hydration>0f ? healthRegen*dt : -healthRegen*dt);
 	}
 
 }

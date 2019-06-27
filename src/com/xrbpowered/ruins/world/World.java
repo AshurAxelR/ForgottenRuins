@@ -2,6 +2,7 @@ package com.xrbpowered.ruins.world;
 
 import java.util.ArrayList;
 
+import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.world.gen.WorldGenerator;
 import com.xrbpowered.ruins.world.obj.TileObject;
 
@@ -16,8 +17,11 @@ public class World {
 	
 	public final ArrayList<TileObject> tileObjects = new ArrayList<>();
 	
-	public World(long seed) {
+	public final PlayerActor player;
+	
+	public World(long seed, PlayerActor player) {
 		this.seed = seed;
+		this.player = player;
 		map = new Tile[size][size][height];
 		for(int x=0; x<size; x++)
 			for(int z=0; z<size; z++) {
@@ -36,9 +40,9 @@ public class World {
 		return (x>=0 && z>=0 && x<size && z<size);
 	}
 
-	public static World createWorld(long seed) {
+	public static World createWorld(long seed, PlayerActor player) {
 		for(;;) {
-			World world = new World(seed);
+			World world = new World(seed, player);
 			WorldGenerator gen = new WorldGenerator(world);
 			if(gen.generate())
 				return world;
