@@ -51,6 +51,7 @@ public class Prefabs {
 	private static ArrayList<PrefabComponent> components = null; 
 	
 	public static Prefab palm;
+	public static Prefab well;
 	public static Prefab obelisk;
 	public static Prefab obeliskGlow;
 	
@@ -64,7 +65,9 @@ public class Prefabs {
 		final PrefabComponent plot = add(new PrefabComponent(mesh("plot.obj"), texture("plot.png")));
 		final PrefabComponent palmT = add(new PrefabComponent(mesh("palm_t3.obj"), texture("palm_t.png")));
 		final PrefabComponent palm = add(new PrefabComponent(mesh("palm.obj"), texture("palm.png")).setCulling(false));
-		
+
+		Prefabs.well = new Prefab(true, add(new PrefabComponent(mesh("well.obj"), texture("well.png"))));
+
 		StaticMesh obeliskMesh = mesh("obelisk.obj");
 		Texture obeliskTex = texture("obelisk.png");
 		Prefabs.obelisk = new Prefab(true, add(new PrefabComponent(obeliskMesh, obeliskTex)));
