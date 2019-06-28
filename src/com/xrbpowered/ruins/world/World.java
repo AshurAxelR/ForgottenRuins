@@ -15,6 +15,8 @@ public class World {
 	public final Tile[][][] map;
 	public int startx, startz;
 	
+	public ObeliskSystem obelisks;
+	
 	public final ArrayList<TileObject> tileObjects = new ArrayList<>();
 	
 	public final PlayerActor player;

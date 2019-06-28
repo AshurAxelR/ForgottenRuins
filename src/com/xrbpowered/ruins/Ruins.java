@@ -44,8 +44,9 @@ public class Ruins extends UIClient {
 	private StaticMesh groundMesh;
 	private Texture groundTexture;
 
-	private World world;
 	private PlayerActor player = new PlayerActor(input);
+
+	public static World world;
 
 	public static ShaderEnvironment environment = new ShaderEnvironment();
 	public static FlashPane flash;

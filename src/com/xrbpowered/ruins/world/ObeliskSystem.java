@@ -7,6 +7,9 @@ import com.xrbpowered.ruins.world.obj.Obelisk;
 public class ObeliskSystem {
 
 	public static final int maxObelisks = 8;
+	public static int[] dx = {0, -1, 1, -1, 1, -1, 1, 0};
+	public static int[] dy = {-1, -1, -1, 0, 0, 1, 1, 1};
+
 	
 	public final World world;
 
