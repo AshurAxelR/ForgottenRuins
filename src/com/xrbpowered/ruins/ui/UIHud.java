@@ -36,6 +36,7 @@ public class UIHud extends UINode {
 	private final UIIcon waterIcon;
 	private final UIBar healthBar;
 	private final UIBar waterBar;
+	private final UIObeliskDots obeliskDots; 
 	
 	private String shownPick = null;
 	private String shownAction = "";
@@ -76,6 +77,8 @@ public class UIHud extends UINode {
 			}
 		}.setColors(new Color(0x0055aaee), new Color(0x3377aa), new Color(0x226699));
 		
+		obeliskDots = new UIObeliskDots(this);
+		
 		pickPane = new UIPane(this, false) {
 			@Override
 			protected void paintSelf(GraphAssist g) {
@@ -111,7 +114,8 @@ public class UIHud extends UINode {
 		healthBar.setLocation(10+3*s+heartIcon.getWidth(), heartIcon.getY()+3*s);
 		waterBar.setSize(healthBar.getWidth(), healthBar.getHeight());
 		waterBar.setLocation(healthBar.getX(), waterIcon.getY()+3*s);
-		
+
+		obeliskDots.setLocation(getWidth()-obeliskDots.getWidth()-s*5, getHeight()-obeliskDots.getHeight()-s*5);
 		pickPane.setLocation(getWidth()/2f-pickPane.getWidth()/2f, getHeight()/2f-pickPane.getHeight()/2f);
 		super.layout();
 	}

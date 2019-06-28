@@ -77,11 +77,11 @@ public class TileObjectGenerator {
 	}
 	
 	private void generateObelisks() {
-		ObeliskSystem obelisks = new ObeliskSystem(gen.world);
+		world.obelisks = new ObeliskSystem(gen.world);
 		for(int count = 0; count<ObeliskSystem.maxObelisks;) {
 			Token t = objTokens.get(random.nextInt(objTokens.size()));
 			if(isAdjTop(t, 1)) {
-				gen.world.tileObjects.add(new Obelisk(obelisks, t));
+				gen.world.tileObjects.add(new Obelisk(world.obelisks, t));
 				objTokens.remove(t);
 				count++;
 			}
