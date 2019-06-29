@@ -29,7 +29,7 @@ public class Prefab {
 	
 	public void addInstance(World world, TileObject obj) {
 		for(PrefabComponent comp : components) {
-			int index = comp.addInstance(new InstanceInfo(world, obj));
+			int index = comp.addInstance(new InstanceInfo(world, obj).setRotate(obj.d));
 			if(comp==interactionComponent)
 				obj.intractionComponentIndex = index;
 		}

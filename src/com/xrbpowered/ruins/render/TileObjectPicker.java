@@ -45,6 +45,7 @@ public class TileObjectPicker {
 				float dist = player.position.distance(obj.position);
 				if(dist<=reach) {
 					objActor.position = obj.position;
+					objActor.rotation.y = -obj.d.rotation();
 					objActor.updateTransform();
 					objActor.setMesh(comp.mesh);
 					pick.drawActor(objActor, objId);

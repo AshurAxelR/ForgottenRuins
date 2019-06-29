@@ -21,4 +21,8 @@ public enum Direction {
 	public Direction ccw() {
 		return values()[(ordinal()+3) % 4];
 	}
+	
+	public float rotation() {
+		return (ordinal()-1) * (float)Math.PI / 2f;
+	}
 }
