@@ -36,7 +36,9 @@ public class UIHud extends UINode {
 	private final UIIcon waterIcon;
 	private final UIBar healthBar;
 	private final UIBar waterBar;
-	private final UIObeliskDots obeliskDots; 
+	private final UIObeliskDots obeliskDots;
+	
+	public final UIPopup popup;
 	
 	private String shownPick = null;
 	private String shownAction = "";
@@ -86,9 +88,9 @@ public class UIHud extends UINode {
 				g.graph.clearRect(0, 0, (int)getWidth(), (int)getHeight());
 				if(shownPick!=null) {
 					FontMetrics fm = g.graph.getFontMetrics(fontBold);
-					float w1 = fm.stringWidth(shownPick)+20f;
+					float w1 = fm.stringWidth(shownPick)+30f;
 					fm = g.graph.getFontMetrics(font);
-					float w2 = fm.stringWidth(shownAction)+20f;
+					float w2 = fm.stringWidth(shownAction)+30f;
 					float w = Math.max(w1, w2);
 					g.setColor(new Color(0x77000000, true));
 					g.fillRect(getWidth()/2f-w/2f, 0, w, getHeight());
@@ -101,8 +103,10 @@ public class UIHud extends UINode {
 				}
 			}
 		};
-		pickPane.setSize(250, 40);
+		pickPane.setSize(250, 50);
 		pickPane.setVisible(false);
+		
+		popup = new UIPopup(this);
 	}
 	
 	@Override
@@ -117,6 +121,7 @@ public class UIHud extends UINode {
 
 		obeliskDots.setLocation(getWidth()-obeliskDots.getWidth()-s*5, getHeight()-obeliskDots.getHeight()-s*5);
 		pickPane.setLocation(getWidth()/2f-pickPane.getWidth()/2f, getHeight()/2f-pickPane.getHeight()/2f);
+		popup.setLocation(getWidth()/2f-popup.getWidth()/2f, getHeight()*0.75f-popup.getHeight()/2f);
 		super.layout();
 	}
 	

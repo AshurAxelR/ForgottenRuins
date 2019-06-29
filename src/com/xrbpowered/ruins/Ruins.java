@@ -49,6 +49,7 @@ public class Ruins extends UIClient {
 	public static World world;
 
 	public static ShaderEnvironment environment = new ShaderEnvironment();
+	public static UIHud hud;
 	public static FlashPane flash;
 	public static TileObjectPicker pick;
 	
@@ -103,7 +104,6 @@ public class Ruins extends UIClient {
 				WallChunk.zsort(walls, player.camera);
 				
 				GL11.glEnable(GL11.GL_CULL_FACE);
-				pick.update(target);
 
 				super.renderBuffer(target);
 				shader.use();
@@ -118,11 +118,12 @@ public class Ruins extends UIClient {
 				shader.unuse();
 				
 				Prefabs.drawInstances();
+				pick.update(target);
 			}
 		};
 		
 		flash = new FlashPane(getContainer());
-		new UIHud(getContainer(), player);
+		hud = new UIHud(getContainer(), player);
 		new UIFpsOverlay(this);
 	}
 	

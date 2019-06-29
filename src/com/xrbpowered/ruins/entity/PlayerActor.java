@@ -11,7 +11,7 @@ public class PlayerActor extends Actor {
 	public static final int baseHealth = 100;
 	public static final int baseHydration = 100;
 	public static final float healthRegen = 0.2f;
-	public static final float hydrationLoss = 0.1f;
+	public static final float hydrationLoss = 0.2f;
 	
 	public static final float cameraHeight = 1.5f;
 	public static final float cameraDeathHeight = 0.3f;

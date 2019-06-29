@@ -1,40 +1,34 @@
 package com.xrbpowered.ruins.world.obj;
 
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.Prefabs;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
-public class Well extends TileObject {
+public class Tablet extends TileObject {
 
-	public static final int genSpan = 16;
-	public static final int extraWells = 10;
-	
-	public Well(World world, Token objToken) {
+	public Tablet(World world, Token objToken) {
 		super(world, objToken);
 	}
 
 	@Override
 	public Prefab getPrefab() {
-		return Prefabs.well;
+		return Prefabs.tablet;
 	}
 	
 	@Override
 	public String getPickName() {
-		return "Water Well";
+		return "Tablet";
 	}
 	
 	@Override
 	public String getActionString() {
-		return "[Right-click to drink]";
+		return "[Right-click to read]";
 	}
 	
 	@Override
 	public void interact() {
-		world.player.hydration = PlayerActor.baseHydration;
-		Ruins.hud.popup.popup("Refreshing...");
+		Ruins.hud.popup.popup("Interesting...");
 	}
-
 }

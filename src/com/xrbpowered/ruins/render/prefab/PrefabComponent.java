@@ -52,7 +52,7 @@ public class PrefabComponent {
 		}
 
 		public InstanceInfo setRotate(Direction d) {
-			this.rotate = d.ordinal() * (float)Math.PI / 2f;
+			this.rotate = d.rotation();
 			return this;
 		}
 

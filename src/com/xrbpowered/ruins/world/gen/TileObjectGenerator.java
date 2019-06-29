@@ -3,11 +3,14 @@ package com.xrbpowered.ruins.world.gen;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.ObeliskSystem;
+import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 import com.xrbpowered.ruins.world.obj.Obelisk;
 import com.xrbpowered.ruins.world.obj.Palm;
+import com.xrbpowered.ruins.world.obj.Tablet;
 import com.xrbpowered.ruins.world.obj.TileObject;
 import com.xrbpowered.ruins.world.obj.Well;
 
@@ -43,6 +46,25 @@ public class TileObjectGenerator {
 			&& gen.colInfo[t.x+1][t.z].height<t.y+dy
 			&& gen.colInfo[t.x][t.z-1].height<t.y+dy
 			&& gen.colInfo[t.x][t.z+1].height<t.y+dy;
+	}
+	
+	private Direction dWall(Token t, int min, int max) {
+		Direction wd = null;
+		int wh = 0;
+		Direction d = t.d;
+		for(int i=0; i<4; i++) {
+			int dy = 0;
+			for(; dy<max; dy++) {
+				if(world.map[t.x+d.dx][t.z+d.dz][t.y+dy].type!=TileType.solid)
+					break;
+			}
+			if(dy>wh) {
+				wh = dy;
+				wd = d;
+			}
+			d = d.cw();
+		}
+		return (wh>=min) ? wd : null;
 	}
 
 	private void generateWell(int cx, int cz, int span) {
@@ -93,10 +115,19 @@ public class TileObjectGenerator {
 		generateObelisks();
 		
 		for(Token t : objTokens) {
-			if(random.nextInt(10)<4 && isAdjTop(t, 2))
+			if(random.nextInt(10)<4 && isAdjTop(t, 2)) {
 				gen.world.tileObjects.add(new Palm(world, t));
-			else
-				world.map[t.x][t.z][t.y].canHaveObject = true;
+				continue;
+			}
+			if(random.nextInt(10)<3) {
+				Direction d = dWall(t, 2, 2);
+				if(d!=null) {
+					t.d = d;
+					gen.world.tileObjects.add(new Tablet(world, t));
+					continue;
+				}
+			}
+			world.map[t.x][t.z][t.y].canHaveObject = true;
 		}
 	}
 	
