@@ -33,6 +33,7 @@ public class Ruins extends UIClient {
 
 	// settings
 	public static float renderScale = 1f; 
+	public static boolean enableObserver = false;
 	
 	private WallChunk[] walls;
 	private WallShader shader;
@@ -104,6 +105,7 @@ public class Ruins extends UIClient {
 				WallChunk.zsort(walls, player.camera);
 				
 				GL11.glEnable(GL11.GL_CULL_FACE);
+				pick.update(target);
 
 				super.renderBuffer(target);
 				shader.use();
@@ -118,7 +120,7 @@ public class Ruins extends UIClient {
 				shader.unuse();
 				
 				Prefabs.drawInstances();
-				pick.update(target);
+				//pick.update(target, true);
 			}
 		};
 		
@@ -147,7 +149,7 @@ public class Ruins extends UIClient {
 	public void keyPressed(char c, int code) {
 		if(code==KeyEvent.VK_ESCAPE)
 			requestExit();
-		else if(code==KeyEvent.VK_F1) {
+		else if(code==KeyEvent.VK_F1 && enableObserver) {
 			activeController.setMouseLook(false);
 			activeController = (activeController==player.controller) ? observerController : player.controller;
 			activeController.setMouseLook(true);
