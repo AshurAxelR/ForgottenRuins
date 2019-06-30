@@ -34,6 +34,7 @@ public class UIHud extends UINode {
 	
 	private final UIIcon heartIcon;
 	private final UIIcon waterIcon;
+	private final UIIcon coinIcon;
 	private final UIBar healthBar;
 	private final UIBar waterBar;
 	private final UIObeliskDots obeliskDots;
@@ -43,6 +44,9 @@ public class UIHud extends UINode {
 	private String shownPick = null;
 	private String shownAction = "";
 	private final UIPane pickPane;
+	
+	private int shownCoins = 0;
+	private final UIPane coinsPane;
 	
 	public UIHud(UIContainer parent, final PlayerActor player) {
 		super(parent);
@@ -78,6 +82,17 @@ public class UIHud extends UINode {
 				return showValue<=0;
 			}
 		}.setColors(new Color(0x0055aaee), new Color(0x3377aa), new Color(0x226699));
+		coinIcon = new UIIcon(this, "icons/coin.png");
+		coinsPane = new UIPane(this, false) {
+			@Override
+			protected void paintSelf(GraphAssist g) {
+				g.graph.setBackground(new Color(0x77000000, true));
+				g.graph.clearRect(0, 0, (int)getWidth(), (int)getHeight());
+				g.setFont(UIHud.font);
+				g.setColor(shownCoins>0 ? Color.WHITE : new Color(0xdddddd));
+				g.drawString(Integer.toString(shownCoins), getWidth()/2, getHeight()/2+1, GraphAssist.CENTER, GraphAssist.CENTER);
+			}
+		};
 		
 		obeliskDots = new UIObeliskDots(this);
 		
@@ -114,30 +129,40 @@ public class UIHud extends UINode {
 		float s = UIIcon.pixelSize * getPixelScale();
 		heartIcon.setLocation(10, getHeight()-heartIcon.getHeight()/2f-s*25);
 		waterIcon.setLocation(10, heartIcon.getY()+heartIcon.getHeight());
+		coinIcon.setLocation(10, heartIcon.getY()-heartIcon.getHeight());
 		healthBar.setSize(s*40, heartIcon.getHeight()-6*s);
 		healthBar.setLocation(10+3*s+heartIcon.getWidth(), heartIcon.getY()+3*s);
 		waterBar.setSize(healthBar.getWidth(), healthBar.getHeight());
 		waterBar.setLocation(healthBar.getX(), waterIcon.getY()+3*s);
+		coinsPane.setSize(healthBar.getWidth(), healthBar.getHeight());
+		coinsPane.setLocation(healthBar.getX(), coinIcon.getY()+3*s);
 
 		obeliskDots.setLocation(getWidth()-obeliskDots.getWidth()-s*5, getHeight()-obeliskDots.getHeight()-s*5);
 		pickPane.setLocation(getWidth()/2f-pickPane.getWidth()/2f, getHeight()/2f-pickPane.getHeight()/2f);
 		popup.setLocation(getWidth()/2f-popup.getWidth()/2f, getHeight()*0.75f-popup.getHeight()/2f);
 		super.layout();
 	}
+
+	public void updatePickText(String pick) {
+		shownPick = pick;
+		shownAction = "";
+		if(shownPick==null)
+			pickPane.setVisible(false);
+		else {
+			shownAction = Ruins.pick.pickObject.getActionString();
+			pickPane.setVisible(true);
+			repaint();
+		}
+	}
 	
 	@Override
 	public void updateTime(float dt) {
 		String pick = Ruins.pick.pickObject==null ? null : Ruins.pick.pickObject.getPickName();
-		if(pick!=shownPick) {
-			shownPick = pick;
-			shownAction = "";
-			if(shownPick==null)
-				pickPane.setVisible(false);
-			else {
-				shownAction = Ruins.pick.pickObject.getActionString();
-				pickPane.setVisible(true);
-				repaint();
-			}
+		if(pick!=shownPick)
+			updatePickText(pick);
+		if(player.coins!=shownCoins) {
+			shownCoins = player.coins;
+			coinsPane.repaint();
 		}
 		super.updateTime(dt);
 	}

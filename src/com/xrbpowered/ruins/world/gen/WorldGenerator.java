@@ -81,7 +81,10 @@ public class WorldGenerator {
 			map[x][z][y].type = type;
 		}
 	}
-
+	
+	public Tile getTile(Token t) {
+		return world.map[t.x][t.z][t.y];
+	}
 
 	private void reset(int x, int z, int y, Tile cell) {
 		map[x][z][y] = cell;

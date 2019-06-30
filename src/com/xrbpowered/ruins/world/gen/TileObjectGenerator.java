@@ -8,26 +8,28 @@ import com.xrbpowered.ruins.world.ObeliskSystem;
 import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
+import com.xrbpowered.ruins.world.obj.MapObject;
 import com.xrbpowered.ruins.world.obj.Obelisk;
 import com.xrbpowered.ruins.world.obj.Palm;
 import com.xrbpowered.ruins.world.obj.Tablet;
-import com.xrbpowered.ruins.world.obj.TileObject;
 import com.xrbpowered.ruins.world.obj.Well;
 
 public class TileObjectGenerator {
 
 	public final World world;
-	public final ArrayList<TileObject> tileObjects; 
+	public final ArrayList<MapObject> objects; 
 	
 	public final WorldGenerator gen;
 	public final ArrayList<Token> objTokens;
 	
+	public final SmallObjectGenerator smallObjects;
 	private final Random random;
 	
 	public TileObjectGenerator(WorldGenerator gen, Random random) {
+		this.smallObjects = new SmallObjectGenerator(gen, random);
 		this.world = gen.world;
 		this.random = random;
-		this.tileObjects = world.tileObjects;
+		this.objects = world.objects;
 		this.gen = gen;
 		this.objTokens = gen.objTokens;
 	}
@@ -76,7 +78,7 @@ public class TileObjectGenerator {
 				int z = cz+(jz+j) % span;
 				Token t = gen.info[x][z][gen.colInfo[x][z].bottom].objToken;
 				if(t!=null) {
-					gen.world.tileObjects.add(new Well(world, t));
+					objects.add(new Well(world, t));
 					objTokens.remove(t);
 					return;
 				}
@@ -91,7 +93,7 @@ public class TileObjectGenerator {
 		for(int count = 0; count<Well.extraWells;) {
 			Token t = objTokens.get(random.nextInt(objTokens.size()));
 			if(isBottom(t)) {
-				gen.world.tileObjects.add(new Well(world, t));
+				objects.add(new Well(world, t));
 				objTokens.remove(t);
 				count++;
 			}
@@ -103,7 +105,7 @@ public class TileObjectGenerator {
 		for(int count = 0; count<ObeliskSystem.maxObelisks;) {
 			Token t = objTokens.get(random.nextInt(objTokens.size()));
 			if(isAdjTop(t, 1)) {
-				gen.world.tileObjects.add(new Obelisk(world.obelisks, t));
+				objects.add(new Obelisk(world.obelisks, t));
 				objTokens.remove(t);
 				count++;
 			}
@@ -116,16 +118,20 @@ public class TileObjectGenerator {
 		
 		for(Token t : objTokens) {
 			if(random.nextInt(10)<4 && isAdjTop(t, 2)) {
-				gen.world.tileObjects.add(new Palm(world, t));
+				objects.add(new Palm(world, t));
 				continue;
 			}
 			if(random.nextInt(10)<3) {
 				Direction d = dWall(t, 2, 2);
 				if(d!=null) {
 					t.d = d;
-					gen.world.tileObjects.add(new Tablet(world, t));
+					objects.add(new Tablet(world, t));
 					continue;
 				}
+			}
+			if(random.nextInt(10)<4) {
+				smallObjects.fillTile(t);
+				continue;
 			}
 			world.map[t.x][t.z][t.y].canHaveObject = true;
 		}

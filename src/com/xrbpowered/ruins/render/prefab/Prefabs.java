@@ -12,6 +12,7 @@ import com.xrbpowered.ruins.render.prefab.PrefabComponent.InstanceInfo;
 import com.xrbpowered.ruins.render.shader.ShaderEnvironment;
 import com.xrbpowered.ruins.render.shader.WallShader;
 import com.xrbpowered.ruins.world.World;
+import com.xrbpowered.ruins.world.obj.MapObject;
 import com.xrbpowered.ruins.world.obj.TileObject;
 
 public class Prefabs {
@@ -57,7 +58,10 @@ public class Prefabs {
 	public static Prefab tablet;
 	public static Prefab obelisk;
 	public static Prefab obeliskGlow;
-	
+
+	public static Prefab jar1;
+	public static Prefab broken;
+
 	public static PrefabComponent pickedComponent = null; 
 	public static int pickedComponentIndex = -1; 
 	
@@ -71,6 +75,8 @@ public class Prefabs {
 
 		Prefabs.well = new Prefab(true, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well.png"))));
 		Prefabs.tablet = new Prefab(true, add(new PrefabComponent(mesh("tablet/tablet.obj"), texture("tablet/tablet.png"))));
+		Prefabs.jar1 = new Prefab(true, add(new PrefabComponent(mesh("jar/jar1.obj"), texture("jar/jar.png"))));
+		Prefabs.broken = new Prefab(false, add(new PrefabComponent(mesh("jar/broken.obj"), texture("jar/broken.png"))));
 
 		StaticMesh obeliskMesh = mesh("obelisk/obelisk.obj");
 		Texture obeliskTex = texture("obelisk/obelisk.png");
@@ -111,11 +117,8 @@ public class Prefabs {
 	public static void createInstances(World world) {
 		for(PrefabComponent comp : components)
 			comp.startCreateInstances();
-		for(TileObject obj : world.tileObjects) {
-			Prefab prefab = obj.getPrefab();
-			if(prefab!=null)
-				prefab.addInstance(world, obj);
-		}
+		for(MapObject obj : world.objects)
+			obj.addPrefabInstance();
 		for(PrefabComponent comp : components)
 			comp.finishCreateInstances();
 		System.gc();

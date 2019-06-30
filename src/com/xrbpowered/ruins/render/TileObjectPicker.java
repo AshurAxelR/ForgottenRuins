@@ -7,7 +7,7 @@ import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.render.prefab.PrefabComponent;
 import com.xrbpowered.ruins.render.prefab.Prefabs;
 import com.xrbpowered.ruins.world.World;
-import com.xrbpowered.ruins.world.obj.TileObject;
+import com.xrbpowered.ruins.world.obj.MapObject;
 
 public class TileObjectPicker {
 
@@ -19,7 +19,7 @@ public class TileObjectPicker {
 	private World world;
 	private WallChunk[] walls;
 
-	public TileObject pickObject = null;
+	public MapObject pickObject = null;
 	
 	public TileObjectPicker(PlayerActor player) {
 		this.player = player;
@@ -32,21 +32,30 @@ public class TileObjectPicker {
 	}
 	
 	public void update(RenderTarget target) {
-		pick.startPicking(target.getWidth()/2, target.getHeight()/2, target);
-		for(WallChunk wall : walls) {
-			if(wall.getCameraZ()<WallChunk.radius && wall.getCameraZ()>=-WallChunk.radius-reach)
-				pick.drawSceneMesh(wall.getMesh(), 0);
+		update(target, false);
+	}
+	
+	public void update(RenderTarget target, boolean test) {
+		if(test)
+			pick.startPickingTest(target.getWidth()/2, target.getHeight()/2, target);
+		else
+			pick.startPicking(target.getWidth()/2, target.getHeight()/2, target);
+		
+		if(!test) {
+			for(WallChunk wall : walls) {
+				if(wall.getCameraZ()<WallChunk.radius && wall.getCameraZ()>=-WallChunk.radius-reach)
+					pick.drawSceneMesh(wall.getMesh(), 0);
+			}
 		}
+		
 		int objId = 1;
 		StaticMeshActor objActor = new StaticMeshActor();
-		for(TileObject obj : world.tileObjects) {
-			PrefabComponent comp = obj.getPrefab().interactionComponent;
+		for(MapObject obj : world.objects) {
+			PrefabComponent comp = obj.getInteractionComp();
 			if(comp!=null) {
 				float dist = player.position.distance(obj.position);
 				if(dist<=reach) {
-					objActor.position = obj.position;
-					objActor.rotation.y = -obj.d.rotation();
-					objActor.updateTransform();
+					obj.copyToActor(objActor);
 					objActor.setMesh(comp.mesh);
 					pick.drawActor(objActor, objId);
 				}
@@ -54,14 +63,14 @@ public class TileObjectPicker {
 			objId++;
 		}
 		int pickId = pick.finishPicking(target);
-		if(pickId==0) {
+		if(pickId<=0 || pickId>world.objects.size()) {
 			pickObject = null;
 			Prefabs.pickedComponent = null;
 			Prefabs.pickedComponentIndex = -1;
 		}
 		else {
-			pickObject = world.tileObjects.get(pickId-1);
-			Prefabs.pickedComponent = pickObject.getPrefab().interactionComponent;
+			pickObject = world.objects.get(pickId-1);
+			Prefabs.pickedComponent = pickObject.getInteractionComp();
 			Prefabs.pickedComponentIndex = pickObject.intractionComponentIndex;
 		}
 	}

@@ -22,6 +22,7 @@ public class PlayerActor extends Actor {
 	public boolean alive = true;
 	public float health = baseHealth;
 	public float hydration = baseHydration;
+	public int coins = 0;
 	
 	public PlayerActor(ClientInput input) {
 		controller = new PlayerController(input, this);
@@ -41,6 +42,7 @@ public class PlayerActor extends Actor {
 		alive = true;
 		health = baseHealth;
 		hydration = baseHydration;
+		coins = 0;
 		if(Ruins.flash!=null)
 			Ruins.flash.reset();
 	}

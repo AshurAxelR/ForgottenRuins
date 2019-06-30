@@ -2,24 +2,20 @@ package com.xrbpowered.ruins.world.obj;
 
 import org.joml.Vector3f;
 
+import com.xrbpowered.gl.scene.Actor;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator;
 
-public abstract class TileObject {
+public abstract class TileObject extends MapObject {
 
-	public final World world;
 	public int x, z, y;
 	public Direction d;
 	public long seed;
 	
-	public Vector3f position;
-	
-	public int intractionComponentIndex = -1; 
-
 	public TileObject(World world, WorldGenerator.Token objToken) {
-		this.world = world;
+		super(world);
 		this.x = objToken.x;
 		this.z = objToken.z;
 		this.y = objToken.y;
@@ -29,17 +25,17 @@ public abstract class TileObject {
 		position = new Vector3f(x*2f, y, z*2f);
 	}
 	
-	public abstract Prefab getPrefab();
-	
-	public void interact() {
+	@Override
+	public void copyToActor(Actor actor) {
+		actor.rotation.y = -d.rotation();
+		super.copyToActor(actor);
 	}
 	
-	public String getPickName() {
-		return null;
-	}
-	
-	public String getActionString() {
-		return "";
+	@Override
+	public void addPrefabInstance() {
+		Prefab prefab = getPrefab();
+		if(prefab!=null)
+			prefab.addInstance(world, this);
 	}
 	
 }

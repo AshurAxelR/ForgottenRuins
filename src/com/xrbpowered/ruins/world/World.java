@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.world.gen.WorldGenerator;
-import com.xrbpowered.ruins.world.obj.TileObject;
+import com.xrbpowered.ruins.world.obj.MapObject;
 
 public class World {
 
@@ -17,7 +17,7 @@ public class World {
 	
 	public ObeliskSystem obelisks;
 	
-	public final ArrayList<TileObject> tileObjects = new ArrayList<>();
+	public final ArrayList<MapObject> objects = new ArrayList<>();
 	
 	public final PlayerActor player;
 	

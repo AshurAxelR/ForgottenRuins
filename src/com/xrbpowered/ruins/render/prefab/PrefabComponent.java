@@ -23,7 +23,14 @@ public class PrefabComponent {
 		public float rotate = 0f;
 		public float scale = 1f;
 		public float light = 1f;
-		
+
+		public InstanceInfo(float light) {
+			this.x = 0;
+			this.z = 0;
+			this.y = 0;
+			this.light = light;
+		}
+
 		public InstanceInfo(float x, float z, float y, float light) {
 			this.x = x;
 			this.z = z;
