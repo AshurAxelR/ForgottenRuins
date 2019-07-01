@@ -28,7 +28,7 @@ public class Obelisk extends TileObject {
 	
 	@Override
 	public String getActionString() {
-		return visited ? "[visited]" : "[Right-click to activate]";
+		return visited ? "[Visited]" : "[Right-click to activate]";
 	}
 	
 	@Override

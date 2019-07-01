@@ -18,6 +18,8 @@ public class PlayerController extends WalkController {
 	private boolean jumpReset = true;
 	private boolean inAir = false;
 	
+	public boolean enabled = true;
+	
 	public PlayerController(ClientInput input, PlayerActor player) {
 		super(input);
 		setActor(player);
@@ -29,7 +31,7 @@ public class PlayerController extends WalkController {
 	
 	@Override
 	protected void updateMove(Vector3f move) {
-		if(isAlive()) {
+		if(isAlive() && enabled) {
 			super.updateMove(move);
 			if(inAir)
 				move.mul(0.015f);
@@ -42,7 +44,7 @@ public class PlayerController extends WalkController {
 			velocity.add(move.mul(moveSpeed * dt));
 		else
 			super.updateVelocity(move, dt);
-		if(isAlive() && input.isKeyDown(keyJump)) {
+		if(isAlive() && enabled && input.isKeyDown(keyJump)) {
 			if(jumpReset && !inAir) {
 				velocity.y += jumpVelocity;
 				inAir = true;

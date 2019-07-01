@@ -50,15 +50,14 @@ public class Jar extends SmallObject {
 	@Override
 	public void interact() {
 		if(!broken) {
-			if(coins>0) {
-				if(coins>1)
-					Ruins.hud.popup.popup(String.format("Found %d coins", coins));
-				else
-					Ruins.hud.popup.popup("Found a coin");
-				world.player.coins += coins;
-				coins = 0;
-				//Ruins.hud.updatePickText(getPickName());
-			}
+			if(coins>1)
+				Ruins.hud.popup.popup(String.format("Found %d coins", coins));
+			else if(coins==1)
+				Ruins.hud.popup.popup("Found a coin");
+			else
+				Ruins.hud.popup.popup("Nothing here");
+			world.player.coins += coins;
+			coins = 0;
 			broken = true;
 			Prefabs.updateAllInstances(world);
 		}
