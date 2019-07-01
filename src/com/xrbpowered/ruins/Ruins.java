@@ -27,6 +27,8 @@ import com.xrbpowered.ruins.render.shader.WallShader;
 import com.xrbpowered.ruins.render.texture.TextureAtlas;
 import com.xrbpowered.ruins.ui.UIHud;
 import com.xrbpowered.ruins.ui.UIIcon;
+import com.xrbpowered.ruins.ui.overlay.UIOverlay;
+import com.xrbpowered.ruins.ui.overlay.UIOverlayVerse;
 import com.xrbpowered.ruins.world.World;
 
 public class Ruins extends UIClient {
@@ -49,13 +51,19 @@ public class Ruins extends UIClient {
 
 	public static World world;
 
+	public static Ruins ruins;
 	public static ShaderEnvironment environment = new ShaderEnvironment();
 	public static UIHud hud;
 	public static FlashPane flash;
 	public static TileObjectPicker pick;
 	
+	private UIOverlay activeOverlay = null;
+	
+	public static UIOverlayVerse overlayVerse;
+	
 	public Ruins() {
 		super("Ruins Generator");
+		ruins = this;
 		UIIcon.updatePixelSize(this);
 		
 		AssetManager.defaultAssets = new FileAssetManager("assets", AssetManager.defaultAssets);
@@ -95,7 +103,8 @@ public class Ruins extends UIClient {
 			
 			@Override
 			public void updateTime(float dt) {
-				activeController.update(dt);
+				if(activeController==observerController)
+					observerController.update(dt);
 				player.updateTime(dt);
 				super.updateTime(dt);
 			}
@@ -126,6 +135,9 @@ public class Ruins extends UIClient {
 		
 		flash = new FlashPane(getContainer());
 		hud = new UIHud(getContainer(), player);
+		
+		overlayVerse = new UIOverlayVerse(getContainer());
+		
 		new UIFpsOverlay(this);
 	}
 	
@@ -145,8 +157,37 @@ public class Ruins extends UIClient {
 			wall.release();
 	}
 	
+	public void grabMouse(boolean grab) {
+		activeController.setMouseLook(grab);
+		player.controller.enabled = grab;
+		if(!grab) {
+			input.setMousePos(getWidth()/2, getHeight()/2);
+		}
+	}
+	
+	public boolean isOverlayActive() {
+		return activeOverlay!=null;
+	}
+	
+	public void setOverlay(UIOverlay overlay) {
+		if(activeOverlay!=null)
+			activeOverlay.setVisible(false);
+		activeOverlay = overlay;
+		if(overlay!=null) {
+			overlay.setVisible(true);
+			grabMouse(false);
+		}
+		else {
+			grabMouse(true);
+		}
+		getContainer().repaint();
+	}
+	
 	@Override
 	public void keyPressed(char c, int code) {
+		if(isOverlayActive())
+			return; // TODO overlay keys
+		
 		if(code==KeyEvent.VK_ESCAPE)
 			requestExit();
 		else if(code==KeyEvent.VK_F1 && enableObserver) {
@@ -155,7 +196,7 @@ public class Ruins extends UIClient {
 			activeController.setMouseLook(true);
 		}
 		else if(code==KeyEvent.VK_ALT)
-			activeController.setMouseLook(false);
+			grabMouse(false);
 		else if(code==KeyEvent.VK_BACK_SPACE) {
 			releaseWorldResources();
 			createWorldResources();
@@ -166,11 +207,11 @@ public class Ruins extends UIClient {
 	
 	@Override
 	public void mouseDown(float x, float y, int button) {
-		activeController.setMouseLook(true);
-		
-		if(button==GLFW.GLFW_MOUSE_BUTTON_RIGHT && pick.pickObject!=null)
-			pick.pickObject.interact();
-		
+		if(!isOverlayActive()) {
+			grabMouse(true);
+			if(button==GLFW.GLFW_MOUSE_BUTTON_RIGHT && pick.pickObject!=null)
+				pick.pickObject.interact();
+		}
 		super.mouseDown(x, y, button);
 	}
 	

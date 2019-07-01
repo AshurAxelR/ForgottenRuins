@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import com.xrbpowered.gl.res.asset.IOUtils;
+import com.xrbpowered.gl.res.buffer.RenderTarget;
 import com.xrbpowered.gl.ui.UINode;
 import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
@@ -116,6 +117,11 @@ public class UIHud extends UINode {
 					g.setFont(font);
 					g.drawString(shownAction, getWidth()/2f, getHeight()/2f+5, GraphAssist.CENTER, GraphAssist.TOP);
 				}
+			}
+			@Override
+			public void render(RenderTarget target) {
+				if(!Ruins.ruins.isOverlayActive())
+					super.render(target);
 			}
 		};
 		pickPane.setSize(250, 50);

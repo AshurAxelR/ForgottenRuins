@@ -84,6 +84,7 @@ public class PlayerActor extends Actor {
 	}
 	
 	public void updateTime(float dt) {
+		controller.update(dt);
 		if(alive) {
 			hydration -= hydrationLoss*dt;
 			if(hydration<0f)

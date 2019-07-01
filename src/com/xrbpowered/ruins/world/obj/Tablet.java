@@ -8,6 +8,8 @@ import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
 public class Tablet extends TileObject {
 
+	public boolean visited = false;
+	
 	public Tablet(World world, Token objToken) {
 		super(world, objToken);
 	}
@@ -24,11 +26,13 @@ public class Tablet extends TileObject {
 	
 	@Override
 	public String getActionString() {
-		return "[Right-click to read]";
+		return visited ? "[Visited]" : "[Right-click to read]";
 	}
 	
 	@Override
 	public void interact() {
-		Ruins.hud.popup.popup("Interesting...");
+		Ruins.overlayVerse.updateAndShow(world.verses, this);
+		visited = true;
+		Ruins.hud.updatePickText(getPickName());
 	}
 }
