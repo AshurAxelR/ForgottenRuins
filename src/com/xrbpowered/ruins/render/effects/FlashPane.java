@@ -64,6 +64,9 @@ public class FlashPane extends UINode {
 	private float startAlpha = 0f;
 	private float flash = 0f;
 	private boolean blackOut = false;
+	private float blackOutLevel = 0f;
+	private boolean daze = false;
+	private float dazeUpdated = 1f;
 	
 	public FlashPane(UIContainer parent) {
 		super(parent);
@@ -92,11 +95,19 @@ public class FlashPane extends UINode {
 		blackOut = true;
 	}
 	
+	public void daze(boolean daze) {
+		if(daze!=this.daze) {
+			this.daze = daze;
+			dazeUpdated = 0f;
+		}
+	}
+	
 	public void reset() {
 		t = 0f;
 		baseAlpha = 0f;
 		startAlpha = 0f;
 		blackOut = false;
+		blackOutLevel = 0f;
 		if(shader!=null) {
 			shader.alpha = 0f;
 			shader.black = 0f;
@@ -110,11 +121,15 @@ public class FlashPane extends UINode {
 		float a = (float)Math.pow(0.75f, flash*5f) * startAlpha + baseAlpha * ((float)Math.sin(t*2f)*0.25f+0.75f);
 		if(a<0.01f) a = 0;
 		shader.alpha = a;
-		if(blackOut) {
-			shader.black += dt*0.5f;
-			if(shader.black>1f)
-				shader.black = 1f;
-		}
+		if(blackOut && blackOutLevel<2f)
+			blackOutLevel += dt*0.5f;
+		shader.black = blackOutLevel;
+		if(dazeUpdated<1f)
+			dazeUpdated += dt;
+		if(dazeUpdated>1f)
+			dazeUpdated = 1f;
+		if(daze || dazeUpdated<1f)
+			shader.black += 0.2f * (daze ? dazeUpdated : 1f-dazeUpdated) * ((float)Math.sin(t*0.7f)*0.5f+0.5f);
 		super.updateTime(dt);
 	}
 	

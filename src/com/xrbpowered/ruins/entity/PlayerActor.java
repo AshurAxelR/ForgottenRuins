@@ -19,6 +19,8 @@ public class PlayerActor extends Actor {
 	public final PlayerController controller;
 	public CameraActor camera = null;
 	
+	private float cameraLevel = cameraHeight;
+	
 	public boolean alive = true;
 	public float health = baseHealth;
 	public float hydration = baseHydration;
@@ -30,6 +32,7 @@ public class PlayerActor extends Actor {
 	}
 	public void reset(World world) {
 		controller.collider.world = world;
+		controller.reset();
 
 		position.x = world.startx * 2f;
 		position.z = world.startz * 2f;
@@ -38,6 +41,8 @@ public class PlayerActor extends Actor {
 		rotation.z = 0f;
 		rotation.y = (float) Math.toRadians(-180f);
 		updateTransform();
+		
+		cameraLevel = cameraHeight;
 
 		alive = true;
 		health = baseHealth;
@@ -54,11 +59,16 @@ public class PlayerActor extends Actor {
 		if(health>baseHealth)
 			health = baseHealth;
 		if(health<1f) {
-			health = 0f;
-			alive = false;
-			Ruins.flash.blackOut();
+			die();
 		}
 		Ruins.flash.setBaseAlpha(health);
+	}
+	
+	public void die() {
+		health = 0f;
+		hydration = 0f;
+		alive = false;
+		Ruins.flash.blackOut();
 	}
 	
 	public void applyDamage(float damage, boolean flash) {
@@ -77,7 +87,7 @@ public class PlayerActor extends Actor {
 	public void updateTransform() {
 		super.updateTransform();
 		if(camera!=null) {
-			camera.position.set(this.position.x, this.position.y+(alive ? cameraHeight : cameraDeathHeight), this.position.z);
+			camera.position.set(this.position.x, this.position.y+cameraLevel, this.position.z);
 			camera.rotation.set(this.rotation);
 			camera.updateTransform();
 		}
@@ -85,10 +95,24 @@ public class PlayerActor extends Actor {
 	
 	public void updateTime(float dt) {
 		controller.update(dt);
+		if(alive && controller.isDrowning()) {
+			cameraLevel -= dt*0.25f;
+			if(cameraLevel<=cameraDeathHeight) {
+				cameraLevel = cameraDeathHeight;
+				die();
+			}
+		}
 		if(alive) {
 			hydration -= hydrationLoss*dt;
-			if(hydration<0f)
+			if(hydration<=0f) {
 				hydration = 0f;
+				Ruins.flash.daze(true);
+			}
+			else
+				Ruins.flash.daze(false);
+		}
+		else {
+			cameraLevel = cameraDeathHeight;
 		}
 		updateHealth(hydration>0f ? healthRegen*dt : -healthRegen*dt);
 	}

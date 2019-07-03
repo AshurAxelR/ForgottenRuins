@@ -17,6 +17,7 @@ public class PlayerController extends WalkController {
 	
 	private boolean jumpReset = true;
 	private boolean inAir = false;
+	private boolean drowning = false;
 	
 	public boolean enabled = true;
 	
@@ -25,6 +26,17 @@ public class PlayerController extends WalkController {
 		setActor(player);
 	}
 
+	public void reset() {
+		drowning = false;
+		inAir = false;
+		jumpReset = true;
+		velocity.zero();
+	}
+	
+	public boolean isDrowning() {
+		return drowning;
+	}
+	
 	protected boolean isAlive() {
 		return ((PlayerActor) actor).alive;
 	}
@@ -33,6 +45,8 @@ public class PlayerController extends WalkController {
 	protected void updateMove(Vector3f move) {
 		if(isAlive() && enabled) {
 			super.updateMove(move);
+			if(drowning)
+				move.mul(0.25f);
 			if(inAir)
 				move.mul(0.015f);
 		}
@@ -44,7 +58,7 @@ public class PlayerController extends WalkController {
 			velocity.add(move.mul(moveSpeed * dt));
 		else
 			super.updateVelocity(move, dt);
-		if(isAlive() && enabled && input.isKeyDown(keyJump)) {
+		if(isAlive() && enabled && !drowning && input.isKeyDown(keyJump)) {
 			if(jumpReset && !inAir) {
 				velocity.y += jumpVelocity;
 				inAir = true;
@@ -94,6 +108,8 @@ public class PlayerController extends WalkController {
 				velocity.y -= 0.375f*dt;
 			}
 		}
+		if(actor.position.y==0)
+			drowning = true;
 	}
 
 }
