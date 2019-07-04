@@ -16,6 +16,8 @@ public class PlayerActor extends Actor {
 	public static final float cameraHeight = 1.5f;
 	public static final float cameraDeathHeight = 0.3f;
 	
+	public static final float dtLimit = 0.05f;
+	
 	public final PlayerController controller;
 	public CameraActor camera = null;
 	
@@ -28,7 +30,6 @@ public class PlayerActor extends Actor {
 	
 	public PlayerActor(ClientInput input) {
 		controller = new PlayerController(input, this);
-		controller.moveSpeed = 2.5f;
 	}
 	public void reset(World world) {
 		controller.collider.world = world;
@@ -72,7 +73,7 @@ public class PlayerActor extends Actor {
 	}
 	
 	public void applyDamage(float damage, boolean flash) {
-		if(health<=0 || damage<=0)
+		if(health<=0 || damage<0.1f)
 			return;
 		if(flash)
 			Ruins.flash.flashPain(damage, health);
@@ -94,6 +95,8 @@ public class PlayerActor extends Actor {
 	}
 	
 	public void updateTime(float dt) {
+		if(dt>dtLimit)
+			dt = dtLimit;
 		controller.update(dt);
 		if(alive && controller.isDrowning()) {
 			cameraLevel -= dt*0.25f;
