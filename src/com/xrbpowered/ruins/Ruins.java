@@ -52,11 +52,12 @@ public class Ruins extends UIClient {
 	public static World world;
 
 	public static Ruins ruins;
-	public static ShaderEnvironment environment = new ShaderEnvironment();
 	public static UIHud hud;
 	public static FlashPane flash;
 	public static TileObjectPicker pick;
-	
+
+	private ShaderEnvironment environment = new ShaderEnvironment();
+
 	private UIOverlay activeOverlay = null;
 	
 	public static UIOverlayVerse overlayVerse;

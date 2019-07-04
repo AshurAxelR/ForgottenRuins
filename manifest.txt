@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Main-Class: com.xrbpowered.ruins.Ruins
+Class-Path:  lib/lwjgl.jar
+  lib/joml-1.9.14.jar
+  lib/lwjgl-opengl.jar
+  lib/lwjgl-glfw.jar
+  lib/natives/lwjgl-glfw-natives-linux.jar
+  lib/natives/lwjgl-glfw-natives-macos.jar
+  lib/natives/lwjgl-glfw-natives-windows.jar
+  lib/natives/lwjgl-natives-linux.jar
+  lib/natives/lwjgl-natives-macos.jar
+  lib/natives/lwjgl-natives-windows.jar
+  lib/natives/lwjgl-opengl-natives-linux.jar
+  lib/natives/lwjgl-opengl-natives-macos.jar
+  lib/natives/lwjgl-opengl-natives-windows.jar
+
