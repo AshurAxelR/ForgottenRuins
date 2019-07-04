@@ -13,8 +13,10 @@ public class PlayerController extends WalkController {
 	
 	public final PlayerCollider collider = new PlayerCollider();
 
-	public float jumpVelocity = 0.075f; // 0.09f;
+	public final float jumpVelocity = 0.075f;//0.075f; // 0.09f;
+	public final float gravity = 0.375f;
 	
+	private boolean queueJump = false;
 	private boolean jumpReset = true;
 	private boolean inAir = false;
 	private boolean drowning = false;
@@ -24,6 +26,7 @@ public class PlayerController extends WalkController {
 	public PlayerController(ClientInput input, PlayerActor player) {
 		super(input);
 		setActor(player);
+		moveSpeed = 2.5f;
 	}
 
 	public void reset() {
@@ -52,14 +55,19 @@ public class PlayerController extends WalkController {
 		}
 	}
 
+	public void queueJump() {
+		queueJump = true;
+	}
+	
 	@Override
 	protected void updateVelocity(Vector3f move, float dt) {
 		if(inAir)
 			velocity.add(move.mul(moveSpeed * dt));
 		else
 			super.updateVelocity(move, dt);
-		if(isAlive() && enabled && !drowning && input.isKeyDown(keyJump)) {
+		if(isAlive() && enabled && !drowning && queueJump) {
 			if(jumpReset && !inAir) {
+				//velocity.set(move.mul(moveSpeed * 0.55f));
 				velocity.y += jumpVelocity;
 				inAir = true;
 				jumpReset = false;
@@ -68,9 +76,12 @@ public class PlayerController extends WalkController {
 		else if(!inAir) {
 			jumpReset = true;
 		}
+		if(queueJump && !input.isKeyDown(keyJump))
+			queueJump = false;
 	}
 	
-	private static final float[] dyPoints = {0f}; //{0f, 0.7f, 1.4f};
+	private static final float[] dyPoints = {0f, 0.7f, 1.4f};
+	private static final Vector3f v = new Vector3f();
 	
 	@Override
 	protected void applyVelocity(float dt) {
@@ -78,21 +89,36 @@ public class PlayerController extends WalkController {
 			return;
 		PlayerActor player = (PlayerActor) actor;
 		if(velocity.length()>0) {
-			// FIXME corner collision
-			// FIXME upper body collision: velocity is applied multiple times
-			for(float dy : dyPoints) {
-				float nx = collider.clipx(actor.position, velocity.x, dy);
-				float nz = collider.clipz(actor.position, velocity.z, dy);
-				actor.position.x = nx;
-				actor.position.z = nz;
+			if(velocity.y>0f) {
+				float ny = collider.clipyTop(player.position, velocity.y, PlayerActor.cameraHeight);
+				if(collider.hitTop) {
+					velocity.x = 0f;
+					velocity.z = 0f;
+					velocity.y = 0f;
+				}
+				if(ny>player.position.y)
+					player.position.y = ny;
 			}
+			
+			v.set(velocity);
+			for(float dy : dyPoints) {
+				float nx = collider.clipx(player.position, v.x, dy);
+				float nz = collider.clipz(player.position, v.z, dy);
+				v.x = nx - player.position.x;
+				v.z = nz - player.position.z;
+				if(collider.hitx && collider.hitz) {
+					// FIXME corner collision
+				}
+			}
+			player.position.x += v.x;
+			player.position.z += v.z;
 
-			actor.position.y += velocity.y;
-			float ny = collider.clipy(actor.position);
-			if(inAir && !collider.falling && ny>actor.position.y) {
+			player.position.y += velocity.y;
+			float ny = collider.clipy(player.position);
+			if(inAir && !collider.falling && ny>player.position.y) {
 				inAir = false;
-				float damage = Math.max((velocity.y*velocity.y*100f-3.7f)*8f, 0);
-				if(damage>0f) {
+				float damage = Math.max((velocity.y*velocity.y*100f-3.75f)*8f, 0);
+				if(damage>0.1f) {
 					player.applyDamage(damage);
 					System.out.printf("Hit at velocity %.3f (Damage %.1f)\n", velocity.y, damage);
 				}
@@ -102,10 +128,10 @@ public class PlayerController extends WalkController {
 				inAir = true;
 			}
 			if(!inAir) {
-				actor.position.y = ny;
+				player.position.y = ny;
 			}
 			else {
-				velocity.y -= 0.375f*dt;
+				velocity.y -= gravity*dt;
 			}
 		}
 		if(actor.position.y==0)

@@ -169,7 +169,7 @@ public class WorldGenerator {
 					if(c1!=null) {
 						Tile c2 = set(x, z, y+3, TileType.empty);
 						if(c2!=null) {
-							if(random.nextInt(5)==0 && createRampUp(random, x+d.dx, z+d.dz, y+1, d))
+							if(random.nextInt(4)==0 && createRampUp(random, x+d.dx, z+d.dz, y+1, d))
 								return true;
 							if(createPass(x+d.dx, z+d.dz, y+1, d))
 								return true;
@@ -199,7 +199,7 @@ public class WorldGenerator {
 					if(c1!=null) {
 						Tile c2 = set(x, z, y+2, TileType.empty);
 						if(c2!=null) {
-							if(random.nextInt(5)==0 && createRampDown(random, x+d.dx, z+d.dz, y-1, d))
+							if(random.nextInt(4)==0 && createRampDown(random, x+d.dx, z+d.dz, y-1, d))
 								return true;
 							if(createPass(x+d.dx, z+d.dz, y-1, d))
 								return true;

@@ -36,6 +36,8 @@ public class PlayerCollider {
 		return world.map[mx][mz][my];
 	}
 
+	public boolean hitx, hitz, hitTop;
+	
 	public float clipx(Vector3f pos, float vx, float dy) {
 		float sv = Math.signum(vx);
 		if(sv==0)
@@ -43,10 +45,9 @@ public class PlayerCollider {
 		int mx = mapx(pos.x+vx+r*sv);
 		int mz = mapz(pos.z);
 		int my = mapy(pos.y+dy);
-		if(map(mx, mz, my).type==TileType.solid) {
+		hitx = map(mx, mz, my).type==TileType.solid;
+		if(hitx)
 			return mx*2f - sv*(1+r);
-			//return Math.signum(pos.x+vx-2f*mx)*(1+r)+2f*mx;
-		}
 		else
 			return pos.x + vx;
 	}
@@ -58,10 +59,9 @@ public class PlayerCollider {
 		int mx = mapx(pos.x);
 		int mz = mapz(pos.z+vz+r*sv);
 		int my = mapy(pos.y+dy);
-		if(map(mx, mz, my).type==TileType.solid) {
+		hitz = map(mx, mz, my).type==TileType.solid; 
+		if(hitz)
 			return mz*2f - sv*(1+r);
-			//return Math.signum(pos.z+vz-2f*mz)*(1+r)+2f*mz;
-		}
 		else
 			return pos.z + vz;
 	}
@@ -69,19 +69,30 @@ public class PlayerCollider {
 	public float rampy(float x, float z, int mx, int mz, Direction rampd) {
 		float sx = x - mx*2f;
 		float sz = z - mz*2f;
-		//System.out.printf("Ramp (%s): %.3f %.3f -> %.3f\n", rampd.name(), sx, sz, (sx*rampd.dx + sz*rampd.dz+1)*0.5f);
 		return (sx*rampd.dx + sz*rampd.dz+1)*0.5f;
 	}
 	
 	public boolean falling;
-	
+
+	public float clipyTop(Vector3f pos, float vy, float dy) {
+		int mx = mapx(pos.x);
+		int mz = mapz(pos.z);
+		int my = mapy(pos.y+dy+vy);
+		Tile cell = map(mx, mz, my);
+		hitTop = cell.type==TileType.solid;
+		if(hitTop)
+			return my-1.01f-dy;
+		else
+			return pos.y + vy;
+	}
+
 	public float clipy(Vector3f pos) {
 		falling = false;
 		int mx = mapx(pos.x);
 		int mz = mapz(pos.z);
 		int my = mapy(pos.y);
 		if(my<=0)
-			return 0; // TODO sink
+			return 0;
 		
 		Tile cell = map(mx, mz, my);
 		Tile celld = map(mx, mz, my-1);

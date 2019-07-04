@@ -35,7 +35,7 @@ public class Ruins extends UIClient {
 
 	// settings
 	public static float renderScale = 1f; 
-	public static boolean enableObserver = false;
+	public static boolean enableObserver = true;
 	
 	private WallChunk[] walls;
 	private WallShader shader;
@@ -105,7 +105,8 @@ public class Ruins extends UIClient {
 			public void updateTime(float dt) {
 				if(activeController==observerController)
 					observerController.update(dt);
-				player.updateTime(dt);
+				else
+					player.updateTime(dt);
 				super.updateTime(dt);
 			}
 			
@@ -187,22 +188,35 @@ public class Ruins extends UIClient {
 	public void keyPressed(char c, int code) {
 		if(isOverlayActive())
 			return; // TODO overlay keys
-		
-		if(code==KeyEvent.VK_ESCAPE)
-			requestExit();
-		else if(code==KeyEvent.VK_F1 && enableObserver) {
-			activeController.setMouseLook(false);
-			activeController = (activeController==player.controller) ? observerController : player.controller;
-			activeController.setMouseLook(true);
+
+		if(code==player.controller.keyJump) {
+			if(activeController==player.controller) {
+				player.controller.queueJump();
+				return;
+			}
 		}
-		else if(code==KeyEvent.VK_ALT)
-			grabMouse(false);
-		else if(code==KeyEvent.VK_BACK_SPACE) {
-			releaseWorldResources();
-			createWorldResources();
+		switch(code) {
+			case KeyEvent.VK_ESCAPE:
+				requestExit();
+				break;
+			case KeyEvent.VK_F1:
+				if(code==KeyEvent.VK_F1 && enableObserver) {
+					activeController.setMouseLook(false);
+					activeController = (activeController==player.controller) ? observerController : player.controller;
+					hud.setVisible(activeController==player.controller);
+					activeController.setMouseLook(true);
+				}
+				break;
+			case KeyEvent.VK_ALT:
+				grabMouse(false);
+				break;
+			case KeyEvent.VK_BACK_SPACE:
+				releaseWorldResources();
+				createWorldResources();
+				break;
+			default:
+				super.keyPressed(c, code);
 		}
-		else
-			super.keyPressed(c, code);
 	}
 	
 	@Override
