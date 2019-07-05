@@ -1,0 +1,42 @@
+plugins {
+    id "java"
+    id "application"
+}
+
+version = "pre-a.0.1"
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src"]
+        }
+    }
+}
+
+jar {
+    from("src/assets") {
+        into("assets")
+    }
+}
+
+dependencies {
+    implementation("com.xrbpowered:xrbengine:2.0")
+}
+
+application {
+    mainClassName = "com.xrbpowered.ruins.Ruins"
+    executableDir = ""
+}
+
+distZip {
+  from ("assets") {
+    into ("${project.name}-${project.version}/assets")
+  }
+}
+
+startScripts.windowsStartScriptGenerator.template = resources.text.fromFile("startup/windowsTemplate.txt")
