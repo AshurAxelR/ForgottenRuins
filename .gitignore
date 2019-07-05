@@ -83,3 +83,12 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Ignore Gradle project-specific cache directory
+.gradle
+gradle/
+
+# Ignore Gradle build output directory
+build
+
+.idea
