@@ -39,4 +39,4 @@ distZip {
   }
 }
 
-startScripts.windowsStartScriptGenerator.template = resources.text.fromFile("startup/windowsTemplate.txt")
+startScripts.windowsStartScriptGenerator.template = resources.text.fromFile("run.bat.template")
