@@ -13,8 +13,10 @@ public class PlayerController extends WalkController {
 	
 	public final PlayerCollider collider = new PlayerCollider();
 
-	public final float jumpVelocity = 0.075f;//0.075f; // 0.09f;
-	public final float gravity = 0.375f;
+	public final static float walkSpeed = 2.6f;
+	public final static float jumpSpeed = 6.0f;
+	public final static float airAccel = 0.8f;
+	public final static float gravity = 19.6f;
 	
 	private boolean queueJump = false;
 	private boolean jumpReset = true;
@@ -26,7 +28,7 @@ public class PlayerController extends WalkController {
 	public PlayerController(ClientInput input, PlayerActor player) {
 		super(input);
 		setActor(player);
-		moveSpeed = 2.5f;
+		moveSpeed = walkSpeed;
 	}
 
 	public void reset() {
@@ -51,7 +53,7 @@ public class PlayerController extends WalkController {
 			if(drowning)
 				move.mul(0.25f);
 			if(inAir)
-				move.mul(0.015f);
+				move.mul(airAccel);
 		}
 	}
 
@@ -59,16 +61,21 @@ public class PlayerController extends WalkController {
 		queueJump = true;
 	}
 	
+	private Vector3f speed = new Vector3f();
+	
 	@Override
 	protected void updateVelocity(Vector3f move, float dt) {
-		if(inAir)
-			velocity.add(move.mul(moveSpeed * dt));
-		else
-			super.updateVelocity(move, dt);
+		if(inAir) {
+			speed.add(move.mul(moveSpeed * dt));
+		}
+		else {
+			speed.set(move);
+			speed.mul(moveSpeed);
+		}
 		if(isAlive() && enabled && !drowning && queueJump) {
 			if(jumpReset && !inAir) {
-				//velocity.set(move.mul(moveSpeed * 0.55f));
-				velocity.y += jumpVelocity;
+				speed.y = jumpSpeed;
+				
 				inAir = true;
 				jumpReset = false;
 			}
@@ -78,6 +85,8 @@ public class PlayerController extends WalkController {
 		}
 		if(queueJump && !input.isKeyDown(keyJump))
 			queueJump = false;
+		velocity.set(speed);
+		velocity.mul(dt);
 	}
 	
 	private static final float[] dyPoints = {0f, 0.7f, 1.4f};
@@ -92,13 +101,21 @@ public class PlayerController extends WalkController {
 			if(velocity.y>0f) {
 				float ny = collider.clipyTop(player.position, velocity.y, PlayerActor.cameraHeight);
 				if(collider.hitTop) {
-					velocity.x = 0f;
-					velocity.z = 0f;
+					if(speed.y>1f) {
+						float s = 1f/speed.y;
+						speed.x *= s;
+						speed.z *= s;
+						velocity.x *= s;
+						velocity.z *= s;
+					}
+					speed.y = 0f;
 					velocity.y = 0f;
 				}
 				if(ny>player.position.y)
 					player.position.y = ny;
 			}
+			else
+				player.position.y += velocity.y;
 			
 			v.set(velocity);
 			for(float dy : dyPoints) {
@@ -113,16 +130,15 @@ public class PlayerController extends WalkController {
 			player.position.x += v.x;
 			player.position.z += v.z;
 
-			player.position.y += velocity.y;
 			float ny = collider.clipy(player.position);
 			if(inAir && !collider.falling && ny>player.position.y) {
 				inAir = false;
-				float damage = Math.max((velocity.y*velocity.y*100f-3.75f)*8f, 0);
+				float damage = Math.max((speed.y*speed.y-120f)*0.3f, 0);
 				if(damage>0.1f) {
 					player.applyDamage(damage);
-					System.out.printf("Hit at velocity %.3f (Damage %.1f)\n", velocity.y, damage);
+					System.out.printf("Hit at speed %.3f (Damage %.1f)\n", speed.y, damage);
 				}
-				velocity.y = 0f;
+				speed.y = 0f;
 			}
 			if(collider.falling) {
 				inAir = true;
@@ -131,7 +147,7 @@ public class PlayerController extends WalkController {
 				player.position.y = ny;
 			}
 			else {
-				velocity.y -= gravity*dt;
+				speed.y -= gravity*dt;
 			}
 		}
 		if(actor.position.y==0)
