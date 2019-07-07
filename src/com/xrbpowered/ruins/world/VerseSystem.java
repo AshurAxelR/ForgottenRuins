@@ -45,6 +45,8 @@ public class VerseSystem {
 		if(!complete && learn) {
 			learned = unknown.get(random.nextInt(unknown.size()));
 			known.add(learned);
+			if(unknown.size()==1)
+				complete = true;
 		}
 		StringBuilder text = new StringBuilder();
 		text.append("<p>- ");

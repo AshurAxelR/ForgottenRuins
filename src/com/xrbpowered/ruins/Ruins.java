@@ -28,6 +28,7 @@ import com.xrbpowered.ruins.render.texture.TextureAtlas;
 import com.xrbpowered.ruins.ui.UIHud;
 import com.xrbpowered.ruins.ui.UIIcon;
 import com.xrbpowered.ruins.ui.overlay.UIOverlay;
+import com.xrbpowered.ruins.ui.overlay.UIOverlayGameOver;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVerse;
 import com.xrbpowered.ruins.world.World;
 
@@ -61,6 +62,7 @@ public class Ruins extends UIClient {
 	private UIOverlay activeOverlay = null;
 	
 	public static UIOverlayVerse overlayVerse;
+	public static UIOverlayGameOver overlayGameOver;
 	
 	public Ruins() {
 		super("Ruins Generator");
@@ -139,6 +141,7 @@ public class Ruins extends UIClient {
 		hud = new UIHud(getContainer(), player);
 		
 		overlayVerse = new UIOverlayVerse(getContainer());
+		overlayGameOver = new UIOverlayGameOver(getContainer());
 		
 		new UIFpsOverlay(this);
 	}
@@ -159,6 +162,11 @@ public class Ruins extends UIClient {
 			wall.release();
 	}
 	
+	public void restart() {
+		releaseWorldResources();
+		createWorldResources();
+	}
+	
 	public void grabMouse(boolean grab) {
 		activeController.setMouseLook(grab);
 		player.controller.enabled = grab;
@@ -169,6 +177,10 @@ public class Ruins extends UIClient {
 	
 	public boolean isOverlayActive() {
 		return activeOverlay!=null;
+	}
+	
+	public boolean isOverlayActive(UIOverlay overlay) {
+		return activeOverlay==overlay;
 	}
 	
 	public void setOverlay(UIOverlay overlay) {
@@ -212,8 +224,7 @@ public class Ruins extends UIClient {
 				grabMouse(false);
 				break;
 			case KeyEvent.VK_BACK_SPACE:
-				releaseWorldResources();
-				createWorldResources();
+				restart();
 				break;
 			default:
 				super.keyPressed(c, code);

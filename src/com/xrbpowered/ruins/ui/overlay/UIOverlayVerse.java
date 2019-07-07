@@ -4,26 +4,31 @@ import java.awt.Color;
 
 import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.ui.UIHud;
+import com.xrbpowered.ruins.ui.UIText;
 import com.xrbpowered.ruins.world.VerseSystem;
 import com.xrbpowered.ruins.world.obj.Tablet;
 import com.xrbpowered.zoomui.GraphAssist;
 import com.xrbpowered.zoomui.UIContainer;
-import com.xrbpowered.zoomui.std.UIFormattedLabel;
-import com.xrbpowered.zoomui.std.UIFormattedLabel.ZoomableCss;
 
 public class UIOverlayVerse extends UIOverlay {
 
-	public final UIPane box;
-	public final UIFormattedLabel text;
-	public final UIPane info;
-	public final UIFormattedLabel infoText;
+	private final UIButtonPane closeButton;
 	
-	private static ZoomableCss css = new ZoomableCss("p{text-align:center} p.dim{color:#aaaaaa} span.e{font-style:normal;color:#ffdd55}");
+	public final UIPane box;
+	public final UIText text;
+	public final UIPane info;
+	public final UIText infoText;
 	
 	public UIOverlayVerse(UIContainer parent) {
 		super(parent);
 		
+		closeButton = new UIButtonPane(this, "Close") {
+			@Override
+			public void onAction() {
+				dismiss();
+			}
+		};
+
 		box = new UIPane(this, true) {
 			@Override
 			protected void paintSelf(GraphAssist g) {
@@ -32,14 +37,7 @@ public class UIOverlayVerse extends UIOverlay {
 			}
 		};
 		box.setSize(560, 160);
-		text = new UIFormattedLabel(box, "") {
-			@Override
-			public void setupHtmlKit() {
-				htmlKit.defaultFont = UIHud.fontBold;
-				htmlKit.defaultColor = Color.WHITE;
-				htmlKit.zoomableCss = css;
-			}
-		};
+		text = new UIText(box);
 		text.setSize(box.getWidth()-40, box.getHeight()-60);
 		text.setLocation(20, 30);
 		
@@ -52,19 +50,13 @@ public class UIOverlayVerse extends UIOverlay {
 			}
 		};
 		info.setSize(text.getWidth()-100, 100);
-		infoText = new UIFormattedLabel(info, "") {
-			@Override
-			public void setupHtmlKit() {
-				htmlKit.defaultFont = UIHud.font;
-				htmlKit.defaultColor = new Color(0xeeeeee);
-				htmlKit.zoomableCss = css;
-			}
-		};
+		infoText = new UIText.Small(info);
 		infoText.setSize(info.getWidth(), info.getHeight());
 	}
 	
 	@Override
 	public void layout() {
+		closeButton.setLocation(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-100);
 		box.setLocation(getWidth()/2f-box.getWidth()/2f, getHeight()/2f-box.getHeight()/2f);
 		info.setLocation(getWidth()/2f-info.getWidth()/2f, getHeight()-200);
 		super.layout();
