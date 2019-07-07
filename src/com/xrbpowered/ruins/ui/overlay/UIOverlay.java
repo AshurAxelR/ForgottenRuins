@@ -1,6 +1,7 @@
 package com.xrbpowered.ruins.ui.overlay;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 
 import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.gl.ui.UINode;
@@ -47,6 +48,14 @@ public abstract class UIOverlay extends UINode {
 		Ruins.ruins.setOverlay(null);
 	}
 	
+	public void defaultAction() {
+		closeAction();
+	}
+	
+	public void closeAction() {
+		dismiss();
+	}
+	
 	public boolean isActive() {
 		return Ruins.ruins.isOverlayActive(this);
 	}
@@ -54,9 +63,20 @@ public abstract class UIOverlay extends UINode {
 	@Override
 	public boolean onMouseDown(float x, float y, Button button, int mods) {
 		if(button==Button.right) {
-			dismiss();
+			closeAction();
 		}
 		return true;
+	}
+	
+	public void keyPressed(char c, int code) {
+		switch(code) {
+			case KeyEvent.VK_ESCAPE:
+				closeAction();
+				break;
+			case KeyEvent.VK_ENTER:
+				defaultAction();
+				break;
+		}
 	}
 	
 }

@@ -29,6 +29,7 @@ import com.xrbpowered.ruins.ui.UIHud;
 import com.xrbpowered.ruins.ui.UIIcon;
 import com.xrbpowered.ruins.ui.overlay.UIOverlay;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayGameOver;
+import com.xrbpowered.ruins.ui.overlay.UIOverlayMenu;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVerse;
 import com.xrbpowered.ruins.world.World;
 
@@ -50,7 +51,8 @@ public class Ruins extends UIClient {
 
 	private PlayerActor player = new PlayerActor(input);
 
-	public static World world;
+	public static World world = null;
+	public static boolean pause = false;
 
 	public static Ruins ruins;
 	public static UIHud hud;
@@ -61,6 +63,7 @@ public class Ruins extends UIClient {
 
 	private UIOverlay activeOverlay = null;
 	
+	public static UIOverlayMenu overlayMenu;
 	public static UIOverlayVerse overlayVerse;
 	public static UIOverlayGameOver overlayGameOver;
 	
@@ -93,28 +96,33 @@ public class Ruins extends UIClient {
 				observerController = new Controller(input).setActor(player.camera);
 				observerController.moveSpeed = 10f;
 				activeController = player.controller;
-				activeController.setMouseLook(true);
+				//activeController.setMouseLook(true);
 
 				groundTexture = new Texture("ground.png", true, false);
 				groundMesh = WallBuilder.createGround(80f);
 				
 				Prefabs.createResources(environment, player.camera);
-				createWorldResources();
+				//createWorldResources();
 				
 				super.setupResources();
 			}
 			
 			@Override
 			public void updateTime(float dt) {
-				if(activeController==observerController)
-					observerController.update(dt);
-				else
-					player.updateTime(dt);
+				if(world!=null && !pause) {
+					if(activeController==observerController)
+						observerController.update(dt);
+					else
+						player.updateTime(dt);
+				}
 				super.updateTime(dt);
 			}
 			
 			@Override
 			protected void renderBuffer(RenderTarget target) {
+				if(world==null)
+					return;
+				
 				WallChunk.zsort(walls, player.camera);
 				
 				GL11.glEnable(GL11.GL_CULL_FACE);
@@ -142,8 +150,11 @@ public class Ruins extends UIClient {
 		
 		overlayVerse = new UIOverlayVerse(getContainer());
 		overlayGameOver = new UIOverlayGameOver(getContainer());
+		overlayMenu = new UIOverlayMenu(getContainer());
 		
 		new UIFpsOverlay(this);
+		
+		overlayMenu.show();
 	}
 	
 	private void createWorldResources() {
@@ -157,9 +168,11 @@ public class Ruins extends UIClient {
 	}
 	
 	private void releaseWorldResources() {
-		Prefabs.releaseInstances();
-		for(WallChunk wall : walls)
-			wall.release();
+		if(world!=null) {
+			Prefabs.releaseInstances();
+			for(WallChunk wall : walls)
+				wall.release();
+		}
 	}
 	
 	public void restart() {
@@ -168,6 +181,8 @@ public class Ruins extends UIClient {
 	}
 	
 	public void grabMouse(boolean grab) {
+		if(activeController==null)
+			return;
 		activeController.setMouseLook(grab);
 		player.controller.enabled = grab;
 		if(!grab) {
@@ -199,35 +214,32 @@ public class Ruins extends UIClient {
 	
 	@Override
 	public void keyPressed(char c, int code) {
-		if(isOverlayActive())
-			return; // TODO overlay keys
-
-		if(code==player.controller.keyJump) {
-			if(activeController==player.controller) {
-				player.controller.queueJump();
-				return;
-			}
+		if(isOverlayActive()) {
+			activeOverlay.keyPressed(c, code);
+			return;
 		}
-		switch(code) {
-			case KeyEvent.VK_ESCAPE:
-				requestExit();
-				break;
-			case KeyEvent.VK_F1:
-				if(code==KeyEvent.VK_F1 && enableObserver) {
-					activeController.setMouseLook(false);
-					activeController = (activeController==player.controller) ? observerController : player.controller;
-					hud.setVisible(activeController==player.controller);
-					activeController.setMouseLook(true);
+		else {
+			if(code==player.controller.keyJump) {
+				if(activeController==player.controller) {
+					player.controller.queueJump();
+					return;
 				}
-				break;
-			case KeyEvent.VK_ALT:
-				grabMouse(false);
-				break;
-			case KeyEvent.VK_BACK_SPACE:
-				restart();
-				break;
-			default:
-				super.keyPressed(c, code);
+			}
+			switch(code) {
+				case KeyEvent.VK_ESCAPE:
+					overlayMenu.show();
+					break;
+				case KeyEvent.VK_F1:
+					if(code==KeyEvent.VK_F1 && enableObserver) {
+						activeController.setMouseLook(false);
+						activeController = (activeController==player.controller) ? observerController : player.controller;
+						hud.setVisible(activeController==player.controller);
+						activeController.setMouseLook(true);
+					}
+					break;
+				default:
+					super.keyPressed(c, code);
+			}
 		}
 	}
 	

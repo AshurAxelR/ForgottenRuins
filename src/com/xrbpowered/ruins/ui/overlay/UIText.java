@@ -1,7 +1,8 @@
-package com.xrbpowered.ruins.ui;
+package com.xrbpowered.ruins.ui.overlay;
 
 import java.awt.Color;
 
+import com.xrbpowered.ruins.ui.UIHud;
 import com.xrbpowered.zoomui.UIContainer;
 import com.xrbpowered.zoomui.std.UIFormattedLabel;
 
@@ -27,6 +28,9 @@ public class UIText extends UIFormattedLabel {
 	}
 	
 	public static class Small extends UIText {
+		public Small(UIContainer parent, float marginx, float marginy) {
+			super(parent, marginx, marginy);
+		}
 		public Small(UIContainer parent) {
 			super(parent, 0, 0);
 		}
