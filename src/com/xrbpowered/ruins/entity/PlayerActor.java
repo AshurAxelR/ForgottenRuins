@@ -24,6 +24,9 @@ public class PlayerActor extends Actor {
 	private float cameraLevel = cameraHeight;
 	
 	public boolean alive = true;
+	public DamageSource lastDamageSource = null;
+	public float deathTimer = 0f;
+	
 	public float health = baseHealth;
 	public float hydration = baseHydration;
 	public int coins = 0;
@@ -53,9 +56,10 @@ public class PlayerActor extends Actor {
 			Ruins.flash.reset();
 	}
 	
-	public void updateHealth(float dh) {
+	public void updateHealth(float dh, DamageSource souce) {
 		if(!alive)
 			return;
+		lastDamageSource = souce;
 		health += dh;
 		if(health>baseHealth)
 			health = baseHealth;
@@ -69,19 +73,20 @@ public class PlayerActor extends Actor {
 		health = 0f;
 		hydration = 0f;
 		alive = false;
+		deathTimer = 0f;
 		Ruins.flash.blackOut();
 	}
 	
-	public void applyDamage(float damage, boolean flash) {
+	public void applyDamage(float damage, boolean flash, DamageSource source) {
 		if(health<=0 || damage<0.1f)
 			return;
 		if(flash)
 			Ruins.flash.flashPain(damage, health);
-		updateHealth(-damage);
+		updateHealth(-damage, source);
 	}
 	
-	public void applyDamage(float damage) {
-		applyDamage(damage, true);
+	public void applyDamage(float damage, DamageSource source) {
+		applyDamage(damage, true, source);
 	}
 	
 	@Override
@@ -102,6 +107,7 @@ public class PlayerActor extends Actor {
 			cameraLevel -= dt*0.25f;
 			if(cameraLevel<=cameraDeathHeight) {
 				cameraLevel = cameraDeathHeight;
+				lastDamageSource = DamageSource.drown;
 				die();
 			}
 		}
@@ -116,8 +122,12 @@ public class PlayerActor extends Actor {
 		}
 		else {
 			cameraLevel = cameraDeathHeight;
+			deathTimer += dt;
+			if(deathTimer>2f && !Ruins.overlayGameOver.isActive()) {
+				Ruins.overlayGameOver.show(lastDamageSource.gameOverMessage);
+			}
 		}
-		updateHealth(hydration>0f ? healthRegen*dt : -healthRegen*dt);
+		updateHealth(hydration>0f ? healthRegen*dt : -healthRegen*dt, DamageSource.dehydrate);
 	}
 
 }

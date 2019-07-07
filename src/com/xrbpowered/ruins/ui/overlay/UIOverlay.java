@@ -13,7 +13,6 @@ public abstract class UIOverlay extends UINode {
 	private static Texture fillTexture = null;
 	
 	private final UITexture fill;
-	private final UIButtonPane closeButton;
 	
 	public UIOverlay(UIContainer parent) {
 		super(parent);
@@ -26,12 +25,6 @@ public abstract class UIOverlay extends UINode {
 				setTexture(fillTexture);
 			}
 		};
-		closeButton = new UIButtonPane(this, "Close") {
-			@Override
-			public void onAction() {
-				dismiss();
-			}
-		};
 		
 		setVisible(false);
 	}
@@ -39,19 +32,23 @@ public abstract class UIOverlay extends UINode {
 	@Override
 	public void layout() {
 		fill.setSize(getWidth(), getHeight());
-		closeButton.setLocation(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-100);
 		super.layout();
 	}
 	
 	@Override
 	public void releaseResources() {
-		fillTexture.release();
+		if(fillTexture!=null)
+			fillTexture.release();
 		fillTexture = null;
 		super.releaseResources();
 	}
 
 	public void dismiss() {
 		Ruins.ruins.setOverlay(null);
+	}
+	
+	public boolean isActive() {
+		return Ruins.ruins.isOverlayActive(this);
 	}
 	
 	@Override

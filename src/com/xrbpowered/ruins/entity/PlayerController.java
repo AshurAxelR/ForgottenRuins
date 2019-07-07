@@ -135,7 +135,7 @@ public class PlayerController extends WalkController {
 				inAir = false;
 				float damage = Math.max((speed.y*speed.y-120f)*0.3f, 0);
 				if(damage>0.1f) {
-					player.applyDamage(damage);
+					player.applyDamage(damage, DamageSource.fall);
 					System.out.printf("Hit at speed %.3f (Damage %.1f)\n", speed.y, damage);
 				}
 				speed.y = 0f;
