@@ -163,6 +163,8 @@ public class UIHud extends UINode {
 	
 	@Override
 	public void updateTime(float dt) {
+		if(Ruins.world==null)
+			return;
 		String pick = Ruins.pick.pickObject==null ? null : Ruins.pick.pickObject.getPickName();
 		if(pick!=shownPick)
 			updatePickText(pick);
@@ -171,6 +173,12 @@ public class UIHud extends UINode {
 			coinsPane.repaint();
 		}
 		super.updateTime(dt);
+	}
+	
+	@Override
+	public void render(RenderTarget target) {
+		if(Ruins.world!=null)
+			super.render(target);
 	}
 	
 }

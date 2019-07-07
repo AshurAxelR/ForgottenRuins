@@ -1,48 +1,40 @@
 package com.xrbpowered.ruins.ui.overlay;
 
-import java.awt.Color;
-
-import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.ui.UIText;
-import com.xrbpowered.zoomui.GraphAssist;
 import com.xrbpowered.zoomui.UIContainer;
 
 public class UIOverlayGameOver extends UIOverlay {
 
-	private final UIButtonPane closeButton;
+	private final UIButtonPane restartButton;
 	
-	public final UIPane box;
+	public final UISolid box;
 	public final UIText text;
 
 	public UIOverlayGameOver(UIContainer parent) {
 		super(parent);
-		closeButton = new UIButtonPane(this, "Restart") {
+		restartButton = new UIButtonPane(this, "Restart") {
 			@Override
 			public void onAction() {
-				Ruins.ruins.restart();
-				dismiss();
+				defaultAction();
 			}
 		};
 
-		box = new UIPane(this, true) {
-			@Override
-			protected void paintSelf(GraphAssist g) {
-				g.fill(this, Color.BLACK);
-				super.paintSelf(g);
-			}
-		};
+		box = new UISolid.Black(this);
 		box.setSize(560, 60);
 		text = new UIText(box);
-		text.setSize(box.getWidth()-40, box.getHeight()-60);
-		text.setLocation(20, 30);
 	}
 
 	@Override
 	public void layout() {
-		closeButton.setLocation(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-100);
+		restartButton.setLocation(getWidth()/2f-restartButton.getWidth()/2f, getHeight()-100);
 		box.setLocation(getWidth()/2f-box.getWidth()/2f, getHeight()/2f-box.getHeight()/2f);
 		super.layout();
+	}
+	
+	@Override
+	public void closeAction() {
+		Ruins.ruins.restart();
+		dismiss();
 	}
 	
 	public void show(String message) {
