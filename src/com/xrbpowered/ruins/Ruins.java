@@ -35,9 +35,7 @@ import com.xrbpowered.ruins.world.World;
 
 public class Ruins extends UIClient {
 
-	// settings
-	public static float renderScale = 1f; 
-	public static boolean enableObserver = true;
+	public static GlobalSettings settings = new GlobalSettings();
 	
 	private WallChunk[] walls;
 	private WallShader shader;
@@ -51,7 +49,8 @@ public class Ruins extends UIClient {
 
 	private PlayerActor player = new PlayerActor(input);
 
-	public static World world = null;
+	public static World world;
+	public static boolean preview = true;
 	public static boolean pause = false;
 
 	public static Ruins ruins;
@@ -68,13 +67,19 @@ public class Ruins extends UIClient {
 	public static UIOverlayGameOver overlayGameOver;
 	
 	public Ruins() {
-		super("Ruins Generator");
+		super("Forgotten Ruins", settings.uiScaling/100f);
+		fullscreen = settings.fullscreen;
+		windowedWidth = settings.windowedWidth;
+		windowedHeight = settings.windowedHeight;
+		vsync = settings.vsync;
+		noVsyncSleep = settings.noVsyncSleep;
+		
 		ruins = this;
 		UIIcon.updatePixelSize(this);
 		
 		AssetManager.defaultAssets = new FileAssetManager("assets", AssetManager.defaultAssets);
 		
-		new UIOffscreen(getContainer(), renderScale) {
+		new UIOffscreen(getContainer(), settings.renderScaling) {
 			@Override
 			public void setSize(float width, float height) {
 				super.setSize(width, height);
@@ -96,20 +101,23 @@ public class Ruins extends UIClient {
 				observerController = new Controller(input).setActor(player.camera);
 				observerController.moveSpeed = 10f;
 				activeController = player.controller;
-				//activeController.setMouseLook(true);
 
 				groundTexture = new Texture("ground.png", true, false);
 				groundMesh = WallBuilder.createGround(80f);
 				
 				Prefabs.createResources(environment, player.camera);
-				//createWorldResources();
+				createWorldResources();
+				
+				player.camera.position.z = -8f;
+				player.camera.position.y = World.height/4f;
+				player.camera.updateTransform();
 				
 				super.setupResources();
 			}
 			
 			@Override
 			public void updateTime(float dt) {
-				if(world!=null && !pause) {
+				if(world!=null && !preview && !pause) {
 					if(activeController==observerController)
 						observerController.update(dt);
 					else
@@ -178,6 +186,7 @@ public class Ruins extends UIClient {
 	public void restart() {
 		releaseWorldResources();
 		createWorldResources();
+		preview = false;
 	}
 	
 	public void grabMouse(boolean grab) {
@@ -230,7 +239,7 @@ public class Ruins extends UIClient {
 					overlayMenu.show();
 					break;
 				case KeyEvent.VK_F1:
-					if(code==KeyEvent.VK_F1 && enableObserver) {
+					if(code==KeyEvent.VK_F1 && settings.enableObserver) {
 						activeController.setMouseLook(false);
 						activeController = (activeController==player.controller) ? observerController : player.controller;
 						hud.setVisible(activeController==player.controller);
@@ -254,6 +263,7 @@ public class Ruins extends UIClient {
 	}
 	
 	public static void main(String[] args) {
+		settings = GlobalSettings.load();
 		new Ruins().run();
 	}
 
