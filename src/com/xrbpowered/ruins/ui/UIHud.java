@@ -163,7 +163,7 @@ public class UIHud extends UINode {
 	
 	@Override
 	public void updateTime(float dt) {
-		if(Ruins.world==null)
+		if(Ruins.world==null || Ruins.preview)
 			return;
 		String pick = Ruins.pick.pickObject==null ? null : Ruins.pick.pickObject.getPickName();
 		if(pick!=shownPick)
@@ -177,8 +177,9 @@ public class UIHud extends UINode {
 	
 	@Override
 	public void render(RenderTarget target) {
-		if(Ruins.world!=null)
-			super.render(target);
+		if(Ruins.world==null || Ruins.preview)
+			return;
+		super.render(target);
 	}
 	
 }
