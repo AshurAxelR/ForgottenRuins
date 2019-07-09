@@ -6,6 +6,7 @@ import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.Prefabs;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
+import com.xrbpowered.ruins.world.item.EmptyFlask;
 
 public class Well extends TileObject {
 
@@ -34,6 +35,7 @@ public class Well extends TileObject {
 	@Override
 	public void interact() {
 		world.player.hydration = PlayerActor.baseHydration;
+		EmptyFlask.fill(world.player.inventory);
 		Ruins.hud.popup.popup("Refreshing...");
 	}
 

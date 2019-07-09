@@ -10,13 +10,14 @@ public class UIOverlayVerse extends UIOverlay {
 
 	private final UIButtonPane closeButton;
 	
-	public final UISolid box;
+	public final UIPane box;
 	public final UIText text;
 	public final UIPane info;
 	public final UIText infoText;
 	
 	public UIOverlayVerse(UIContainer parent) {
 		super(parent);
+		dismissOnRightClick = true;
 		
 		closeButton = new UIButtonPane(this, "Close") {
 			@Override
@@ -25,11 +26,11 @@ public class UIOverlayVerse extends UIOverlay {
 			}
 		};
 
-		box = new UISolid.Black(this);
+		box = new UISolidPane.Black(this);
 		box.setSize(560, 160);
 		text = new UIText(box);
 		
-		info = new UISolid.Clear(this);
+		info = new UISolidPane.Clear(this);
 		info.setSize(text.getWidth()-100, 100);
 		infoText = new UIText.Small(info);
 	}

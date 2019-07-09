@@ -5,6 +5,8 @@ import com.xrbpowered.gl.scene.Actor;
 import com.xrbpowered.gl.scene.CameraActor;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.world.World;
+import com.xrbpowered.ruins.world.item.Item;
+import com.xrbpowered.ruins.world.item.ItemList;
 
 public class PlayerActor extends Actor {
 
@@ -31,13 +33,30 @@ public class PlayerActor extends Actor {
 	public float hydration = baseHydration;
 	public int coins = 0;
 	
+	public ItemList inventory = new ItemList();
+	
 	public PlayerActor(ClientInput input) {
 		controller = new PlayerController(input, this);
 	}
 	public void reset(World world) {
 		controller.collider.world = world;
-		controller.reset();
+		returnToStart();
 
+		alive = true;
+		health = baseHealth;
+		hydration = baseHydration;
+		coins = 0;
+		inventory.clear();
+		inventory.add(Item.emptyFlask, 2);
+		inventory.add(Item.amuletOfReturn, 1);
+		if(Ruins.flash!=null)
+			Ruins.flash.reset();
+	}
+	
+	public void returnToStart() {
+		controller.reset();
+		World world = controller.collider.world;
+		
 		position.x = world.startx * 2f;
 		position.z = world.startz * 2f;
 		position.y = 1f;
@@ -47,13 +66,6 @@ public class PlayerActor extends Actor {
 		updateTransform();
 		
 		cameraLevel = cameraHeight;
-
-		alive = true;
-		health = baseHealth;
-		hydration = baseHydration;
-		coins = 0;
-		if(Ruins.flash!=null)
-			Ruins.flash.reset();
 	}
 	
 	public void updateHealth(float dh, DamageSource souce) {
@@ -75,6 +87,7 @@ public class PlayerActor extends Actor {
 		alive = false;
 		deathTimer = 0f;
 		Ruins.flash.blackOut();
+		Ruins.ruins.setOverlay(null);
 	}
 	
 	public void applyDamage(float damage, boolean flash, DamageSource source) {

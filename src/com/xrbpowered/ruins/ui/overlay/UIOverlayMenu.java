@@ -1,5 +1,6 @@
 package com.xrbpowered.ruins.ui.overlay;
 
+import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.zoomui.UIContainer;
 
@@ -10,7 +11,7 @@ public class UIOverlayMenu extends UIOverlay {
 	private final UIButtonPane exitButton;
 	private final UIButtonPane[] buttons;
 
-	public final UISolid box;
+	public final UIPane box;
 	public final UIText text;
 
 	public UIOverlayMenu(UIContainer parent) {
@@ -36,14 +37,14 @@ public class UIOverlayMenu extends UIOverlay {
 		
 		buttons = new UIButtonPane[] {resumeButton, restartButton, exitButton};
 		
-		box = new UISolid.Black(this);
+		box = new UISolidPane.Black(this);
 		box.setSize(250, 220);
 		text = new UIText.Small(box, 20, 30);
 		text.setHtml("<p style=\"text-align:left; color:#ffffff\">Control keys:</p><p>&nbsp;</p>"+
 				"<p style=\"text-align:left; color:#aaaaaa\"><span class=\"e\">W, A, S, D</span> - Move<br>"+
 				"<span class=\"e\">SPACE</span> - Jump<br>"+
 				"<span class=\"e\">RMB</span> - Interact<br>"+
-				"<span class=\"e\">TAB</span> - Inventory (W.I.P.)<br>"+
+				"<span class=\"e\">TAB</span> - Inventory<br>"+
 				"<span class=\"e\">ESC</span> - Pause/Menu</p>"
 			);
 	}
@@ -67,13 +68,15 @@ public class UIOverlayMenu extends UIOverlay {
 
 	@Override
 	public void dismiss() {
-		super.dismiss();
-		Ruins.pause = false;
+		if(!Ruins.preview) {
+			super.dismiss();
+			Ruins.pause = false;
+		}
 	}
 	
 	@Override
 	public void defaultAction() {
-		if(Ruins.world==null)
+		if(Ruins.preview)
 			restart();
 		else
 			super.defaultAction();
@@ -84,16 +87,10 @@ public class UIOverlayMenu extends UIOverlay {
 		dismiss();
 	}
 	
-	@Override
-	public void closeAction() {
-		if(Ruins.world!=null)
-			dismiss();
-	}
-	
 	public void show() {
 		if(!isActive()) {
-			resumeButton.setVisible(Ruins.world!=null);
-			restartButton.label = Ruins.world!=null ? "Restart" : "Start";
+			resumeButton.setVisible(!Ruins.preview);
+			restartButton.label = !Ruins.preview ? "Restart" : "Start";
 			invalidateLayout();
 			Ruins.ruins.setOverlay(Ruins.overlayMenu);
 			Ruins.pause = true;

@@ -1,5 +1,6 @@
 package com.xrbpowered.ruins.ui.overlay;
 
+import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.zoomui.UIContainer;
 
@@ -7,7 +8,7 @@ public class UIOverlayGameOver extends UIOverlay {
 
 	private final UIButtonPane restartButton;
 	
-	public final UISolid box;
+	public final UIPane box;
 	public final UIText text;
 
 	public UIOverlayGameOver(UIContainer parent) {
@@ -19,7 +20,7 @@ public class UIOverlayGameOver extends UIOverlay {
 			}
 		};
 
-		box = new UISolid.Black(this);
+		box = new UISolidPane.Black(this);
 		box.setSize(560, 60);
 		text = new UIText(box);
 	}

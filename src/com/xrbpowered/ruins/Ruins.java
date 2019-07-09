@@ -29,9 +29,11 @@ import com.xrbpowered.ruins.ui.UIHud;
 import com.xrbpowered.ruins.ui.UIIcon;
 import com.xrbpowered.ruins.ui.overlay.UIOverlay;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayGameOver;
+import com.xrbpowered.ruins.ui.overlay.UIOverlayInventory;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayMenu;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVerse;
 import com.xrbpowered.ruins.world.World;
+import com.xrbpowered.ruins.world.item.Item;
 
 public class Ruins extends UIClient {
 
@@ -65,6 +67,7 @@ public class Ruins extends UIClient {
 	public static UIOverlayMenu overlayMenu;
 	public static UIOverlayVerse overlayVerse;
 	public static UIOverlayGameOver overlayGameOver;
+	public static UIOverlayInventory overlayInventory;
 	
 	public Ruins() {
 		super("Forgotten Ruins", settings.uiScaling/100f);
@@ -88,6 +91,8 @@ public class Ruins extends UIClient {
 			
 			@Override
 			public void setupResources() {
+				Item.loadIcons();
+				
 				clearColor = new Color(0xe5efee);
 				environment.setFog(10, 80, clearColor);
 				environment.lightScale = 0.1f;
@@ -154,6 +159,8 @@ public class Ruins extends UIClient {
 		};
 		
 		flash = new FlashPane(getContainer());
+		
+		overlayInventory = new UIOverlayInventory(getContainer());
 		hud = new UIHud(getContainer(), player);
 		
 		overlayVerse = new UIOverlayVerse(getContainer());
@@ -212,6 +219,7 @@ public class Ruins extends UIClient {
 			activeOverlay.setVisible(false);
 		activeOverlay = overlay;
 		if(overlay!=null) {
+			hud.popup.dismiss();
 			overlay.setVisible(true);
 			grabMouse(false);
 		}
@@ -238,6 +246,9 @@ public class Ruins extends UIClient {
 				case KeyEvent.VK_ESCAPE:
 					overlayMenu.show();
 					break;
+				case KeyEvent.VK_TAB:
+					overlayInventory.updateAndShow(player);
+					break;
 				case KeyEvent.VK_F1:
 					if(code==KeyEvent.VK_F1 && settings.enableObserver) {
 						activeController.setMouseLook(false);
@@ -256,7 +267,7 @@ public class Ruins extends UIClient {
 	public void mouseDown(float x, float y, int button) {
 		if(!isOverlayActive()) {
 			grabMouse(true);
-			if(button==GLFW.GLFW_MOUSE_BUTTON_RIGHT && pick.pickObject!=null)
+			if(button==GLFW.GLFW_MOUSE_BUTTON_RIGHT && pick.pickObject!=null && player.alive)
 				pick.pickObject.interact();
 		}
 		super.mouseDown(x, y, button);

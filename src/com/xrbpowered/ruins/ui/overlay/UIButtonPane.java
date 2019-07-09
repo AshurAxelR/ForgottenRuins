@@ -10,6 +10,9 @@ import com.xrbpowered.zoomui.UIElement;
 
 public class UIButtonPane extends UIPane {
 
+	public static final int width = 180;
+	public static final int height = 40;
+	
 	public String label;
 	public boolean down = false;
 	public boolean hover = false;
@@ -17,7 +20,7 @@ public class UIButtonPane extends UIPane {
 	public UIButtonPane(UIContainer parent, String label) {
 		super(parent, true);
 		this.label = label;
-		setSize(180, 40);
+		setSize(width, height);
 	}
 	
 	@Override
