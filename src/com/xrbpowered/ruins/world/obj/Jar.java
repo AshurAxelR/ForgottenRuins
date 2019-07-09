@@ -6,19 +6,30 @@ import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.Prefabs;
 import com.xrbpowered.ruins.world.World;
+import com.xrbpowered.ruins.world.item.Item;
 
 public class Jar extends SmallObject {
 
-	public int coins;
+	public Item item = null;
+	public int coins = 0;
 	public boolean broken = false;
 	
 	public Jar(World world, Random random) {
 		super(world);
-		coins = random.nextInt(8)-4;
-		if(coins<0) {
-			coins = 0;
-			if(random.nextInt(4)<2)
-				broken = true;
+		int n = random.nextInt(25); 
+		if(n==0)
+			item = Item.amuletOfReturn;
+		else if(n<3)
+			item = Item.emptyFlask;
+		else if(n<5)
+			item = Item.healingHerbs;
+		else {
+			coins = random.nextInt(8)-4;
+			if(coins<0) {
+				coins = 0;
+				if(random.nextInt(4)<2)
+					broken = true;
+			}
 		}
 	}
 	
@@ -44,13 +55,18 @@ public class Jar extends SmallObject {
 	
 	@Override
 	public String getActionString() {
-		return coins>0 ? "[Right-click to search]" : "[Empty]";
+		return coins>0 || item!=null ? "[Right-click to search]" : "[Empty]";
 	}
 	
 	@Override
 	public void interact() {
 		if(!broken) {
-			if(coins>1)
+			if(item!=null) {
+				Ruins.hud.popup.popup("Found "+item.countString(1));
+				world.player.inventory.add(item, 1);
+				item = null;
+			}
+			else if(coins>1)
 				Ruins.hud.popup.popup(String.format("Found %d coins", coins));
 			else if(coins==1)
 				Ruins.hud.popup.popup("Found a coin");

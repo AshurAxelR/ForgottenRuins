@@ -128,7 +128,7 @@ public class TileObjectGenerator {
 					continue;
 				}
 			}
-			if(random.nextInt(10)<4) {
+			if(random.nextInt(10)<6) {
 				smallObjects.fillTile(t);
 				continue;
 			}

@@ -14,6 +14,7 @@ import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.zoomui.GraphAssist;
 import com.xrbpowered.zoomui.UIContainer;
+import com.xrbpowered.zoomui.UIElement;
 
 public class UIHud extends UINode {
 
@@ -131,6 +132,11 @@ public class UIHud extends UINode {
 	}
 	
 	@Override
+	public UIElement getElementAt(float x, float y) {
+		return null;
+	}
+	
+	@Override
 	public void layout() {
 		float s = UIIcon.pixelSize * getPixelScale();
 		heartIcon.setLocation(10, getHeight()-heartIcon.getHeight()/2f-s*25);
@@ -145,7 +151,7 @@ public class UIHud extends UINode {
 
 		obeliskDots.setLocation(getWidth()-obeliskDots.getWidth()-s*5, getHeight()-obeliskDots.getHeight()-s*5);
 		pickPane.setLocation(getWidth()/2f-pickPane.getWidth()/2f, getHeight()/2f-pickPane.getHeight()/2f);
-		popup.setLocation(getWidth()/2f-popup.getWidth()/2f, getHeight()*0.75f-popup.getHeight()/2f);
+		popup.setLocation(getWidth()/2f-popup.getWidth()/2f, getHeight()-120-popup.getHeight());
 		super.layout();
 	}
 

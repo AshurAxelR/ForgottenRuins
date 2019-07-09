@@ -3,7 +3,6 @@ package com.xrbpowered.ruins.ui;
 import java.awt.Color;
 
 import com.xrbpowered.gl.ui.pane.UIPane;
-import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.zoomui.GraphAssist;
 import com.xrbpowered.zoomui.UIContainer;
 
@@ -34,11 +33,13 @@ public class UIPopup extends UIPane {
 	
 	public void popup(String msg) {
 		message = msg;
-		if(msg!=null) {
+		if(msg!=null)
 			t = 0f;
-			System.out.println(msg);
-		}
 		repaint();
+	}
+	
+	public void dismiss() {
+		t = duration;
 	}
 	
 	@Override
@@ -53,8 +54,6 @@ public class UIPopup extends UIPane {
 		else {
 			pane.alpha = 0f;
 		}
-		if(Ruins.ruins.isOverlayActive())
-			pane.alpha = 0f;
 	}
 
 }

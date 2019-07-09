@@ -16,11 +16,23 @@ public class UIIcon extends UITexture {
 		this.icon = icon;
 	}
 	
+	public UIIcon(UIContainer parent, Texture icon) {
+		super(parent);
+		this.icon = null;
+		setTexture(icon);
+	}
+	
+	@Override
+	protected UITexture setTexture(Texture texture) {
+		super.setTexture(texture);
+		float s = pixelSize * getPixelScale();
+		setSize(pane.getTexture().getWidth()*s, pane.getTexture().getHeight()*s);
+		return this;
+	}
+	
 	@Override
 	public void setupResources() {
 		setTexture(new Texture(icon, false, false));
-		float s = pixelSize * getPixelScale();
-		setSize(pane.getTexture().getWidth()*s, pane.getTexture().getHeight()*s);
 	}
 
 	public static void updatePixelSize(UIClient client) {
