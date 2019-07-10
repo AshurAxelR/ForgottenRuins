@@ -4,6 +4,7 @@ import com.xrbpowered.gl.client.ClientInput;
 import com.xrbpowered.gl.scene.Actor;
 import com.xrbpowered.gl.scene.CameraActor;
 import com.xrbpowered.ruins.Ruins;
+import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
 import com.xrbpowered.ruins.world.item.ItemList;
@@ -35,6 +36,8 @@ public class PlayerActor extends Actor {
 	
 	public ItemList inventory = new ItemList();
 	
+	public int mapx, mapz, mapy;
+	
 	public PlayerActor(ClientInput input) {
 		controller = new PlayerController(input, this);
 	}
@@ -56,6 +59,10 @@ public class PlayerActor extends Actor {
 	public void returnToStart() {
 		controller.reset();
 		World world = controller.collider.world;
+		
+		mapx = world.startx;
+		mapz = world.startz;
+		mapy = 1;
 		
 		position.x = world.startx * 2f;
 		position.z = world.startz * 2f;
@@ -112,10 +119,29 @@ public class PlayerActor extends Actor {
 		}
 	}
 	
+	protected boolean updateMapPosition() {
+		int x = controller.collider.mapx(position.x);
+		int z = controller.collider.mapz(position.z);
+		int y = controller.collider.mapy(position.y);
+		while(y>0 && controller.collider.world.map[x][z][y-1].type!=TileType.solid)
+			y--;
+		if(mapx!=x || mapz!=z || mapy!=y) {
+			mapx = x;
+			mapz = z;
+			mapy = y;
+			return true;
+		}
+		else
+			return false;
+	}
+	
 	public void updateTime(float dt) {
 		if(dt>dtLimit)
 			dt = dtLimit;
 		controller.update(dt);
+		if(updateMapPosition()) {
+			//System.out.printf("%d %d %d\n", mapx, mapz, mapy);
+		}
 		if(alive && controller.isDrowning()) {
 			cameraLevel -= dt*0.25f;
 			if(cameraLevel<=cameraDeathHeight) {

@@ -150,7 +150,7 @@ public class PlayerController extends WalkController {
 				speed.y -= gravity*dt;
 			}
 		}
-		if(actor.position.y==0)
+		if(player.position.y==0)
 			drowning = true;
 	}
 
