@@ -1,5 +1,7 @@
 package com.xrbpowered.ruins.world.item;
 
+import java.awt.event.KeyEvent;
+
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.PlayerActor;
 
@@ -10,6 +12,7 @@ public class HealingHerbs extends Item {
 
 	public HealingHerbs() {
 		super("Healing Herbs", "icons/herbs.png", String.format("Use: %+d Health, %+d Water", restoreHealth, waterCost));
+		hotkey = KeyEvent.VK_H;
 	}
 
 	public String countString(int count) {

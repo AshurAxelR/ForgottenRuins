@@ -1,5 +1,7 @@
 package com.xrbpowered.ruins.world.item;
 
+import java.awt.event.KeyEvent;
+
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.PlayerActor;
 
@@ -9,6 +11,7 @@ public class WaterFlask extends Item {
 	
 	public WaterFlask() {
 		super("Flask of Water", "icons/water_flask.png", String.format("Use: %+d Water", restore));
+		hotkey = KeyEvent.VK_F;
 	}
 
 	@Override

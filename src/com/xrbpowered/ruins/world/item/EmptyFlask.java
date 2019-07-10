@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.world.item;
 public class EmptyFlask extends Item {
 
 	public EmptyFlask() {
-		super("Empty Flask", "icons/empty_flask.png", "Fill it in a water well");
+		super("Empty Flask", "icons/empty_flask.png", "Fill in a water well");
 	}
 
 	@Override
