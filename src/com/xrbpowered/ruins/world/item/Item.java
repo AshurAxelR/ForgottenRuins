@@ -18,6 +18,7 @@ public abstract class Item {
 	public final String name;
 	public final String iconPath;
 	public final String info;
+	public int hotkey = 0;
 	
 	public Texture icon = null;
 	
@@ -57,6 +58,16 @@ public abstract class Item {
 	public static void releaseResources() {
 		for(Item item : items)
 			item.icon.release();
+	}
+	
+	public static boolean keyPressed(int code, PlayerActor player) {
+		for(Item item : items) {
+			if(item.hotkey==code) {
+				player.inventory.use(item, player);
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

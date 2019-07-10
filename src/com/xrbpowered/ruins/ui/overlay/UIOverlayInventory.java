@@ -7,6 +7,7 @@ import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.ui.UIHud;
+import com.xrbpowered.ruins.world.item.Item;
 import com.xrbpowered.zoomui.UIContainer;
 
 public class UIOverlayInventory extends UIOverlay {
@@ -32,7 +33,7 @@ public class UIOverlayInventory extends UIOverlay {
 		title.setSize(200, 50);
 		
 		info = new UISolidPane.Clear(this);
-		info.setSize(260, 80);
+		info.setSize(260, 100);
 		infoText = new UIText.Small(info);
 		info.setVisible(false);
 
@@ -54,6 +55,10 @@ public class UIOverlayInventory extends UIOverlay {
 				closeAction();
 				break;
 			default:
+				if(Item.keyPressed(code, Ruins.world.player)) {
+					items.update(Ruins.world.player);
+					return;
+				}
 				super.keyPressed(c, code);
 		}
 	}

@@ -247,7 +247,8 @@ public class Ruins extends UIClient {
 					overlayMenu.show();
 					break;
 				case KeyEvent.VK_TAB:
-					overlayInventory.updateAndShow(player);
+					if(activeController==player.controller)
+						overlayInventory.updateAndShow(player);
 					break;
 				case KeyEvent.VK_F1:
 					if(code==KeyEvent.VK_F1 && settings.enableObserver) {
@@ -258,6 +259,8 @@ public class Ruins extends UIClient {
 					}
 					break;
 				default:
+					if(activeController==player.controller && Item.keyPressed(code, player))
+						return;
 					super.keyPressed(c, code);
 			}
 		}

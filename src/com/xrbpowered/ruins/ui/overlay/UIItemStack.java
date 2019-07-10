@@ -1,5 +1,7 @@
 package com.xrbpowered.ruins.ui.overlay;
 
+import java.awt.event.KeyEvent;
+
 import com.xrbpowered.gl.ui.UINode;
 import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.ui.UIIcon;
@@ -23,7 +25,10 @@ public class UIItemStack extends UINode {
 		this.item = stack.item;
 		this.player = player;
 		this.infoText = infoText;
-		this.html = "<p><span class=\"e\">"+item.name+"</span><br>"+item.info+"</p>";
+		String hk = "";
+		if(item.hotkey!=0)
+			hk = "<br>Hotkey: <span class=\"e\">"+KeyEvent.getKeyText(item.hotkey)+"</span>";
+		this.html = "<p><span class=\"e\">"+item.name+"</span><br>"+item.info+hk+"</p>";
 		
 		icon = new UIIcon(this, item.icon);
 		float w = icon.getWidth();
