@@ -237,17 +237,17 @@ public class WallBuilder extends AdvancedMeshBuilder {
 								addBottom(x, z, y);
 							for(Direction d : Direction.values()) {
 								Tile cell = world.map[x+d.dx][z+d.dz][y]; 
-								if(cell.type!=TileType.solid && !(cell.type==TileType.ramp && cell.dir==d.opposite()))
+								if(cell.type!=TileType.solid && !(cell.type==TileType.ramp && cell.rampDir==d.opposite()))
 									addSide(x, z, y, d, cell.light);
 							}
 							break;
 						}
 						case ramp: {
-							Direction rampd = world.map[x][z][y].dir;
+							Direction rampd = world.map[x][z][y].rampDir;
 							addRampTop(x, z, y, rampd, world.map[x][z][y].light);
 							for(Direction d : Direction.values()) {
 								Tile cell = world.map[x+d.dx][z+d.dz][y]; 
-								if(cell.type==TileType.empty || (cell.type==TileType.ramp && cell.dir!=d))
+								if(cell.type==TileType.empty || (cell.type==TileType.ramp && cell.rampDir!=d))
 									addRampSide(x, z, y, d, rampd, cell.light);
 							}
 							break;

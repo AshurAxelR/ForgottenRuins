@@ -97,10 +97,10 @@ public class PlayerCollider {
 		Tile cell = map(mx, mz, my);
 		Tile celld = map(mx, mz, my-1);
 		if(cell.type==TileType.ramp) {
-			return my + rampy(pos.x, pos.z, mx, mz, cell.dir);
+			return my + rampy(pos.x, pos.z, mx, mz, cell.rampDir);
 		}
 		else if(celld.type==TileType.ramp) {
-			return my-1 + rampy(pos.x, pos.z, mx, mz, celld.dir);
+			return my-1 + rampy(pos.x, pos.z, mx, mz, celld.rampDir);
 		}
 		else if(celld.type==TileType.solid) {
 			return my; 
