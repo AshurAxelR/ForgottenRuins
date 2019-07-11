@@ -8,6 +8,7 @@ import com.xrbpowered.ruins.world.ObeliskSystem;
 import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
+import com.xrbpowered.ruins.world.obj.DryWell;
 import com.xrbpowered.ruins.world.obj.MapObject;
 import com.xrbpowered.ruins.world.obj.Obelisk;
 import com.xrbpowered.ruins.world.obj.Palm;
@@ -94,6 +95,14 @@ public class TileObjectGenerator {
 			Token t = objTokens.get(random.nextInt(objTokens.size()));
 			if(isBottom(t)) {
 				objects.add(new Well(world, t));
+				objTokens.remove(t);
+				count++;
+			}
+		}
+		for(int count = 0; count<DryWell.count;) {
+			Token t = objTokens.get(random.nextInt(objTokens.size()));
+			if(isBottom(t) || t.y>3 && world.map[t.x][t.z][t.y-3].type==TileType.solid) {
+				objects.add(new DryWell(world, t));
 				objTokens.remove(t);
 				count++;
 			}

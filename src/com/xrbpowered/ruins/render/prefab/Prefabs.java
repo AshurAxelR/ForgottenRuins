@@ -55,6 +55,7 @@ public class Prefabs {
 	
 	public static Prefab palm;
 	public static Prefab well;
+	public static Prefab dryWell;
 	public static Prefab tablet;
 	public static Prefab obelisk;
 	public static Prefab obeliskGlow;
@@ -74,6 +75,7 @@ public class Prefabs {
 		final PrefabComponent palm = add(new PrefabComponent(mesh("palm/palm.obj"), texture("palm/palm.png")).setCulling(false));
 
 		Prefabs.well = new Prefab(true, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well.png"))));
+		Prefabs.dryWell = new Prefab(false, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well_dry.png"))));
 		Prefabs.tablet = new Prefab(true, add(new PrefabComponent(mesh("tablet/tablet.obj"), texture("tablet/tablet.png"))));
 		Prefabs.jar1 = new Prefab(true, add(new PrefabComponent(mesh("jar/jar1.obj"), texture("jar/jar.png"))));
 		Prefabs.broken = new Prefab(false, add(new PrefabComponent(mesh("jar/broken.obj"), texture("jar/broken.png"))));
