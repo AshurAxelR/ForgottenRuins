@@ -4,6 +4,8 @@ import com.xrbpowered.gl.client.ClientInput;
 import com.xrbpowered.gl.scene.Actor;
 import com.xrbpowered.gl.scene.CameraActor;
 import com.xrbpowered.ruins.Ruins;
+import com.xrbpowered.ruins.render.DebugPaths;
+import com.xrbpowered.ruins.world.PathFinder;
 import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
@@ -43,6 +45,7 @@ public class PlayerActor extends Actor {
 	}
 	public void reset(World world) {
 		controller.collider.world = world;
+		controller.collider.world.pathfinder.clear();
 		returnToStart();
 
 		alive = true;
@@ -140,7 +143,10 @@ public class PlayerActor extends Actor {
 			dt = dtLimit;
 		controller.update(dt);
 		if(updateMapPosition()) {
-			//System.out.printf("%d %d %d\n", mapx, mapz, mapy);
+			PathFinder paths = controller.collider.world.pathfinder;
+			paths.clear();
+			paths.update(mapx, mapz, mapy, 1000);
+			DebugPaths.update(controller.collider.world);
 		}
 		if(alive && controller.isDrowning()) {
 			cameraLevel -= dt*0.25f;

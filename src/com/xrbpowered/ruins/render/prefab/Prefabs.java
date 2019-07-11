@@ -123,7 +123,13 @@ public class Prefabs {
 			comp.finishCreateInstances();
 		System.gc();
 	}
-	
+
+	public static void drawInstances(PrefabComponent comp) {
+		shader.use();
+		comp.drawInstances();
+		shader.unuse();
+	}
+
 	public static void drawInstances() {
 		shader.use();
 		for(PrefabComponent comp : components) {

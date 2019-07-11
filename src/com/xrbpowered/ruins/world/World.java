@@ -15,6 +15,8 @@ public class World {
 	public final Tile[][][] map;
 	public int startx, startz;
 	
+	public PathFinder pathfinder = new PathFinder(this);
+	
 	public ObeliskSystem obelisks = new ObeliskSystem(this);
 	public VerseSystem verses = new VerseSystem();
 	

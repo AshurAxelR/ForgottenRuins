@@ -17,6 +17,7 @@ import com.xrbpowered.gl.scene.Controller;
 import com.xrbpowered.gl.ui.common.UIFpsOverlay;
 import com.xrbpowered.gl.ui.pane.UIOffscreen;
 import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.render.DebugPaths;
 import com.xrbpowered.ruins.render.TileObjectPicker;
 import com.xrbpowered.ruins.render.WallBuilder;
 import com.xrbpowered.ruins.render.WallChunk;
@@ -155,6 +156,8 @@ public class Ruins extends UIClient {
 				
 				Prefabs.drawInstances();
 				//pick.update(target, true);
+				
+				DebugPaths.draw();
 			}
 		};
 		
@@ -257,6 +260,11 @@ public class Ruins extends UIClient {
 						hud.setVisible(activeController==player.controller);
 						activeController.setMouseLook(true);
 					}
+					break;
+				case KeyEvent.VK_F2:
+					DebugPaths.show = !DebugPaths.show;
+					if(DebugPaths.show)
+						DebugPaths.update(world);
 					break;
 				default:
 					if(activeController==player.controller && Item.keyPressed(code, player))

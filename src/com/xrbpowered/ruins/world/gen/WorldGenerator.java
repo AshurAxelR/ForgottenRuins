@@ -120,11 +120,11 @@ public class WorldGenerator {
 	private Tile setRamp(int x, int z, int y, Direction rampd) {
 		Tile prev = map[x][z][y];
 		if(prev.type==TileType.ramp)
-			return (prev.dir==rampd) ? prev : null;
+			return (prev.rampDir==rampd) ? prev : null;
 		if(prev.type==TileType.undefined) {
 			// TODO check ramp neighbours
 			map[x][z][y] = new Tile(TileType.ramp);
-			map[x][z][y].dir = rampd;
+			map[x][z][y].rampDir = rampd;
 			return prev;
 		}
 		return null;
@@ -320,13 +320,13 @@ public class WorldGenerator {
 				objects++;
 			if(adji.platform)
 				pass = true;
-			else if(adj.type==TileType.ramp && adj.dir==d) {
+			else if(adj.type==TileType.ramp && adj.rampDir==d) {
 				pass = true;
 				ramp = true;
 			}
 			else {
 				adj = map[x+d.dx][z+d.dz][y-1];
-				if(adj.type==TileType.ramp && adj.dir==d.opposite()) {
+				if(adj.type==TileType.ramp && adj.rampDir==d.opposite()) {
 					pass = true;
 					ramp = true;
 				}
