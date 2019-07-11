@@ -254,7 +254,7 @@ public class Ruins extends UIClient {
 						overlayInventory.updateAndShow(player);
 					break;
 				case KeyEvent.VK_F1:
-					if(code==KeyEvent.VK_F1 && settings.enableObserver) {
+					if(settings.enableObserver) {
 						activeController.setMouseLook(false);
 						activeController = (activeController==player.controller) ? observerController : player.controller;
 						hud.setVisible(activeController==player.controller);
@@ -262,12 +262,14 @@ public class Ruins extends UIClient {
 					}
 					break;
 				case KeyEvent.VK_F2:
-					DebugPaths.show = !DebugPaths.show;
-					if(DebugPaths.show)
-						DebugPaths.update(world);
+					if(settings.enableDebugPaths) {
+						DebugPaths.show = !DebugPaths.show;
+						if(DebugPaths.show)
+							DebugPaths.update(world);
+					}
 					break;
 				default:
-					if(activeController==player.controller && Item.keyPressed(code, player))
+					if(activeController==player.controller && player.alive && Item.keyPressed(code, player))
 						return;
 					super.keyPressed(c, code);
 			}

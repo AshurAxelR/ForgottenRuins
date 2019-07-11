@@ -19,6 +19,7 @@ public class GlobalSettings {
 	public boolean vsync = true;
 	public int noVsyncSleep = 0;
 	public boolean enableObserver = false;
+	public boolean enableDebugPaths = false;
 	
 	public static HashMap<String, String> loadValues() {
 		try {
@@ -76,6 +77,7 @@ public class GlobalSettings {
 		s.vsync = getBoolean(values.get("vsync"), s.vsync);
 		s.noVsyncSleep = getInt(values.get("noVsyncSleep"), 0, 1000, s.noVsyncSleep);
 		s.enableObserver = getBoolean(values.get("enableObserver"), s.enableObserver);
+		s.enableDebugPaths = getBoolean(values.get("enableDebugPaths"), s.enableDebugPaths);
 
 		return s;
 	}
