@@ -63,7 +63,7 @@ public class PathFinder {
 			Tile lower = world.map[t.x][t.z][t.y-1];
 			if(lower.type==TileType.solid)
 				return t;
-			else if(lower.type==TileType.ramp) {
+			else if(lower.type==TileType.ramp && lower.rampDir==d.opposite()) {
 				t.y--;
 				return t;
 			}

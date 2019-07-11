@@ -2,8 +2,6 @@ package com.xrbpowered.ruins.render;
 
 import java.awt.Color;
 
-import org.lwjgl.opengl.GL11;
-
 import com.xrbpowered.gl.res.mesh.FastMeshBuilder;
 import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.ruins.Ruins;
@@ -58,7 +56,7 @@ public class DebugPaths {
 	
 	public static void draw() {
 		if(dot!=null && show) {
-			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+			//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 			Prefabs.drawInstances(dot);
 		}
 	}
