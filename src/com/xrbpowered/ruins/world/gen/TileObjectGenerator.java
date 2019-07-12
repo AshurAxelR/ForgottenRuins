@@ -3,6 +3,7 @@ package com.xrbpowered.ruins.world.gen;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.xrbpowered.ruins.entity.mob.Ghost;
 import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.ObeliskSystem;
 import com.xrbpowered.ruins.world.TileType;
@@ -70,6 +71,10 @@ public class TileObjectGenerator {
 		return (wh>=min) ? wd : null;
 	}
 
+	private int distToStart(Token t) {
+		return (t.x-world.startx)+(t.z-world.startz)+(t.y-1); 
+	}
+	
 	private void generateWell(int cx, int cz, int span) {
 		int ix = random.nextInt(span);
 		int jz = random.nextInt(span);
@@ -102,9 +107,12 @@ public class TileObjectGenerator {
 		for(int count = 0; count<DryWell.count;) {
 			Token t = objTokens.get(random.nextInt(objTokens.size()));
 			if(isBottom(t) || t.y>3 && world.map[t.x][t.z][t.y-3].type==TileType.solid) {
-				objects.add(new DryWell(world, t));
-				objTokens.remove(t);
-				count++;
+				if(distToStart(t)>10) {
+					objects.add(new DryWell(world, t));
+					world.mobs.add(new Ghost(world).spawn(t.x, t.z, t.y, t.d, random.nextFloat()));
+					objTokens.remove(t);
+					count++;
+				}
 			}
 		}
 	}

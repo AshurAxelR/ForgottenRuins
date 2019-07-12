@@ -29,8 +29,7 @@ public class PrefabRenderer extends ComponentRenderer<PrefabComponent> {
 		final PrefabComponent palm = add(new PrefabComponent(mesh("palm/palm.obj"), texture("palm/palm.png")).setCulling(false));
 
 		PrefabRenderer.well = new Prefab(true, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well.png"))));
-		//Prefabs.dryWell = new Prefab(false, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well_dry.png"))));
-		PrefabRenderer.dryWell = new Prefab(false, add(new PrefabComponent(mesh("../entities/ghost.obj"), texture("../entities/ghost.png"))));
+		PrefabRenderer.dryWell = new Prefab(false, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well_dry.png"))));
 		PrefabRenderer.tablet = new Prefab(true, add(new PrefabComponent(mesh("tablet/tablet.obj"), texture("tablet/tablet.png"))));
 		PrefabRenderer.jar1 = new Prefab(true, add(new PrefabComponent(mesh("jar/jar1.obj"), texture("jar/jar.png"))));
 		PrefabRenderer.broken = new Prefab(false, add(new PrefabComponent(mesh("jar/broken.obj"), texture("jar/broken.png"))));
@@ -58,7 +57,7 @@ public class PrefabRenderer extends ComponentRenderer<PrefabComponent> {
 			obj.addPrefabInstance();
 		for(PrefabComponent comp : components)
 			comp.finishCreateInstances();
-		System.gc();
+		// System.gc();
 	}
 
 	public void updateAllInstances(World world) {

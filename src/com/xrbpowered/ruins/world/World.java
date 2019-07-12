@@ -1,8 +1,10 @@
 package com.xrbpowered.ruins.world;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.entity.mob.MobEntity;
 import com.xrbpowered.ruins.world.gen.WorldGenerator;
 import com.xrbpowered.ruins.world.obj.MapObject;
 
@@ -21,6 +23,7 @@ public class World {
 	public VerseSystem verses = new VerseSystem();
 	
 	public final ArrayList<MapObject> objects = new ArrayList<>();
+	public final ArrayList<MobEntity> mobs = new ArrayList<>();
 	
 	public final PlayerActor player;
 	
@@ -36,6 +39,14 @@ public class World {
 				}
 			}
 	}
+
+	public void updateMobs(float dt) {
+		for(Iterator<MobEntity> i = mobs.iterator(); i.hasNext();) {
+			MobEntity mob = i.next();
+			if(!mob.updateTime(dt))
+				i.remove();
+		}
+	}
 	
 	public static boolean isEdge(int x, int z) {
 		return (x==0 || z==0 || x==size-1 || z==size-1);
@@ -44,7 +55,7 @@ public class World {
 	public static boolean isInside(int x, int z) {
 		return (x>=0 && z>=0 && x<size && z<size);
 	}
-
+	
 	public static World createWorld(long seed, PlayerActor player) {
 		for(;;) {
 			World world = new World(seed, player);
