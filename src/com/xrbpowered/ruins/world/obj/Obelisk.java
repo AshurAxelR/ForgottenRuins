@@ -1,7 +1,8 @@
 package com.xrbpowered.ruins.world.obj;
 
+import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.render.prefab.Prefab;
-import com.xrbpowered.ruins.render.prefab.Prefabs;
+import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.ObeliskSystem;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
@@ -18,7 +19,7 @@ public class Obelisk extends TileObject {
 
 	@Override
 	public Prefab getPrefab() {
-		return visited ? Prefabs.obeliskGlow : Prefabs.obelisk;
+		return visited ? PrefabRenderer.obeliskGlow : PrefabRenderer.obelisk;
 	}
 	
 	@Override
@@ -36,7 +37,7 @@ public class Obelisk extends TileObject {
 		if(visited==false) {
 			visited = true;
 			System.out.printf("New obelisk! Visited %d of %d.\n", system.countVisited(), system.countTotal());
-			Prefabs.updateAllInstances(world);
+			Ruins.prefabs.updateAllInstances(world);
 		}
 		else {
 			System.out.println("Already visited...");

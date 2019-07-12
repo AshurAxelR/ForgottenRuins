@@ -2,7 +2,7 @@ package com.xrbpowered.ruins.world.obj;
 
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.render.prefab.Prefab;
-import com.xrbpowered.ruins.render.prefab.Prefabs;
+import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
@@ -16,7 +16,7 @@ public class Tablet extends TileObject {
 
 	@Override
 	public Prefab getPrefab() {
-		return Prefabs.tablet;
+		return PrefabRenderer.tablet;
 	}
 	
 	@Override

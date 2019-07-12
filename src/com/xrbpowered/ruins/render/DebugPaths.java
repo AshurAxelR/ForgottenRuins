@@ -5,9 +5,9 @@ import java.awt.Color;
 import com.xrbpowered.gl.res.mesh.FastMeshBuilder;
 import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.render.prefab.PrefabComponent;
-import com.xrbpowered.ruins.render.prefab.PrefabComponent.InstanceInfo;
-import com.xrbpowered.ruins.render.prefab.Prefabs;
+import com.xrbpowered.ruins.render.prefab.ComponentShader;
+import com.xrbpowered.ruins.render.prefab.EntityComponent;
+import com.xrbpowered.ruins.render.prefab.InstanceInfo;
 import com.xrbpowered.ruins.render.shader.WallShader;
 import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.PathFinder.Token;
@@ -20,7 +20,8 @@ public class DebugPaths {
 
 	public static boolean show = false;
 	
-	private static PrefabComponent dot;
+	private static final int maxCount = 1000;
+	private static EntityComponent dot;
 
 	private static void tracePath(World world, Token t) {
 		Tile tile = world.map[t.x][t.z][t.y];
@@ -42,9 +43,10 @@ public class DebugPaths {
 		if(Ruins.preview || !show)
 			return;
 		
-		if(dot==null)
-			dot = new PrefabComponent(FastMeshBuilder.cube(0.2f, WallShader.vertexInfo, null), new Texture(Color.RED));
-		dot.releaseInstances();
+		if(dot==null) {
+			dot = new EntityComponent(FastMeshBuilder.cube(0.2f, WallShader.vertexInfo, null), new Texture(Color.RED));
+			dot.allocateInstanceData(maxCount);
+		}
 		dot.startCreateInstances();
 		
 		for(Obelisk obj : world.obelisks.obelisks)
@@ -57,7 +59,10 @@ public class DebugPaths {
 	public static void draw() {
 		if(dot!=null && show) {
 			//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-			Prefabs.drawInstances(dot);
+			ComponentShader shader = ComponentShader.getInstance();
+			shader.use();
+			dot.drawInstances();
+			shader.unuse();
 		}
 	}
 

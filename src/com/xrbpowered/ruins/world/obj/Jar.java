@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.render.prefab.Prefab;
-import com.xrbpowered.ruins.render.prefab.Prefabs;
+import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
 
@@ -45,7 +45,7 @@ public class Jar extends SmallObject {
 
 	@Override
 	public Prefab getPrefab() {
-		return broken ? Prefabs.broken : Prefabs.jar1;
+		return broken ? PrefabRenderer.broken : PrefabRenderer.jar1;
 	}
 	
 	@Override
@@ -75,7 +75,7 @@ public class Jar extends SmallObject {
 			world.player.coins += coins;
 			coins = 0;
 			broken = true;
-			Prefabs.updateAllInstances(world);
+			Ruins.prefabs.updateAllInstances(world);
 		}
 	}
 }

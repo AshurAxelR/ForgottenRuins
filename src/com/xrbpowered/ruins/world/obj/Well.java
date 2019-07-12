@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.world.obj;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.render.prefab.Prefab;
-import com.xrbpowered.ruins.render.prefab.Prefabs;
+import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 import com.xrbpowered.ruins.world.item.EmptyFlask;
@@ -19,7 +19,7 @@ public class Well extends TileObject {
 
 	@Override
 	public Prefab getPrefab() {
-		return Prefabs.well;
+		return PrefabRenderer.well;
 	}
 	
 	@Override

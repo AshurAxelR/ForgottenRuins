@@ -3,8 +3,8 @@ package com.xrbpowered.ruins.world.obj;
 import org.joml.Vector3f;
 
 import com.xrbpowered.gl.scene.Actor;
+import com.xrbpowered.ruins.render.prefab.InstanceInfo;
 import com.xrbpowered.ruins.render.prefab.Prefab;
-import com.xrbpowered.ruins.render.prefab.PrefabComponent.InstanceInfo;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator;
 
