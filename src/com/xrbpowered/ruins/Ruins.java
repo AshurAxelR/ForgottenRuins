@@ -23,6 +23,7 @@ import com.xrbpowered.ruins.render.WallBuilder;
 import com.xrbpowered.ruins.render.WallChunk;
 import com.xrbpowered.ruins.render.effects.FlashPane;
 import com.xrbpowered.ruins.render.prefab.ComponentShader;
+import com.xrbpowered.ruins.render.prefab.MobRenderer;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.render.shader.ShaderEnvironment;
 import com.xrbpowered.ruins.render.shader.WallShader;
@@ -58,6 +59,7 @@ public class Ruins extends UIClient {
 	public static boolean pause = false;
 
 	public static PrefabRenderer prefabs;
+	public static MobRenderer mobs;
 	
 	public static Ruins ruins;
 	public static UIHud hud;
@@ -116,6 +118,7 @@ public class Ruins extends UIClient {
 				
 				ComponentShader.createInstance(environment, player.camera);
 				prefabs = new PrefabRenderer();
+				mobs = new MobRenderer();
 				createWorldResources();
 				
 				player.camera.position.z = -8f;
@@ -132,6 +135,7 @@ public class Ruins extends UIClient {
 						observerController.update(dt);
 					else
 						player.updateTime(dt);
+					world.updateMobs(dt);
 				}
 				super.updateTime(dt);
 			}
@@ -159,6 +163,8 @@ public class Ruins extends UIClient {
 				shader.unuse();
 				
 				prefabs.drawInstances();
+				mobs.updateInstances(world);
+				mobs.drawInstances();
 				//pick.update(target, true);
 				
 				DebugPaths.draw();
@@ -184,6 +190,7 @@ public class Ruins extends UIClient {
 		walls = WallBuilder.createChunks(world, atlas);
 
 		prefabs.createInstances(world);
+		mobs.allocateInstanceData(world);
 
 		player.reset(world);
 		pick.setWorld(world, walls);
@@ -192,6 +199,7 @@ public class Ruins extends UIClient {
 	private void releaseWorldResources() {
 		if(world!=null) {
 			prefabs.releaseInstances();
+			mobs.releaseInstances();
 			for(WallChunk wall : walls)
 				wall.release();
 		}

@@ -10,18 +10,19 @@ public class InstanceInfo {
 	public float scale = 1f;
 	public float light = 1f;
 
-	public InstanceInfo(float light) {
-		this.x = 0;
-		this.z = 0;
-		this.y = 0;
-		this.light = light;
-	}
-
 	public InstanceInfo(float x, float z, float y, float light) {
 		this.x = x;
 		this.z = z;
 		this.y = y;
 		this.light = light;
+	}
+
+	public InstanceInfo() {
+		this(0f, 0f, 0f, 1f);
+	}
+
+	public InstanceInfo(float light) {
+		this(0f, 0f, 0f, light);
 	}
 
 	public InstanceInfo(float x, float z, float y) {
