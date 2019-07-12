@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.world.gen;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.xrbpowered.ruins.render.prefab.PrefabComponent.InstanceInfo;
+import com.xrbpowered.ruins.render.prefab.InstanceInfo;
 import com.xrbpowered.ruins.world.Tile;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;

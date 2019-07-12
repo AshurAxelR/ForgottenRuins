@@ -5,7 +5,7 @@ import com.xrbpowered.gl.scene.ActorPicker;
 import com.xrbpowered.gl.scene.StaticMeshActor;
 import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.render.prefab.PrefabComponent;
-import com.xrbpowered.ruins.render.prefab.Prefabs;
+import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.obj.MapObject;
 
@@ -65,13 +65,13 @@ public class TileObjectPicker {
 		int pickId = pick.finishPicking(target);
 		if(pickId<=0 || pickId>world.objects.size()) {
 			pickObject = null;
-			Prefabs.pickedComponent = null;
-			Prefabs.pickedComponentIndex = -1;
+			PrefabRenderer.pickedComponent = null;
+			PrefabRenderer.pickedComponentIndex = -1;
 		}
 		else {
 			pickObject = world.objects.get(pickId-1);
-			Prefabs.pickedComponent = pickObject.getInteractionComp();
-			Prefabs.pickedComponentIndex = pickObject.intractionComponentIndex;
+			PrefabRenderer.pickedComponent = pickObject.getInteractionComp();
+			PrefabRenderer.pickedComponentIndex = pickObject.intractionComponentIndex;
 		}
 	}
 	

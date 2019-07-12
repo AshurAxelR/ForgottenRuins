@@ -2,7 +2,6 @@ package com.xrbpowered.ruins.render.prefab;
 
 import java.util.Random;
 
-import com.xrbpowered.ruins.render.prefab.PrefabComponent.InstanceInfo;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.obj.SmallObject;
 import com.xrbpowered.ruins.world.obj.TileObject;

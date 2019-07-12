@@ -22,7 +22,8 @@ import com.xrbpowered.ruins.render.TileObjectPicker;
 import com.xrbpowered.ruins.render.WallBuilder;
 import com.xrbpowered.ruins.render.WallChunk;
 import com.xrbpowered.ruins.render.effects.FlashPane;
-import com.xrbpowered.ruins.render.prefab.Prefabs;
+import com.xrbpowered.ruins.render.prefab.ComponentShader;
+import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.render.shader.ShaderEnvironment;
 import com.xrbpowered.ruins.render.shader.WallShader;
 import com.xrbpowered.ruins.render.texture.TextureAtlas;
@@ -56,6 +57,8 @@ public class Ruins extends UIClient {
 	public static boolean preview = true;
 	public static boolean pause = false;
 
+	public static PrefabRenderer prefabs;
+	
 	public static Ruins ruins;
 	public static UIHud hud;
 	public static FlashPane flash;
@@ -111,7 +114,8 @@ public class Ruins extends UIClient {
 				groundTexture = new Texture("ground.png", true, false);
 				groundMesh = WallBuilder.createGround(80f);
 				
-				Prefabs.createResources(environment, player.camera);
+				ComponentShader.createInstance(environment, player.camera);
+				prefabs = new PrefabRenderer();
 				createWorldResources();
 				
 				player.camera.position.z = -8f;
@@ -154,7 +158,7 @@ public class Ruins extends UIClient {
 				groundMesh.draw();
 				shader.unuse();
 				
-				Prefabs.drawInstances();
+				prefabs.drawInstances();
 				//pick.update(target, true);
 				
 				DebugPaths.draw();
@@ -179,7 +183,7 @@ public class Ruins extends UIClient {
 		world = World.createWorld(System.currentTimeMillis(), player);
 		walls = WallBuilder.createChunks(world, atlas);
 
-		Prefabs.createInstances(world);
+		prefabs.createInstances(world);
 
 		player.reset(world);
 		pick.setWorld(world, walls);
@@ -187,7 +191,7 @@ public class Ruins extends UIClient {
 	
 	private void releaseWorldResources() {
 		if(world!=null) {
-			Prefabs.releaseInstances();
+			prefabs.releaseInstances();
 			for(WallChunk wall : walls)
 				wall.release();
 		}
