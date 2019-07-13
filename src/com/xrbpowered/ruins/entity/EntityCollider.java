@@ -1,4 +1,4 @@
-package com.xrbpowered.ruins.entity.player;
+package com.xrbpowered.ruins.entity;
 
 import org.joml.Vector3f;
 
@@ -7,44 +7,41 @@ import com.xrbpowered.ruins.world.Tile;
 import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
 
-public class PlayerCollider {
+public class EntityCollider {
 
-	public float r = 0.3f;
-	
-	public World world = null;
-
-	public int mapx(float x) {
-		return Math.round(x/2f);
-	}
-
-	public int mapz(float z) {
-		return Math.round(z/2f);
-	}
-
-	public int mapy(float y) {
-		int my = Math.round(y);
-		if(my<0)
-			my = 0;
-		return my;
-	}
-	
 	private static Tile emptyCell = new Tile(TileType.empty);
+
+	public final EntityActor entity;
+	private float r, height;
+	private float[] dyPoints;
+
+	public boolean hitx, hitz, hitTop;
+	public boolean falling;
+
+	public EntityCollider(EntityActor entity) {
+		this.entity = entity;
+		entity.setEntityDimensions(this);
+	}
+	
+	public void setEntityDimensions(float r, float h, float[] dyPoints) {
+		this.r = r;
+		this.height = h;
+		this.dyPoints = dyPoints;
+	}
 
 	public Tile map(int mx, int mz, int my) {
 		if(mx<0 || mx>=World.size || mz<0 || mz>=World.size || my>=World.height)
 			return emptyCell;
-		return world.map[mx][mz][my];
+		return entity.world.map[mx][mz][my];
 	}
 
-	public boolean hitx, hitz, hitTop;
-	
 	public float clipx(Vector3f pos, float vx, float dy) {
 		float sv = Math.signum(vx);
 		if(sv==0)
 			return pos.x;
-		int mx = mapx(pos.x+vx+r*sv);
-		int mz = mapz(pos.z);
-		int my = mapy(pos.y+dy);
+		int mx = World.mapx(pos.x+vx+r*sv);
+		int mz = World.mapz(pos.z);
+		int my = World.mapy(pos.y+dy);
 		hitx = map(mx, mz, my).type==TileType.solid;
 		if(hitx)
 			return mx*2f - sv*(1+r);
@@ -56,14 +53,31 @@ public class PlayerCollider {
 		float sv = Math.signum(vz);
 		if(sv==0)
 			return pos.z;
-		int mx = mapx(pos.x);
-		int mz = mapz(pos.z+vz+r*sv);
-		int my = mapy(pos.y+dy);
+		int mx = World.mapx(pos.x);
+		int mz = World.mapz(pos.z+vz+r*sv);
+		int my = World.mapy(pos.y+dy);
 		hitz = map(mx, mz, my).type==TileType.solid; 
 		if(hitz)
 			return mz*2f - sv*(1+r);
 		else
 			return pos.z + vz;
+	}
+	
+	private static final Vector3f v = new Vector3f();
+
+	public void clipxz(Vector3f velocity, Vector3f position) {
+		v.set(velocity);
+		for(float dy : dyPoints) {
+			float nx = clipx(position, v.x, dy);
+			float nz = clipz(position, v.z, dy);
+			v.x = nx - position.x;
+			v.z = nz - position.z;
+			if(hitx && hitz) {
+				// FIXME corner collision
+			}
+		}
+		position.x += v.x;
+		position.z += v.z;
 	}
 	
 	public float rampy(float x, float z, int mx, int mz, Direction rampd) {
@@ -72,25 +86,23 @@ public class PlayerCollider {
 		return (sx*rampd.dx + sz*rampd.dz+1)*0.5f;
 	}
 	
-	public boolean falling;
-
-	public float clipyTop(Vector3f pos, float vy, float dy) {
-		int mx = mapx(pos.x);
-		int mz = mapz(pos.z);
-		int my = mapy(pos.y+dy+vy);
+	public float clipyTop(Vector3f pos, float vy) {
+		int mx = World.mapx(pos.x);
+		int mz = World.mapz(pos.z);
+		int my = World.mapy(pos.y+height+vy);
 		Tile cell = map(mx, mz, my);
 		hitTop = cell.type==TileType.solid;
 		if(hitTop)
-			return my-1.01f-dy;
+			return my-1.01f-height;
 		else
 			return pos.y + vy;
 	}
 
 	public float clipy(Vector3f pos) {
 		falling = false;
-		int mx = mapx(pos.x);
-		int mz = mapz(pos.z);
-		int my = mapy(pos.y);
+		int mx = World.mapx(pos.x);
+		int mz = World.mapz(pos.z);
+		int my = World.mapy(pos.y);
 		if(my<=0)
 			return 0;
 		

@@ -77,4 +77,19 @@ public class World {
 		}
 	}
 	
+	public static int mapx(float x) {
+		return Math.round(x/2f);
+	}
+
+	public static int mapz(float z) {
+		return Math.round(z/2f);
+	}
+
+	public static int mapy(float y) {
+		int my = Math.round(y);
+		if(my<0)
+			my = 0;
+		return my;
+	}
+	
 }
