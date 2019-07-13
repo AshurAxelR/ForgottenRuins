@@ -21,9 +21,14 @@ public abstract class TileObject extends MapObject {
 		this.y = objToken.y;
 		this.d = objToken.d;
 		this.seed = seedXZY(world.seed+58932, x, z, y);
-		world.map[x][z][y].tileObject = this;
 		
 		position = new Vector3f(x*2f, y, z*2f);
+	}
+	
+	@Override
+	public void place() {
+		super.place();
+		world.map[x][z][y].tileObject = this;
 	}
 	
 	@Override

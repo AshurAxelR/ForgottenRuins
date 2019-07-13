@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.world.item;
 import java.awt.event.KeyEvent;
 
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.entity.player.PlayerEntity;
 
 public class AmuletOfReturn extends Item {
 
@@ -23,7 +23,7 @@ public class AmuletOfReturn extends Item {
 	}
 	
 	@Override
-	public boolean use(PlayerActor player) {
+	public boolean use(PlayerEntity player) {
 		player.returnToStart();
 		Ruins.ruins.setOverlay(null);
 		return true;

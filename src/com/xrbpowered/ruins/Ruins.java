@@ -16,7 +16,8 @@ import com.xrbpowered.gl.scene.CameraActor;
 import com.xrbpowered.gl.scene.Controller;
 import com.xrbpowered.gl.ui.common.UIFpsOverlay;
 import com.xrbpowered.gl.ui.pane.UIOffscreen;
-import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.entity.player.PlayerController;
+import com.xrbpowered.ruins.entity.player.PlayerEntity;
 import com.xrbpowered.ruins.render.DebugPaths;
 import com.xrbpowered.ruins.render.TileObjectPicker;
 import com.xrbpowered.ruins.render.WallBuilder;
@@ -47,12 +48,13 @@ public class Ruins extends UIClient {
 	private TextureAtlas atlas;
 	
 	private Controller observerController;
-	private Controller activeController;
+	private boolean observerActive = false;
 	
 	private StaticMesh groundMesh;
 	private Texture groundTexture;
 
-	private PlayerActor player = new PlayerActor(input);
+	private PlayerEntity player;
+	private CameraActor camera;
 
 	public static World world;
 	public static boolean preview = true;
@@ -92,7 +94,7 @@ public class Ruins extends UIClient {
 			@Override
 			public void setSize(float width, float height) {
 				super.setSize(width, height);
-				player.camera.setAspectRatio(getWidth(), getHeight());
+				camera.setAspectRatio(getWidth(), getHeight());
 			}
 			
 			@Override
@@ -103,27 +105,26 @@ public class Ruins extends UIClient {
 				environment.setFog(10, 80, clearColor);
 				environment.lightScale = 0.1f;
 				
-				player.camera = new CameraActor.Perspective().setRange(0.1f, 80f).setAspectRatio(getWidth(), getHeight());
-				pick = new TileObjectPicker(player);
+				camera = new CameraActor.Perspective().setRange(0.1f, 80f).setAspectRatio(getWidth(), getHeight());
+				pick = new TileObjectPicker(camera);
 				
-				shader = (WallShader) new WallShader().setEnvironment(environment).setCamera(player.camera);
+				shader = (WallShader) new WallShader().setEnvironment(environment).setCamera(camera);
 				atlas = new TextureAtlas();
 				
-				observerController = new Controller(input).setActor(player.camera);
+				observerController = new Controller(input).setActor(camera);
 				observerController.moveSpeed = 10f;
-				activeController = player.controller;
 
 				groundTexture = new Texture("ground.png", true, false);
 				groundMesh = WallBuilder.createGround(80f);
 				
-				ComponentShader.createInstance(environment, player.camera);
+				ComponentShader.createInstance(environment, camera);
 				prefabs = new PrefabRenderer();
 				mobs = new MobRenderer();
 				createWorldResources();
 				
-				player.camera.position.z = -8f;
-				player.camera.position.y = World.height/4f;
-				player.camera.updateTransform();
+				camera.position.z = -8f;
+				camera.position.y = World.height/4f;
+				camera.updateTransform();
 				
 				super.setupResources();
 			}
@@ -131,11 +132,9 @@ public class Ruins extends UIClient {
 			@Override
 			public void updateTime(float dt) {
 				if(world!=null && !preview && !pause) {
-					if(activeController==observerController)
+					if(observerActive)
 						observerController.update(dt);
-					else
-						player.updateTime(dt);
-					world.updateMobs(dt);
+					world.update(dt);
 				}
 				super.updateTime(dt);
 			}
@@ -145,7 +144,7 @@ public class Ruins extends UIClient {
 				if(world==null)
 					return;
 				
-				WallChunk.zsort(walls, player.camera);
+				WallChunk.zsort(walls, camera);
 				
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				pick.update(target);
@@ -174,7 +173,7 @@ public class Ruins extends UIClient {
 		flash = new FlashPane(getContainer());
 		
 		overlayInventory = new UIOverlayInventory(getContainer());
-		hud = new UIHud(getContainer(), player);
+		hud = new UIHud(getContainer());
 		
 		overlayVerse = new UIOverlayVerse(getContainer());
 		overlayGameOver = new UIOverlayGameOver(getContainer());
@@ -186,13 +185,13 @@ public class Ruins extends UIClient {
 	}
 	
 	private void createWorldResources() {
-		world = World.createWorld(System.currentTimeMillis(), player);
+		world = World.createWorld(System.currentTimeMillis());
+		player = world.setPlayer(new PlayerEntity(world, input, camera));
 		walls = WallBuilder.createChunks(world, atlas);
 
 		prefabs.createInstances(world);
 		mobs.allocateInstanceData(world);
 
-		player.reset(world);
 		pick.setWorld(world, walls);
 	}
 	
@@ -212,9 +211,12 @@ public class Ruins extends UIClient {
 	}
 	
 	public void grabMouse(boolean grab) {
-		if(activeController==null)
+		if(world==null)
 			return;
-		activeController.setMouseLook(grab);
+		if(observerActive)
+			observerController.setMouseLook(grab);
+		else
+			player.controller.setMouseLook(grab);
 		player.controller.enabled = grab;
 		if(!grab) {
 			input.setMousePos(getWidth()/2, getHeight()/2);
@@ -244,6 +246,21 @@ public class Ruins extends UIClient {
 		getContainer().repaint();
 	}
 	
+	private void enableObserver(boolean enable) {
+		observerActive = enable;
+		player.camera = enable ? null : camera;
+		player.controller.enabled = !enable;
+		hud.setVisible(!enable);
+		if(enable) {
+			player.controller.setMouseLook(false);
+			observerController.setMouseLook(true);
+		}
+		else {
+			observerController.setMouseLook(false);
+			player.controller.setMouseLook(true);
+		}
+	}
+	
 	@Override
 	public void keyPressed(char c, int code) {
 		if(isOverlayActive()) {
@@ -251,8 +268,8 @@ public class Ruins extends UIClient {
 			return;
 		}
 		else {
-			if(code==player.controller.keyJump) {
-				if(activeController==player.controller) {
+			if(code==PlayerController.keyJump) {
+				if(!observerActive) {
 					player.controller.queueJump();
 					return;
 				}
@@ -262,16 +279,12 @@ public class Ruins extends UIClient {
 					overlayMenu.show();
 					break;
 				case KeyEvent.VK_TAB:
-					if(activeController==player.controller)
+					if(!observerActive)
 						overlayInventory.updateAndShow(player);
 					break;
 				case KeyEvent.VK_F1:
-					if(settings.enableObserver) {
-						activeController.setMouseLook(false);
-						activeController = (activeController==player.controller) ? observerController : player.controller;
-						hud.setVisible(activeController==player.controller);
-						activeController.setMouseLook(true);
-					}
+					if(settings.enableObserver)
+						enableObserver(!observerActive);
 					break;
 				case KeyEvent.VK_F2:
 					if(settings.enableDebugPaths) {
@@ -281,7 +294,7 @@ public class Ruins extends UIClient {
 					}
 					break;
 				default:
-					if(activeController==player.controller && player.alive && Item.keyPressed(code, player))
+					if(!observerActive && player.alive && Item.keyPressed(code, player))
 						return;
 					super.keyPressed(c, code);
 			}

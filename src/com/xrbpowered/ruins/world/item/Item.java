@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.world.item;
 import java.util.ArrayList;
 
 import com.xrbpowered.gl.res.texture.Texture;
-import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.entity.player.PlayerEntity;
 
 public abstract class Item {
 
@@ -34,7 +34,7 @@ public abstract class Item {
 		return false;
 	}
 	
-	public boolean use(PlayerActor player) {
+	public boolean use(PlayerEntity player) {
 		return false;
 	}
 	
@@ -60,7 +60,7 @@ public abstract class Item {
 			item.icon.release();
 	}
 	
-	public static boolean keyPressed(int code, PlayerActor player) {
+	public static boolean keyPressed(int code, PlayerEntity player) {
 		for(Item item : items) {
 			if(item.hotkey==code) {
 				player.inventory.use(item, player);

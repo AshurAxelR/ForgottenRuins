@@ -1,9 +1,11 @@
-package com.xrbpowered.ruins.entity;
+package com.xrbpowered.ruins.entity.player;
 
 import com.xrbpowered.gl.client.ClientInput;
-import com.xrbpowered.gl.scene.Actor;
 import com.xrbpowered.gl.scene.CameraActor;
 import com.xrbpowered.ruins.Ruins;
+import com.xrbpowered.ruins.entity.DamageSource;
+import com.xrbpowered.ruins.entity.EntityActor;
+import com.xrbpowered.ruins.entity.WorldEntity;
 import com.xrbpowered.ruins.render.DebugPaths;
 import com.xrbpowered.ruins.world.PathFinder;
 import com.xrbpowered.ruins.world.TileType;
@@ -11,7 +13,7 @@ import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
 import com.xrbpowered.ruins.world.item.ItemList;
 
-public class PlayerActor extends Actor {
+public class PlayerEntity extends EntityActor implements WorldEntity {
 
 	public static final int baseHealth = 100;
 	public static final int baseHydration = 100;
@@ -24,11 +26,10 @@ public class PlayerActor extends Actor {
 	public static final float dtLimit = 0.05f;
 	
 	public final PlayerController controller;
-	public CameraActor camera = null;
+	public CameraActor camera;
 	
 	private float cameraLevel = cameraHeight;
 	
-	public boolean alive = true;
 	public DamageSource lastDamageSource = null;
 	public float deathTimer = 0f;
 	
@@ -38,12 +39,11 @@ public class PlayerActor extends Actor {
 	
 	public ItemList inventory = new ItemList();
 	
-	public int mapx, mapz, mapy;
-	
-	public PlayerActor(ClientInput input) {
+	public PlayerEntity(World world, ClientInput input, CameraActor camera) {
+		super(world);
+		this.camera = camera;
 		controller = new PlayerController(input, this);
-	}
-	public void reset(World world) {
+		
 		controller.collider.world = world;
 		controller.collider.world.pathfinder.clear();
 		returnToStart();
@@ -138,7 +138,8 @@ public class PlayerActor extends Actor {
 			return false;
 	}
 	
-	public void updateTime(float dt) {
+	@Override
+	public boolean updateTime(float dt) {
 		if(dt>dtLimit)
 			dt = dtLimit;
 		controller.update(dt);
@@ -173,6 +174,7 @@ public class PlayerActor extends Actor {
 			}
 		}
 		updateHealth(hydration>0f ? healthRegen*dt : -healthRegen*dt, DamageSource.dehydrate);
+		return true;
 	}
 
 }

@@ -1,33 +1,41 @@
 package com.xrbpowered.ruins.entity.mob;
 
-import com.xrbpowered.gl.scene.Actor;
+import com.xrbpowered.ruins.entity.EntityActor;
+import com.xrbpowered.ruins.entity.WorldEntity;
 import com.xrbpowered.ruins.render.prefab.EntityComponent;
 import com.xrbpowered.ruins.render.prefab.InstanceInfo;
 import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.World;
 
-public abstract class MobEntity extends Actor {
+public abstract class MobEntity extends EntityActor implements WorldEntity {
 
 	public static final float spawnTime = 2f;
-	
-	public final World world;
 	
 	protected final InstanceInfo instInfo = new InstanceInfo();
 	
 	protected float time = 0f;
+	public boolean alive = true;
 	
 	public MobEntity(World world) {
-		this.world = world;
+		super(world);
 	}
 	
-	public MobEntity spawn(int tx, int tz, int ty, Direction d, float delay) {
-		position.x = tx*2f;
-		position.z = tz*2f;
-		position.y = ty;
-		rotation.y = d.rotation();
-		time = -delay*30f;
-		instInfo.light = world.map[tx][tz][ty].light;
-		return this;
+	public MobEntity spawn(int tx, int tz, int ty, Direction d) {
+		if(world.mobs.size()>=World.maxMobs) {
+			alive = false;
+			return null;
+		}
+		else {
+			alive = true;
+			time = 0f;
+			position.x = tx*2f;
+			position.z = tz*2f;
+			position.y = ty;
+			rotation.y = d.rotation();
+			instInfo.light = world.map[tx][tz][ty].light; // FIXME move to addComponentInstance
+			world.mobs.add(this);
+			return this;
+		}
 	}
 	
 	public abstract EntityComponent getRenderComponent();
@@ -46,9 +54,10 @@ public abstract class MobEntity extends Actor {
 		getRenderComponent().addInstance(instInfo);
 	}
 	
+	@Override
 	public boolean updateTime(float dt) {
 		time += dt;
-		return true;
+		return alive;
 	}
 	
 }

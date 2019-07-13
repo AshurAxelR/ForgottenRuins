@@ -3,6 +3,7 @@ package com.xrbpowered.ruins.world.obj;
 import org.joml.Vector3f;
 
 import com.xrbpowered.gl.scene.Actor;
+import com.xrbpowered.ruins.entity.WorldEntity;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabComponent;
 import com.xrbpowered.ruins.world.World;
@@ -17,6 +18,12 @@ public abstract class MapObject {
 
 	public MapObject(World world) {
 		this.world = world;
+	}
+	
+	protected void place() {
+		world.objects.add(this);
+		if(this instanceof WorldEntity)
+			world.objectEntities.add((WorldEntity) this);
 	}
 	
 	public abstract Prefab getPrefab();

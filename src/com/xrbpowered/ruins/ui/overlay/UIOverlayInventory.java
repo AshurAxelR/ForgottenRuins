@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 
 import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.entity.player.PlayerEntity;
 import com.xrbpowered.ruins.ui.UIHud;
 import com.xrbpowered.ruins.world.item.Item;
 import com.xrbpowered.zoomui.UIContainer;
@@ -63,7 +63,7 @@ public class UIOverlayInventory extends UIOverlay {
 		}
 	}
 	
-	public void updateAndShow(PlayerActor player) {
+	public void updateAndShow(PlayerEntity player) {
 		if(!player.alive)
 			return;
 		items.update(player);

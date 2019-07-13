@@ -2,8 +2,8 @@ package com.xrbpowered.ruins.render;
 
 import com.xrbpowered.gl.res.buffer.RenderTarget;
 import com.xrbpowered.gl.scene.ActorPicker;
+import com.xrbpowered.gl.scene.CameraActor;
 import com.xrbpowered.gl.scene.StaticMeshActor;
-import com.xrbpowered.ruins.entity.PlayerActor;
 import com.xrbpowered.ruins.render.prefab.PrefabComponent;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;
@@ -15,15 +15,13 @@ public class TileObjectPicker {
 	
 	private ActorPicker pick;
 
-	private PlayerActor player;
 	private World world;
 	private WallChunk[] walls;
 
 	public MapObject pickObject = null;
 	
-	public TileObjectPicker(PlayerActor player) {
-		this.player = player;
-		this.pick = new ActorPicker(player.camera); 
+	public TileObjectPicker(CameraActor camera) {
+		this.pick = new ActorPicker(camera); 
 	}
 	
 	public void setWorld(World world, WallChunk[] walls) {
@@ -53,7 +51,7 @@ public class TileObjectPicker {
 		for(MapObject obj : world.objects) {
 			PrefabComponent comp = obj.getInteractionComp();
 			if(comp!=null) {
-				float dist = player.position.distance(obj.position);
+				float dist = world.player.position.distance(obj.position);
 				if(dist<=reach) {
 					obj.copyToActor(objActor);
 					objActor.setMesh(comp.mesh);

@@ -16,7 +16,7 @@ public class MobRenderer extends ComponentRenderer<EntityComponent> {
 	
 	public void allocateInstanceData(World world) {
 		for(EntityComponent comp : components)
-			comp.allocateInstanceData(world.mobs.size());
+			comp.allocateInstanceData(World.maxMobs);
 	}
 	
 	public void updateInstances(World world) {
