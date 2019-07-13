@@ -43,6 +43,8 @@ public class Ruins extends UIClient {
 
 	public static GlobalSettings settings = new GlobalSettings();
 	
+	public static final float dtLimit = 0.05f;
+
 	private WallChunk[] walls;
 	private WallShader shader;
 	private TextureAtlas atlas;
@@ -134,7 +136,7 @@ public class Ruins extends UIClient {
 				if(world!=null && !preview && !pause) {
 					if(observerActive)
 						observerController.update(dt);
-					world.update(dt);
+					world.update((dt>dtLimit) ? dtLimit : dt);
 				}
 				super.updateTime(dt);
 			}

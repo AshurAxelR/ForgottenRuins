@@ -5,16 +5,17 @@ import com.xrbpowered.gl.scene.CameraActor;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.DamageSource;
 import com.xrbpowered.ruins.entity.EntityActor;
-import com.xrbpowered.ruins.entity.WorldEntity;
+import com.xrbpowered.ruins.entity.EntityCollider;
 import com.xrbpowered.ruins.render.DebugPaths;
 import com.xrbpowered.ruins.world.PathFinder;
-import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
 import com.xrbpowered.ruins.world.item.ItemList;
 
-public class PlayerEntity extends EntityActor implements WorldEntity {
+public class PlayerEntity extends EntityActor {
 
+	public static final float radius = 0.3f;
+	
 	public static final int baseHealth = 100;
 	public static final int baseHydration = 100;
 	public static final float healthRegen = 0.2f;
@@ -22,8 +23,6 @@ public class PlayerEntity extends EntityActor implements WorldEntity {
 	
 	public static final float cameraHeight = 1.5f;
 	public static final float cameraDeathHeight = 0.3f;
-	
-	public static final float dtLimit = 0.05f;
 	
 	public final PlayerController controller;
 	public CameraActor camera;
@@ -44,8 +43,7 @@ public class PlayerEntity extends EntityActor implements WorldEntity {
 		this.camera = camera;
 		controller = new PlayerController(input, this);
 		
-		controller.collider.world = world;
-		controller.collider.world.pathfinder.clear();
+		world.pathfinder.clear();
 		returnToStart();
 
 		alive = true;
@@ -61,11 +59,6 @@ public class PlayerEntity extends EntityActor implements WorldEntity {
 	
 	public void returnToStart() {
 		controller.reset();
-		World world = controller.collider.world;
-		
-		mapx = world.startx;
-		mapz = world.startz;
-		mapy = 1;
 		
 		position.x = world.startx * 2f;
 		position.z = world.startz * 2f;
@@ -73,9 +66,15 @@ public class PlayerEntity extends EntityActor implements WorldEntity {
 		rotation.x = 0f;
 		rotation.z = 0f;
 		rotation.y = (float) Math.toRadians(-180f);
+		updateMapPosition();
 		updateTransform();
 		
 		cameraLevel = cameraHeight;
+	}
+	
+	@Override
+	public void setEntityDimensions(EntityCollider collider) {
+		collider.setEntityDimensions(radius, cameraHeight, PlayerController.dyPoints);
 	}
 	
 	public void updateHealth(float dh, DamageSource souce) {
@@ -122,16 +121,13 @@ public class PlayerEntity extends EntityActor implements WorldEntity {
 		}
 	}
 	
+	@Override
 	protected boolean updateMapPosition() {
-		int x = controller.collider.mapx(position.x);
-		int z = controller.collider.mapz(position.z);
-		int y = controller.collider.mapy(position.y);
-		while(y>0 && controller.collider.world.map[x][z][y-1].type!=TileType.solid)
-			y--;
-		if(mapx!=x || mapz!=z || mapy!=y) {
-			mapx = x;
-			mapz = z;
-			mapy = y;
+		if(super.updateMapPosition()) {
+			PathFinder paths = world.pathfinder;
+			paths.clear();
+			paths.update(mapx, mapz, mapy, 1000);
+			DebugPaths.update(world);
 			return true;
 		}
 		else
@@ -139,16 +135,13 @@ public class PlayerEntity extends EntityActor implements WorldEntity {
 	}
 	
 	@Override
-	public boolean updateTime(float dt) {
-		if(dt>dtLimit)
-			dt = dtLimit;
+	protected void updateController(float dt) {
 		controller.update(dt);
-		if(updateMapPosition()) {
-			PathFinder paths = controller.collider.world.pathfinder;
-			paths.clear();
-			paths.update(mapx, mapz, mapy, 1000);
-			DebugPaths.update(controller.collider.world);
-		}
+	}
+	
+	@Override
+	public boolean updateTime(float dt) {
+		super.updateTime(dt);
 		if(alive && controller.isDrowning()) {
 			cameraLevel -= dt*0.25f;
 			if(cameraLevel<=cameraDeathHeight) {
