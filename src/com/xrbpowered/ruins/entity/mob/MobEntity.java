@@ -12,10 +12,10 @@ public abstract class MobEntity extends EntityActor {
 	
 	protected final InstanceInfo instInfo = new InstanceInfo();
 	
-	protected float time = 0f;
+	public float time = 0f;
 	public boolean alive = true;
 	
-	private final MobController controller;
+	protected final MobController controller;
 	
 	public MobEntity(World world, float walkSpeed) {
 		super(world);
@@ -51,16 +51,31 @@ public abstract class MobEntity extends EntityActor {
 		instInfo.rotate = rotation.y;
 		if(time<spawnTime)
 			instInfo.y += -2f + 2f*(float)Math.sin(Math.PI*time/spawnTime/2f);
-		else
-			instInfo.rotate += (time-spawnTime) * 0.3f;
 		instInfo.light = world.map[mapx][mapz][mapy].light;
 		getRenderComponent().addInstance(instInfo);
 	}
 	
+	protected void setTarget() {
+		controller.noTarget = true;
+		if(World.isInside(mapx, mapz) && mapy>0) {
+			Direction d = world.map[mapx][mapz][mapy].pathDir;
+			if(d!=null) {
+				d = d.opposite();
+				controller.target.x = mapx*2f + d.dx*1.1f;
+				controller.target.z = mapz*2f + d.dz*1.1f;
+				controller.target.y = mapy;
+				controller.targetDist = world.map[mapx][mapz][mapy].pathDist;
+				controller.noTarget = false;
+			}
+		}
+	}
+	
 	@Override
 	protected void updateController(float dt) {
-		// TODO set target
-		controller.update(dt);
+		if(time>spawnTime) {
+			setTarget();
+			controller.update(dt);
+		}
 	}
 	
 	@Override

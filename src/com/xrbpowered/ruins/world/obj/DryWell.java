@@ -2,7 +2,6 @@ package com.xrbpowered.ruins.world.obj;
 
 import com.xrbpowered.ruins.entity.WorldEntity;
 import com.xrbpowered.ruins.entity.mob.Ghost;
-import com.xrbpowered.ruins.entity.mob.MobEntity;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;
@@ -15,7 +14,7 @@ public class DryWell extends TileObject implements WorldEntity{
 	public static final float spawnPeriod = 30f;
 
 	private float timeToSpawn;
-	private MobEntity ghost = null;
+	private Ghost ghost = null;
 	
 	public DryWell(World world, Token objToken, float spawnDelay) {
 		super(world, objToken);
@@ -32,10 +31,10 @@ public class DryWell extends TileObject implements WorldEntity{
 		if(ghost==null) {
 			timeToSpawn -= dt;
 			if(timeToSpawn<0f) {
-				ghost = new Ghost(world).spawn(x, z, y, d);
+				ghost = (Ghost) new Ghost(world).spawn(x, z, y, d);
 			}
 		}
-		if(ghost!=null && !ghost.alive) {
+		if(ghost!=null && (!ghost.alive || ghost.time>=ghost.lifespan)) {
 			ghost = null;
 			timeToSpawn = spawnPeriod;
 		}

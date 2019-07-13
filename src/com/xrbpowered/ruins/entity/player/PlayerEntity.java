@@ -125,8 +125,10 @@ public class PlayerEntity extends EntityActor {
 	protected boolean updateMapPosition() {
 		if(super.updateMapPosition()) {
 			PathFinder paths = world.pathfinder;
-			paths.clear();
-			paths.update(mapx, mapz, mapy, 1000);
+			if(paths.canUpdate(mapx, mapz, mapy)) {
+				paths.clear();
+				paths.update(mapx, mapz, mapy, 1000);
+			}
 			DebugPaths.update(world);
 			return true;
 		}
