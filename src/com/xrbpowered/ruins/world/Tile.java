@@ -15,6 +15,7 @@ public class Tile {
 	public ArrayList<SmallObject> smallObjects = null;
 	
 	public Direction pathDir = null;
+	public int pathDist = 0;
 	
 	public Tile(TileType type) {
 		this.type = type;

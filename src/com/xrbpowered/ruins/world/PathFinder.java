@@ -47,6 +47,7 @@ public class PathFinder {
 			for(int z=0; z<World.size; z++)
 				for(int y=0; y<World.height; y++) {
 					world.map[x][z][y].pathDir = null;
+					world.map[x][z][y].pathDist = 0;
 				}
 	}
 	
@@ -72,12 +73,13 @@ public class PathFinder {
 		}
 	}
 	
-	private void processTokens() {
+	private void processTokens(int maxDist) {
 		while(!tokens.isEmpty()) {
 			Token t = tokens.removeFirst();
 			Tile tile = world.map[t.x][t.z][t.y];
 			if(tile.pathDir==null) {
 				tile.pathDir = t.d;
+				tile.pathDist = maxDist-t.dist;
 				if(t.dist>0) {
 					for(Direction d : Direction.values()) {
 						Token dt = t.move(d);
@@ -89,11 +91,15 @@ public class PathFinder {
 		}
 	}
 	
+	public boolean canUpdate(int x0, int z0, int y0) {
+		return y0>0 && World.isInside(x0, z0);
+	}
+	
 	public void update(int x0, int z0, int y0, int maxDist) {
-		if(y0<=0)
+		if(!canUpdate(x0, z0, y0))
 			return;
 		tokens.add(new Token(x0, z0, y0, Direction.north, maxDist));
-		processTokens();
+		processTokens(maxDist);
 		tokens.clear();
 		world.map[x0][z0][y0].pathDir = null;
 	}

@@ -164,6 +164,7 @@ public class Ruins extends UIClient {
 				shader.unuse();
 				
 				prefabs.drawInstances();
+				//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 				mobs.updateInstances(world);
 				mobs.drawInstances();
 				//pick.update(target, true);
