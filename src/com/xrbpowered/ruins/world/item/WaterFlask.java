@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.world.item;
 import java.awt.event.KeyEvent;
 
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.entity.player.PlayerEntity;
 
 public class WaterFlask extends Item {
 
@@ -20,11 +20,11 @@ public class WaterFlask extends Item {
 	}
 	
 	@Override
-	public boolean use(PlayerActor player) {
-		if(Math.round(player.hydration)<PlayerActor.baseHydration-5f) {
+	public boolean use(PlayerEntity player) {
+		if(Math.round(player.hydration)<PlayerEntity.baseHydration-5f) {
 			player.hydration += restore;
-			if(player.hydration>PlayerActor.baseHydration)
-				player.hydration = PlayerActor.baseHydration;
+			if(player.hydration>PlayerEntity.baseHydration)
+				player.hydration = PlayerEntity.baseHydration;
 			player.inventory.add(Item.emptyFlask, 1);
 			Ruins.hud.popup.popup("Refreshing...");
 			return true;

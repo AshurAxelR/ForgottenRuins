@@ -8,7 +8,6 @@ import com.xrbpowered.ruins.world.Tile;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 import com.xrbpowered.ruins.world.obj.Jar;
-import com.xrbpowered.ruins.world.obj.MapObject;
 import com.xrbpowered.ruins.world.obj.SmallObject;
 
 public class SmallObjectGenerator {
@@ -61,7 +60,6 @@ public class SmallObjectGenerator {
 	}
 	
 	public final World world;
-	public final ArrayList<MapObject> objects; 
 	
 	public final WorldGenerator gen;
 
@@ -71,7 +69,6 @@ public class SmallObjectGenerator {
 	public SmallObjectGenerator(WorldGenerator gen, Random random) {
 		this.world = gen.world;
 		this.random = random;
-		this.objects = world.objects;
 		this.gen = gen;
 	}
 	
@@ -100,11 +97,8 @@ public class SmallObjectGenerator {
 			InstanceInfo info = new InstanceInfo(tile.light);
 			info.scale = randomScale(obj.getScaleRange());
 			info.rotate = random.nextFloat() * 2f * (float)Math.PI;
-			if(tryAdd(obj.getRadius(info.scale), info)) {
-				obj.place(t, info);
-				tile.addSmallObject(obj);
-				world.objects.add(obj);
-			}
+			if(tryAdd(obj.getRadius(info.scale), info))
+				obj.place(tile, t, info);
 		}
 	}
 	

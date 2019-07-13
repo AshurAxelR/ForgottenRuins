@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.ui.overlay;
 import java.awt.event.KeyEvent;
 
 import com.xrbpowered.gl.ui.UINode;
-import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.entity.player.PlayerEntity;
 import com.xrbpowered.ruins.ui.UIIcon;
 import com.xrbpowered.ruins.world.item.Item;
 import com.xrbpowered.ruins.world.item.ItemList.ItemStack;
@@ -17,10 +17,10 @@ public class UIItemStack extends UINode {
 	private final UIText infoText;
 	
 	private final Item item;
-	private final PlayerActor player;
+	private final PlayerEntity player;
 	private String html;
 	
-	public UIItemStack(UIItemList parent, UIText infoText, ItemStack stack, PlayerActor player) {
+	public UIItemStack(UIItemList parent, UIText infoText, ItemStack stack, PlayerEntity player) {
 		super(parent);
 		this.item = stack.item;
 		this.player = player;

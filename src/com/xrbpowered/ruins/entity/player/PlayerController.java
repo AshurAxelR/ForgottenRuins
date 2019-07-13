@@ -1,4 +1,4 @@
-package com.xrbpowered.ruins.entity;
+package com.xrbpowered.ruins.entity.player;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -6,10 +6,11 @@ import org.joml.Vector3f;
 
 import com.xrbpowered.gl.client.ClientInput;
 import com.xrbpowered.gl.scene.WalkController;
+import com.xrbpowered.ruins.entity.DamageSource;
 
 public class PlayerController extends WalkController {
 
-	public Integer keyJump = VK_SPACE;
+	public static Integer keyJump = VK_SPACE;
 	
 	public final PlayerCollider collider = new PlayerCollider();
 
@@ -25,7 +26,7 @@ public class PlayerController extends WalkController {
 	
 	public boolean enabled = true;
 	
-	public PlayerController(ClientInput input, PlayerActor player) {
+	public PlayerController(ClientInput input, PlayerEntity player) {
 		super(input);
 		setActor(player);
 		moveSpeed = walkSpeed;
@@ -43,7 +44,7 @@ public class PlayerController extends WalkController {
 	}
 	
 	protected boolean isAlive() {
-		return ((PlayerActor) actor).alive;
+		return ((PlayerEntity) actor).alive;
 	}
 	
 	@Override
@@ -96,10 +97,10 @@ public class PlayerController extends WalkController {
 	protected void applyVelocity(float dt) {
 		if(collider.world==null)
 			return;
-		PlayerActor player = (PlayerActor) actor;
+		PlayerEntity player = (PlayerEntity) actor;
 		if(velocity.length()>0) {
 			if(velocity.y>0f) {
-				float ny = collider.clipyTop(player.position, velocity.y, PlayerActor.cameraHeight);
+				float ny = collider.clipyTop(player.position, velocity.y, PlayerEntity.cameraHeight);
 				if(collider.hitTop) {
 					if(speed.y>1f) {
 						float s = 1f/speed.y;

@@ -1,4 +1,4 @@
-package com.xrbpowered.ruins.entity;
+package com.xrbpowered.ruins.entity.player;
 
 import org.joml.Vector3f;
 

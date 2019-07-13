@@ -11,7 +11,7 @@ import com.xrbpowered.gl.res.buffer.RenderTarget;
 import com.xrbpowered.gl.ui.UINode;
 import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.entity.player.PlayerEntity;
 import com.xrbpowered.zoomui.GraphAssist;
 import com.xrbpowered.zoomui.UIContainer;
 import com.xrbpowered.zoomui.UIElement;
@@ -32,8 +32,6 @@ public class UIHud extends UINode {
 	}
 	public static final Color clearColor = new Color(0x77000000, true);
 	
-	public final PlayerActor player;
-	
 	private final UIIcon heartIcon;
 	private final UIIcon waterIcon;
 	private final UIIcon coinIcon;
@@ -50,19 +48,18 @@ public class UIHud extends UINode {
 	private int shownCoins = 0;
 	private final UIPane coinsPane;
 	
-	public UIHud(UIContainer parent, final PlayerActor player) {
+	public UIHud(UIContainer parent) {
 		super(parent);
-		this.player = player;
 		
 		heartIcon = new UIIcon(this, "icons/heart.png");
 		healthBar = new UIBar(this) {
 			@Override
 			public int getValue() {
-				return Math.round(player.health);
+				return Math.round(Ruins.world.player.health);
 			}
 			@Override
 			public int getMaxValue() {
-				return PlayerActor.baseHealth;
+				return PlayerEntity.baseHealth;
 			}
 			@Override
 			public boolean isRedText() {
@@ -73,11 +70,11 @@ public class UIHud extends UINode {
 		waterBar = new UIBar(this) {
 			@Override
 			public int getValue() {
-				return Math.round(player.hydration);
+				return Math.round(Ruins.world.player.hydration);
 			}
 			@Override
 			public int getMaxValue() {
-				return PlayerActor.baseHydration;
+				return PlayerEntity.baseHydration;
 			}
 			@Override
 			public boolean isRedText() {
@@ -174,8 +171,8 @@ public class UIHud extends UINode {
 		String pick = Ruins.pick.pickObject==null ? null : Ruins.pick.pickObject.getPickName();
 		if(pick!=shownPick)
 			updatePickText(pick);
-		if(player.coins!=shownCoins) {
-			shownCoins = player.coins;
+		if(Ruins.world.player.coins!=shownCoins) {
+			shownCoins = Ruins.world.player.coins;
 			coinsPane.repaint();
 		}
 		super.updateTime(dt);

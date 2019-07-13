@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.world.item;
 import java.awt.event.KeyEvent;
 
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.entity.player.PlayerEntity;
 
 public class HealingHerbs extends Item {
 
@@ -25,11 +25,11 @@ public class HealingHerbs extends Item {
 	}
 	
 	@Override
-	public boolean use(PlayerActor player) {
-		if(Math.round(player.health)<PlayerActor.baseHealth) {
+	public boolean use(PlayerEntity player) {
+		if(Math.round(player.health)<PlayerEntity.baseHealth) {
 			player.health += restoreHealth;
-			if(player.health>PlayerActor.baseHealth)
-				player.health = PlayerActor.baseHealth;
+			if(player.health>PlayerEntity.baseHealth)
+				player.health = PlayerEntity.baseHealth;
 			player.hydration += waterCost;
 			if(player.hydration<0)
 				player.hydration = 0;

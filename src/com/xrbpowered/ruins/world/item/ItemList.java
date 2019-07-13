@@ -2,7 +2,7 @@ package com.xrbpowered.ruins.world.item;
 
 import java.util.TreeMap;
 
-import com.xrbpowered.ruins.entity.PlayerActor;
+import com.xrbpowered.ruins.entity.player.PlayerEntity;
 
 public class ItemList {
 
@@ -61,7 +61,7 @@ public class ItemList {
 		s.add(count);
 	}
 	
-	public boolean use(Item item, PlayerActor player) {
+	public boolean use(Item item, PlayerEntity player) {
 		ItemStack s = getStack(item);
 		if(s==null)
 			return false;
