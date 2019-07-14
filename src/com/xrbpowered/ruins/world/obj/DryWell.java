@@ -9,7 +9,7 @@ import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
 public class DryWell extends TileObject implements WorldEntity{
 
-	public static final int count = 100;
+	public static final int count = 50;
 	public static final float maxInitialSpawnDelay = 120f;
 	public static final float spawnPeriod = 30f;
 

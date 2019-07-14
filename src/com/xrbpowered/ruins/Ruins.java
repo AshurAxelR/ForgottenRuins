@@ -196,6 +196,8 @@ public class Ruins extends UIClient {
 		mobs.allocateInstanceData(world);
 
 		pick.setWorld(world, walls);
+		if(observerActive)
+			enableObserver(true);
 	}
 	
 	private void releaseWorldResources() {

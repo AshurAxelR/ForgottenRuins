@@ -53,11 +53,11 @@ public class ComponentRenderer<C extends RenderComponent> {
 		ComponentShader shader = ComponentShader.getInstance();
 		shader.use();
 		for(C comp : components)
-			drawComp(comp);
+			drawComp(shader, comp);
 		shader.unuse();
 	}
 	
-	protected void drawComp(C comp) {
+	protected void drawComp(ComponentShader shader, C comp) {
 		comp.drawInstances();
 	}
 	

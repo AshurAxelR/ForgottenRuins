@@ -110,7 +110,7 @@ public abstract class RenderComponent {
 
 	private static Texture black = null;
 	
-	private static Texture getBlack() {
+	public static Texture getBlack() {
 		if(black==null)
 			black = new Texture(Color.BLACK);
 		return black;

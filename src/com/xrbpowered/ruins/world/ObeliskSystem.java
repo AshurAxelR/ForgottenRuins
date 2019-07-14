@@ -13,25 +13,27 @@ public class ObeliskSystem {
 	
 	public final World world;
 
-	public ArrayList<Obelisk> obelisks = new ArrayList<>(); 
+	public ArrayList<Obelisk> obelisks = new ArrayList<>();
+	public int remaining;
 	
 	public ObeliskSystem(World world) {
 		this.world = world;
+		this.remaining = 0;
 	}
 	
 	public void add(Obelisk obelisk) {
 		obelisks.add(obelisk);
+		remaining++;
 	}
 	
-	public int countVisited() {
-		int count = 0;
-		for(Obelisk o : obelisks)
-			if(o.visited) count++;
-		return count;
-	}
-	
-	public int countTotal() {
-		return obelisks.size();
+	public boolean visit(Obelisk obelisk) {
+		if(!obelisk.visited) {
+			obelisk.visited = true;
+			remaining--;
+			return true;
+		}
+		else
+			return false;
 	}
 	
 }

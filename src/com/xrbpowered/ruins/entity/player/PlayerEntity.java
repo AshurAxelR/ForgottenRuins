@@ -52,7 +52,7 @@ public class PlayerEntity extends EntityActor {
 		coins = 0;
 		inventory.clear();
 		inventory.add(Item.emptyFlask, 2);
-		inventory.add(Item.amuletOfReturn, 1);
+		inventory.add(Item.amuletOfEscape, 1);
 		if(Ruins.flash!=null)
 			Ruins.flash.reset();
 	}
