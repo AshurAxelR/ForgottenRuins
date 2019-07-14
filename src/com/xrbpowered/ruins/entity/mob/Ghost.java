@@ -19,6 +19,7 @@ public class Ghost extends MobEntity {
 	public static final float agitatedSpeedMin = 1.5f;
 	public static final float agitatedSpeedMax = 1.7f;
 	public static final int agitationDist = 32;
+	public static final int chargeDist = 4;
 	
 	public static final float minLifespan = 150f; 
 	public static final float maxLifespan = 600f; 
@@ -53,6 +54,8 @@ public class Ghost extends MobEntity {
 		super.setTarget();
 		agitated = !controller.noTarget && (controller.targetDist>0 && controller.targetDist<agitationDist);
 		controller.walkSpeed = agitated ? agitatedSpeed : speed;
+		if(agitated && controller.targetDist<chargeDist)
+			controller.walkSpeed *= 1.5f;
 	}
 
 	@Override
