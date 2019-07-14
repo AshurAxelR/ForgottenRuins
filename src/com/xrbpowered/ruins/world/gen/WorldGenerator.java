@@ -392,16 +392,15 @@ public class WorldGenerator {
 		}
 		map[world.startx][world.startz][0].type = TileType.solid;
 		
-		//map[startx][startz][1].canHaveObject = true; // TODO add start object
-		
-		tokens.add(new Token(world.startx, world.startz, 1, Direction.north));
+		Token startToken = new Token(world.startx, world.startz, 1, Direction.north);
+		tokens.add(startToken);
 		processTokens(random);
 		fillUndefined();
 		if(calculateCoverage()<0.5f)
 			return false;
 		
 		filterObjectTokens();
-		new TileObjectGenerator(this, random).generateObjects();
+		new TileObjectGenerator(this, random).generateObjects(startToken);
 		return true;
 	}
 	

@@ -11,6 +11,8 @@ import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 import com.xrbpowered.ruins.world.obj.DryWell;
 import com.xrbpowered.ruins.world.obj.Obelisk;
 import com.xrbpowered.ruins.world.obj.Palm;
+import com.xrbpowered.ruins.world.obj.Portal;
+import com.xrbpowered.ruins.world.obj.StartLocation;
 import com.xrbpowered.ruins.world.obj.Tablet;
 import com.xrbpowered.ruins.world.obj.Well;
 
@@ -112,6 +114,31 @@ public class TileObjectGenerator {
 		}
 	}
 	
+	private void generatePortal() {
+		int maxh = 0;
+		for(int x=0; x<World.size; x++)
+			for(int z=0; z<World.size; z++) {
+				int h = gen.colInfo[x][z].height;
+				if(h>maxh)
+					maxh = h;
+			}
+		Token pt = null;
+		for(;;) {
+			for(Token t : objTokens) {
+				if(t.y>=maxh+1) {
+					pt = t;
+					break;
+				}
+			}
+			if(pt!=null) {
+				new Portal(world.obelisks, pt).place();
+				objTokens.remove(pt);
+				return;
+			}
+			maxh--;
+		}
+	}
+	
 	private void generateObelisks() {
 		for(int count = 0; count<ObeliskSystem.maxObelisks;) {
 			Token t = objTokens.get(random.nextInt(objTokens.size()));
@@ -123,8 +150,10 @@ public class TileObjectGenerator {
 		}
 	}
 	
-	public void generateObjects() {
+	public void generateObjects(Token startToken) {
+		new StartLocation(world, startToken).place();
 		generateWells();
+		generatePortal();
 		generateObelisks();
 		
 		for(Token t : objTokens) {

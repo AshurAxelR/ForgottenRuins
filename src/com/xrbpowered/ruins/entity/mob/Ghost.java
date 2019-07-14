@@ -18,8 +18,8 @@ public class Ghost extends MobEntity {
 	public static final float speedMax = 1.0f;
 	public static final float agitatedSpeedMin = 1.5f;
 	public static final float agitatedSpeedMax = 1.7f;
-	public static final int agitationDist = 32;
-	public static final int chargeDist = 4;
+	public static final int agitationDist = 25;
+	public static final int chargeDist = 5;
 	
 	public static final float minLifespan = 150f; 
 	public static final float maxLifespan = 600f; 

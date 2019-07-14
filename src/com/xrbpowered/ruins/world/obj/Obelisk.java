@@ -34,13 +34,12 @@ public class Obelisk extends TileObject {
 	
 	@Override
 	public void interact() {
-		if(visited==false) {
-			visited = true;
-			System.out.printf("New obelisk! Visited %d of %d.\n", system.countVisited(), system.countTotal());
+		if(system.visit(this)) {
+			if(system.remaining>0)
+				Ruins.hud.popup.popup(String.format("%d remaining...", system.remaining));
+			else
+				Ruins.hud.popup.popup("The exit portal is now open");
 			Ruins.prefabs.updateAllInstances(world);
-		}
-		else {
-			System.out.println("Already visited...");
 		}
 	}
 

@@ -18,10 +18,12 @@ public class Jar extends SmallObject {
 		super(world);
 		int n = random.nextInt(25); 
 		if(n==0)
-			item = Item.amuletOfReturn;
-		else if(n<3)
+			item = Item.amuletOfEscape;
+		else if(n==1)
+			item = Item.amuletOfRadiance;
+		else if(n<4)
 			item = Item.emptyFlask;
-		else if(n<5)
+		else if(n<6)
 			item = Item.healingHerbs;
 		else {
 			coins = random.nextInt(8)-4;

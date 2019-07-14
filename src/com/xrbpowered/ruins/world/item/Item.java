@@ -12,7 +12,8 @@ public abstract class Item {
 	public static final Item emptyFlask = new EmptyFlask();
 	public static final Item waterFlask = new WaterFlask();
 	public static final Item healingHerbs = new HealingHerbs();
-	public static final Item amuletOfReturn = new AmuletOfReturn();
+	public static final Item amuletOfEscape = new AmuletOfEscape();
+	public static final Item amuletOfRadiance = new AmuletOfRadiance();
 	
 	public final int id;
 	public final String name;

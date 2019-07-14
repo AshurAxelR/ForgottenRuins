@@ -3,12 +3,13 @@ package com.xrbpowered.ruins.world.item;
 import java.awt.event.KeyEvent;
 
 import com.xrbpowered.ruins.Ruins;
+import com.xrbpowered.ruins.entity.mob.MobEntity;
 import com.xrbpowered.ruins.entity.player.PlayerEntity;
 
-public class AmuletOfReturn extends Item {
+public class AmuletOfRadiance extends Item {
 
-	public AmuletOfReturn() {
-		super("Amulet of Return", "icons/return.png", "Use: instantly returns you to the starting location");
+	public AmuletOfRadiance() {
+		super("Amulet of Radiance", "icons/radiance.png", "Use: destroys all undead up to 4 tiles away");
 		hotkey = KeyEvent.VK_R;
 	}
 
@@ -24,9 +25,12 @@ public class AmuletOfReturn extends Item {
 	
 	@Override
 	public boolean use(PlayerEntity player) {
-		player.returnToStart();
+		for(MobEntity e : player.world.mobs) {
+			if(player.getDistTo(e)<10f)
+				e.alive = false;
+		}
 		Ruins.ruins.setOverlay(null);
 		return true;
 	}
-	
+
 }

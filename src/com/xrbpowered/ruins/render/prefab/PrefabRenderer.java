@@ -14,6 +14,9 @@ public class PrefabRenderer extends ComponentRenderer<PrefabComponent> {
 	public static Prefab tablet;
 	public static Prefab obelisk;
 	public static Prefab obeliskGlow;
+	public static Prefab portalBroken;
+	public static Prefab portalFrame;
+	public static Prefab portal;
 
 	public static Prefab jar1;
 	public static Prefab broken;
@@ -38,7 +41,27 @@ public class PrefabRenderer extends ComponentRenderer<PrefabComponent> {
 		Texture obeliskTex = texture("obelisk/obelisk.png");
 		PrefabRenderer.obelisk = new Prefab(true, add(new PrefabComponent(obeliskMesh, obeliskTex)));
 		PrefabRenderer.obeliskGlow = new Prefab(true, add(new PrefabComponent(obeliskMesh, obeliskTex).setGlow(texture("obelisk/obelisk_glow.png"))));
+
+		Texture portalTex = texture("portal/portal.png");
+		StaticMesh portalFrameMesh =mesh("portal/portal.obj");
+		PrefabRenderer.portalBroken = new Prefab(false, add(new PrefabComponent(mesh("portal/portal_broken.obj"), portalTex)));
 		
+		final PrefabComponent portalFrameOn = add(new PrefabComponent(portalFrameMesh, portalTex).setGlow(texture("portal/portal_glow.png")));
+		final PrefabComponent portalPane = add(new PrefabComponent(mesh("portal/portal_pane.obj"), RenderComponent.getBlack()).setCulling(false).setGlow(texture("portal/astral.png")));
+		final PrefabComponent portalInteract = add(new PrefabComponent(mesh("portal/portal_inter.obj"), portalTex));
+		PrefabRenderer.portalFrame = new Prefab(true, add(new PrefabComponent(portalFrameMesh, portalTex)));
+		PrefabRenderer.portal = new Prefab() {
+			@Override
+			public void addInstance(World world, TileObject obj) {
+				portalFrameOn.addInstance(new InstanceInfo(world, obj).setRotate(obj.d));
+				portalPane.addInstance(new InstanceInfo(world, obj).setRotate(obj.d));
+			}
+			@Override
+			public PrefabComponent getInteractionComp() {
+				return portalInteract;
+			}
+		};
+
 		PrefabRenderer.palm = new Prefab() {
 			@Override
 			public void addInstance(World world, TileObject obj) {
@@ -60,6 +83,12 @@ public class PrefabRenderer extends ComponentRenderer<PrefabComponent> {
 		// System.gc();
 	}
 
+	@Override
+	protected void drawComp(ComponentShader shader, PrefabComponent comp) {
+		shader.updateHighlight(comp==pickedComponent ? pickedComponentIndex : -1);
+		super.drawComp(shader, comp);
+	}
+	
 	public void updateAllInstances(World world) {
 		// FIXME optimise instance update
 		releaseInstances();
