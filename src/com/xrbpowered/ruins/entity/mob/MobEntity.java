@@ -4,6 +4,8 @@ import com.xrbpowered.ruins.entity.EntityActor;
 import com.xrbpowered.ruins.render.prefab.EntityComponent;
 import com.xrbpowered.ruins.render.prefab.InstanceInfo;
 import com.xrbpowered.ruins.world.Direction;
+import com.xrbpowered.ruins.world.Tile;
+import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
 
 public abstract class MobEntity extends EntityActor {
@@ -57,13 +59,21 @@ public abstract class MobEntity extends EntityActor {
 	
 	protected void setTarget() {
 		controller.noTarget = true;
-		if(World.isInside(mapx, mapz) && mapy>0) {
-			Direction d = world.map[mapx][mapz][mapy].pathDir;
+		int x = mapx;
+		int z = mapz;
+		int y = mapy;
+		if(World.isInside(x, z) && mapy>0) {
+			Tile tile = world.map[x][z][y];
+			Direction d = tile.pathDir;
 			if(d!=null) {
 				d = d.opposite();
-				controller.target.x = mapx*2f + d.dx*1.1f;
-				controller.target.z = mapz*2f + d.dz*1.1f;
-				controller.target.y = mapy;
+				int dy = (tile.type==TileType.ramp && tile.rampDir==d) ? 1 : 0;
+				x += d.dx;
+				z += d.dz;
+				y += dy;
+				controller.target.x = x*2f;
+				controller.target.z = z*2f;
+				controller.target.y = y;
 				controller.targetDist = world.map[mapx][mapz][mapy].pathDist;
 				controller.noTarget = false;
 			}
@@ -82,6 +92,8 @@ public abstract class MobEntity extends EntityActor {
 	public boolean updateTime(float dt) {
 		time += dt;
 		super.updateTime(dt);
+		if(mapy<=0)
+			alive = false;
 		return alive;
 	}
 	

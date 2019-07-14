@@ -24,6 +24,8 @@ public class Ghost extends MobEntity {
 	public static final float minLifespan = 150f; 
 	public static final float maxLifespan = 600f; 
 
+	public static final float damage = 30f;
+	
 	private static final Random random = new Random();
 	
 	public float speed;
@@ -62,7 +64,7 @@ public class Ghost extends MobEntity {
 	public boolean updateTime(float dt) {
 		super.updateTime(dt);
 		if(time>spawnTime && this.getDistTo(world.player)<2.8f) {
-			world.player.applyDamage(30f, DamageSource.mob);
+			world.player.applyDamage(damage, DamageSource.mob);
 			alive = false;
 		}
 		if(time>lifespan && !agitated)
