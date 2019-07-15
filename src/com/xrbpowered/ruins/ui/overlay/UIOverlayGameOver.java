@@ -12,8 +12,12 @@ public class UIOverlayGameOver extends UIOverlay {
 	public final UIText text;
 
 	public UIOverlayGameOver(UIContainer parent) {
+		this(parent, 560, 60, "Restart");
+	}
+
+	protected UIOverlayGameOver(UIContainer parent, int boxWidth, int boxHeight, String buttonLabel) {
 		super(parent);
-		restartButton = new UIButtonPane(this, "Restart") {
+		restartButton = new UIButtonPane(this, buttonLabel) {
 			@Override
 			public void onAction() {
 				defaultAction();
@@ -21,7 +25,7 @@ public class UIOverlayGameOver extends UIOverlay {
 		};
 
 		box = new UISolidPane.Black(this);
-		box.setSize(560, 60);
+		box.setSize(boxWidth, boxHeight);
 		text = new UIText(box);
 	}
 

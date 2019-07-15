@@ -37,6 +37,7 @@ import com.xrbpowered.ruins.ui.overlay.UIOverlayGameOver;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayInventory;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayMenu;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVerse;
+import com.xrbpowered.ruins.ui.overlay.UIOverlayVictory;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
 
@@ -79,6 +80,7 @@ public class Ruins extends UIClient {
 	public static UIOverlayMenu overlayMenu;
 	public static UIOverlayVerse overlayVerse;
 	public static UIOverlayGameOver overlayGameOver;
+	public static UIOverlayVictory overlayVictory;
 	public static UIOverlayInventory overlayInventory;
 	
 	public Ruins() {
@@ -125,10 +127,6 @@ public class Ruins extends UIClient {
 				prefabs = new PrefabRenderer();
 				mobs = new MobRenderer();
 				createWorldResources();
-				
-				camera.position.z = -8f;
-				camera.position.y = World.height/4f;
-				camera.updateTransform();
 				
 				super.setupResources();
 			}
@@ -183,6 +181,7 @@ public class Ruins extends UIClient {
 		
 		overlayVerse = new UIOverlayVerse(getContainer());
 		overlayGameOver = new UIOverlayGameOver(getContainer());
+		overlayVictory = new UIOverlayVictory(getContainer());
 		overlayMenu = new UIOverlayMenu(getContainer());
 		
 		new UIFpsOverlay(this);
@@ -197,11 +196,16 @@ public class Ruins extends UIClient {
 
 		prefabs.createInstances(world);
 		mobs.allocateInstanceData(world);
-
 		pick.setWorld(world, walls);
-		if(observerActive)
-			enableObserver(true);
+
 		glare.glare(1.0f);
+		if(!preview)
+			enableObserver(false);
+		else {
+			camera.position.z = -8f;
+			camera.position.y = World.height/4f;
+			camera.updateTransform();
+		}
 	}
 	
 	private void releaseWorldResources() {
@@ -212,11 +216,15 @@ public class Ruins extends UIClient {
 				wall.release();
 		}
 	}
-	
+
 	public void restart() {
+		restart(false);
+	}
+
+	public void restart(boolean preview) {
 		releaseWorldResources();
+		Ruins.preview = preview;
 		createWorldResources();
-		preview = false;
 	}
 	
 	public void grabMouse(boolean grab) {
@@ -255,10 +263,11 @@ public class Ruins extends UIClient {
 		getContainer().repaint();
 	}
 	
-	private void enableObserver(boolean enable) {
+	public void enableObserver(boolean enable) {
 		observerActive = enable;
 		player.camera = enable ? null : camera;
 		player.controller.enabled = !enable;
+		player.invulnerable = enable;
 		hud.setVisible(!enable);
 		if(enable) {
 			player.controller.setMouseLook(false);

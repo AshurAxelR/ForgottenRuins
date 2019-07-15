@@ -129,7 +129,13 @@ public class UIHud extends UINode {
 		pickPane.setSize(250, 50);
 		pickPane.setVisible(false);
 		
-		crosshair = new UIIcon(this, "icons/crosshair.png");
+		crosshair = new UIIcon(this, "icons/crosshair.png") {
+			@Override
+			public void render(RenderTarget target) {
+				if(!Ruins.ruins.isOverlayActive())
+					super.render(target);
+			}
+		};
 		
 		popup = new UIPopup(this);
 	}

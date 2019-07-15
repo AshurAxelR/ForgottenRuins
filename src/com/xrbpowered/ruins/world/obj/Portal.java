@@ -32,8 +32,11 @@ public class Portal extends TileObject {
 
 	@Override
 	public void interact() {
-		if(system.remaining==0)
-			Ruins.hud.popup.popup("VICTORY! (W.I.P.)");
+		if(system.remaining==0) {
+			Ruins.ruins.enableObserver(true);
+			Ruins.flash.blackOut();
+			Ruins.overlayVictory.show();
+		}
 		else
 			Ruins.hud.popup.popup("Activate all obelisks to open");
 	}

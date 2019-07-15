@@ -13,7 +13,7 @@ import com.xrbpowered.zoomui.UIContainer;
 
 public class UIInventoryPreview extends UIPane {
 
-	private static final float itemWidth = 50f;
+	private static final float itemWidth = 40f;
 	
 	public UIInventoryPreview(UIContainer parent) {
 		super(parent, false);
