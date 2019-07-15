@@ -14,18 +14,13 @@ public class Jar extends SmallObject {
 	public int coins = 0;
 	public boolean broken = false;
 	
+	private static int[] witems = {20, 1, 2, 2, 4};
+	private static Item[] items = {null, Item.amuletOfEscape, Item.amuletOfRadiance, Item.emptyFlask, Item.healingHerbs};
+	
 	public Jar(World world, Random random) {
 		super(world);
-		int n = random.nextInt(25); 
-		if(n==0)
-			item = Item.amuletOfEscape;
-		else if(n==1)
-			item = Item.amuletOfRadiance;
-		else if(n<4)
-			item = Item.emptyFlask;
-		else if(n<6)
-			item = Item.healingHerbs;
-		else {
+		item = items[wrandom(random, witems)];
+		if(item==null) {
 			coins = random.nextInt(8)-4;
 			if(coins<0) {
 				coins = 0;
@@ -78,6 +73,20 @@ public class Jar extends SmallObject {
 			coins = 0;
 			broken = true;
 			Ruins.prefabs.updateAllInstances(world);
+		}
+	}
+	
+	public static int wrandom(Random random, int[] w) {
+		int max = 0;
+		for(int i = 0; i < w.length; i++)
+			max += w[i];
+		if(max == 0)
+			return 0;
+		int x = random.nextInt(max);
+		for(int i = 0;; i++) {
+			if(x < w[i])
+				return i;
+			x -= w[i];
 		}
 	}
 }

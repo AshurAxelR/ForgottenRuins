@@ -1,5 +1,6 @@
 package com.xrbpowered.ruins.world.item;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import com.xrbpowered.gl.res.texture.Texture;
@@ -18,16 +19,18 @@ public abstract class Item {
 	public final int id;
 	public final String name;
 	public final String iconPath;
+	public final Color color;
 	public final String info;
 	public int hotkey = 0;
 	
 	public Texture icon = null;
 	
-	public Item(String name, String iconPath, String info) {
+	public Item(String name, String iconPath, Color color, String info) {
 		this.id = items.size();
 		items.add(this);
 		this.name = name;
 		this.iconPath = iconPath;
+		this.color = color;
 		this.info = info;
 	}
 	
@@ -70,5 +73,8 @@ public abstract class Item {
 		}
 		return false;
 	}
-	
+
+	public static int countItemTypes() {
+		return items.size();
+	}
 }

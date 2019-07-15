@@ -1,9 +1,12 @@
 package com.xrbpowered.ruins.world.item;
 
+import java.awt.Color;
+
 public class EmptyFlask extends Item {
 
 	public EmptyFlask() {
-		super("Empty Flask", "icons/empty_flask.png", "Fill in a water well");
+		super("Empty Flask", "icons/empty_flask.png", new Color(0x959190),
+				"Fill in a water well");
 	}
 
 	@Override

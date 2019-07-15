@@ -1,5 +1,6 @@
 package com.xrbpowered.ruins.world.item;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 import com.xrbpowered.ruins.Ruins;
@@ -11,8 +12,9 @@ public class HealingHerbs extends Item {
 	public static final int waterCost = -10;
 
 	public HealingHerbs() {
-		super("Healing Herbs", "icons/herbs.png", String.format("Use: %+d Health, %+d Water", restoreHealth, waterCost));
-		hotkey = KeyEvent.VK_H;
+		super("Healing Herbs", "icons/herbs.png", new Color(0xfab7cc),
+				String.format("Use: %+d Health, %+d Water", restoreHealth, waterCost));
+		hotkey = KeyEvent.VK_Q;
 	}
 
 	public String countString(int count) {
@@ -33,6 +35,7 @@ public class HealingHerbs extends Item {
 			player.hydration += waterCost;
 			if(player.hydration<0)
 				player.hydration = 0;
+			Ruins.glare.smallGlare();
 			Ruins.hud.popup.popup("A touch of healing...");
 			return true;
 		}

@@ -23,6 +23,7 @@ import com.xrbpowered.ruins.render.TileObjectPicker;
 import com.xrbpowered.ruins.render.WallBuilder;
 import com.xrbpowered.ruins.render.WallChunk;
 import com.xrbpowered.ruins.render.effects.FlashPane;
+import com.xrbpowered.ruins.render.effects.GlarePane;
 import com.xrbpowered.ruins.render.prefab.ComponentShader;
 import com.xrbpowered.ruins.render.prefab.MobRenderer;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
@@ -68,6 +69,7 @@ public class Ruins extends UIClient {
 	public static Ruins ruins;
 	public static UIHud hud;
 	public static FlashPane flash;
+	public static GlarePane glare;
 	public static TileObjectPicker pick;
 
 	private ShaderEnvironment environment = new ShaderEnvironment();
@@ -173,6 +175,7 @@ public class Ruins extends UIClient {
 			}
 		};
 		
+		glare = new GlarePane(getContainer());
 		flash = new FlashPane(getContainer());
 		
 		overlayInventory = new UIOverlayInventory(getContainer());
@@ -198,6 +201,7 @@ public class Ruins extends UIClient {
 		pick.setWorld(world, walls);
 		if(observerActive)
 			enableObserver(true);
+		glare.glare(1.0f);
 	}
 	
 	private void releaseWorldResources() {
@@ -299,8 +303,10 @@ public class Ruins extends UIClient {
 					}
 					break;
 				default:
-					if(!observerActive && player.alive && Item.keyPressed(code, player))
+					if(!observerActive && player.alive && Item.keyPressed(code, player)) {
+						hud.updateInventoryPreview();
 						return;
+					}
 					super.keyPressed(c, code);
 			}
 		}

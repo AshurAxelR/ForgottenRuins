@@ -1,5 +1,7 @@
 package com.xrbpowered.ruins.world.obj;
 
+import java.util.Random;
+
 import com.xrbpowered.ruins.entity.WorldEntity;
 import com.xrbpowered.ruins.entity.mob.Ghost;
 import com.xrbpowered.ruins.render.prefab.Prefab;
@@ -16,8 +18,11 @@ public class DryWell extends TileObject implements WorldEntity{
 	private float timeToSpawn;
 	private Ghost ghost = null;
 	
+	private Random random = new Random();
+	
 	public DryWell(World world, Token objToken, float spawnDelay) {
 		super(world, objToken);
+		random.setSeed(this.seed);
 		timeToSpawn = spawnDelay*maxInitialSpawnDelay;
 	}
 
@@ -31,7 +36,7 @@ public class DryWell extends TileObject implements WorldEntity{
 		if(ghost==null) {
 			timeToSpawn -= dt;
 			if(timeToSpawn<0f) {
-				ghost = (Ghost) new Ghost(world).spawn(x, z, y, d);
+				ghost = (Ghost) new Ghost(world, random).spawn(x, z, y, d);
 			}
 		}
 		if(ghost!=null && (!ghost.alive || ghost.time>=ghost.lifespan)) {

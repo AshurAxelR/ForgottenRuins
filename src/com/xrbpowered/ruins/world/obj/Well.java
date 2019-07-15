@@ -36,7 +36,9 @@ public class Well extends TileObject {
 	public void interact() {
 		world.player.hydration = PlayerEntity.baseHydration;
 		EmptyFlask.fill(world.player.inventory);
+		Ruins.glare.smallGlare();
 		Ruins.hud.popup.popup("Refreshing...");
+		Ruins.hud.updateInventoryPreview();
 	}
 
 }
