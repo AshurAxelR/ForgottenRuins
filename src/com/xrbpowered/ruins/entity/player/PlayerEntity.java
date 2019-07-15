@@ -32,6 +32,7 @@ public class PlayerEntity extends EntityActor {
 	public DamageSource lastDamageSource = null;
 	public float deathTimer = 0f;
 	
+	public boolean invulnerable = false;
 	public float health = baseHealth;
 	public float hydration = baseHydration;
 	public int coins = 0;
@@ -100,7 +101,7 @@ public class PlayerEntity extends EntityActor {
 	}
 	
 	public void applyDamage(float damage, boolean flash, DamageSource source) {
-		if(health<=0 || damage<0.1f)
+		if(health<=0 || damage<0.1f || invulnerable)
 			return;
 		if(flash)
 			Ruins.flash.flashPain(damage, health);
@@ -153,13 +154,15 @@ public class PlayerEntity extends EntityActor {
 			}
 		}
 		if(alive) {
-			hydration -= hydrationLoss*dt;
-			if(hydration<=0f) {
-				hydration = 0f;
-				Ruins.flash.daze(true);
+			if(!invulnerable) {
+				hydration -= hydrationLoss*dt;
+				if(hydration<=0f) {
+					hydration = 0f;
+					Ruins.flash.daze(true);
+				}
+				else
+					Ruins.flash.daze(false);
 			}
-			else
-				Ruins.flash.daze(false);
 		}
 		else {
 			cameraLevel = cameraDeathHeight;

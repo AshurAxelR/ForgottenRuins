@@ -61,6 +61,7 @@ public class Jar extends SmallObject {
 			if(item!=null) {
 				Ruins.hud.popup.popup("Found "+item.countString(1));
 				world.player.inventory.add(item, 1);
+				Ruins.hud.updateInventoryPreview();
 				item = null;
 			}
 			else if(coins>1)
