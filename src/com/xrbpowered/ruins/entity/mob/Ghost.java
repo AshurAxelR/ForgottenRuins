@@ -26,15 +26,13 @@ public class Ghost extends MobEntity {
 
 	public static final float damage = 30f;
 	
-	private static final Random random = new Random();
-	
 	public float speed;
 	public float agitatedSpeed;
 	public float lifespan;
 	
 	public boolean agitated = false;
 	
-	public Ghost(World world) {
+	public Ghost(World world, Random random) {
 		super(world, speedMin);
 		speed = random.nextFloat()*(speedMax-speedMin)+speedMin;
 		agitatedSpeed = random.nextFloat()*(agitatedSpeedMax-agitatedSpeedMin)+agitatedSpeedMin;

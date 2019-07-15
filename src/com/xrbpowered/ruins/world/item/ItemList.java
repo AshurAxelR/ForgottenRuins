@@ -17,7 +17,9 @@ public class ItemList {
 		
 		public void add(int count) {
 			this.count += count;
-			if(this.count<=0)
+			if(this.count>99)
+				this.count = 99;
+			else if(this.count<=0)
 				stacks.remove(item.id);
 		}
 		

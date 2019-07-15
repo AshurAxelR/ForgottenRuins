@@ -1,5 +1,6 @@
 package com.xrbpowered.ruins.world.item;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 import com.xrbpowered.ruins.Ruins;
@@ -10,7 +11,8 @@ public class WaterFlask extends Item {
 	public static final int restore = 20;
 	
 	public WaterFlask() {
-		super("Flask of Water", "icons/water_flask.png", String.format("Use: %+d Water", restore));
+		super("Flask of Water", "icons/water_flask.png", new Color(0x0055aaee),
+				String.format("Use: %+d Water", restore));
 		hotkey = KeyEvent.VK_F;
 	}
 
@@ -26,6 +28,7 @@ public class WaterFlask extends Item {
 			if(player.hydration>PlayerEntity.baseHydration)
 				player.hydration = PlayerEntity.baseHydration;
 			player.inventory.add(Item.emptyFlask, 1);
+			Ruins.glare.smallGlare();
 			Ruins.hud.popup.popup("Refreshing...");
 			return true;
 		}

@@ -11,7 +11,7 @@ import com.xrbpowered.ruins.world.obj.MapObject;
 
 public class TileObjectPicker {
 
-	public static final float reach = 2.5f;
+	public static final float reach = 3.0f;
 	
 	private ActorPicker pick;
 

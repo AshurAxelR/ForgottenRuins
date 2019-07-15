@@ -31,6 +31,7 @@ public class UIHud extends UINode {
 		}
 	}
 	public static final Color clearColor = new Color(0x77000000, true);
+	public static final Color transparent = new Color(0, true);
 	
 	private final UIIcon heartIcon;
 	private final UIIcon waterIcon;
@@ -38,12 +39,14 @@ public class UIHud extends UINode {
 	private final UIBar healthBar;
 	private final UIBar waterBar;
 	private final UIObeliskDots obeliskDots;
+	private final UIInventoryPreview invPreview;
 	
 	public final UIPopup popup;
 	
 	private String shownPick = null;
 	private String shownAction = "";
 	private final UIPane pickPane;
+	private final UIIcon crosshair;
 	
 	private int shownCoins = 0;
 	private final UIPane coinsPane;
@@ -85,20 +88,21 @@ public class UIHud extends UINode {
 		coinsPane = new UIPane(this, false) {
 			@Override
 			protected void paintSelf(GraphAssist g) {
-				g.graph.setBackground(new Color(0x77000000, true));
+				g.graph.setBackground(clearColor);
 				g.graph.clearRect(0, 0, (int)getWidth(), (int)getHeight());
-				g.setFont(UIHud.font);
+				g.setFont(font);
 				g.setColor(shownCoins>0 ? Color.WHITE : new Color(0xdddddd));
 				g.drawString(Integer.toString(shownCoins), getWidth()/2, getHeight()/2+1, GraphAssist.CENTER, GraphAssist.CENTER);
 			}
 		};
 		
 		obeliskDots = new UIObeliskDots(this);
+		invPreview = new UIInventoryPreview(this);
 		
 		pickPane = new UIPane(this, false) {
 			@Override
 			protected void paintSelf(GraphAssist g) {
-				g.graph.setBackground(new Color(0, true));
+				g.graph.setBackground(transparent);
 				g.graph.clearRect(0, 0, (int)getWidth(), (int)getHeight());
 				if(shownPick!=null) {
 					FontMetrics fm = g.graph.getFontMetrics(fontBold);
@@ -125,6 +129,8 @@ public class UIHud extends UINode {
 		pickPane.setSize(250, 50);
 		pickPane.setVisible(false);
 		
+		crosshair = new UIIcon(this, "icons/crosshair.png");
+		
 		popup = new UIPopup(this);
 	}
 	
@@ -147,7 +153,10 @@ public class UIHud extends UINode {
 		coinsPane.setLocation(healthBar.getX(), coinIcon.getY()+3*s);
 
 		obeliskDots.setLocation(getWidth()-obeliskDots.getWidth()-s*5, getHeight()-obeliskDots.getHeight()-s*5);
-		pickPane.setLocation(getWidth()/2f-pickPane.getWidth()/2f, getHeight()/2f-pickPane.getHeight()/2f);
+		invPreview.setLocation(obeliskDots.getX()-invPreview.getWidth() - s*5, getHeight()-invPreview.getHeight()-s*5);
+		
+		crosshair.setLocation(getWidth()/2f-crosshair.getWidth()/2f, getHeight()/2f-crosshair.getHeight()/2f);
+		pickPane.setLocation(getWidth()/2f-pickPane.getWidth()/2f, crosshair.getY()+crosshair.getHeight()+s*3);
 		popup.setLocation(getWidth()/2f-popup.getWidth()/2f, getHeight()-120-popup.getHeight());
 		super.layout();
 	}
@@ -162,6 +171,10 @@ public class UIHud extends UINode {
 			pickPane.setVisible(true);
 			repaint();
 		}
+	}
+	
+	public void updateInventoryPreview() {
+		invPreview.repaint();
 	}
 	
 	@Override
