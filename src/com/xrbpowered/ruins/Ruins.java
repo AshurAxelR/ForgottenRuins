@@ -22,9 +22,11 @@ import com.xrbpowered.ruins.render.DebugPaths;
 import com.xrbpowered.ruins.render.TileObjectPicker;
 import com.xrbpowered.ruins.render.WallBuilder;
 import com.xrbpowered.ruins.render.WallChunk;
-import com.xrbpowered.ruins.render.effects.FlashPane;
-import com.xrbpowered.ruins.render.effects.GlarePane;
-import com.xrbpowered.ruins.render.prefab.ComponentShader;
+import com.xrbpowered.ruins.render.effect.FlashPane;
+import com.xrbpowered.ruins.render.effect.GlarePane;
+import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
+import com.xrbpowered.ruins.render.effect.particle.ParticleShader;
+import com.xrbpowered.ruins.render.prefab.InstanceShader;
 import com.xrbpowered.ruins.render.prefab.MobRenderer;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.render.shader.ShaderEnvironment;
@@ -66,6 +68,7 @@ public class Ruins extends UIClient {
 
 	public static PrefabRenderer prefabs;
 	public static MobRenderer mobs;
+	public static ParticleRenderer particles;
 	
 	public static Ruins ruins;
 	public static UIHud hud;
@@ -123,9 +126,11 @@ public class Ruins extends UIClient {
 				groundTexture = new Texture("ground.png", true, false);
 				groundMesh = WallBuilder.createGround(80f);
 				
-				ComponentShader.createInstance(environment, camera);
+				InstanceShader.createInstance(environment, camera);
 				prefabs = new PrefabRenderer();
 				mobs = new MobRenderer();
+				ParticleShader.createInstance(environment, camera);
+				particles = new ParticleRenderer();
 				createWorldResources();
 				
 				super.setupResources();
@@ -138,6 +143,7 @@ public class Ruins extends UIClient {
 						observerController.update(dt);
 					world.update((dt>dtLimit) ? dtLimit : dt);
 				}
+				particles.updateInstances(world, dt);
 				super.updateTime(dt);
 			}
 			
@@ -164,11 +170,13 @@ public class Ruins extends UIClient {
 				shader.unuse();
 				
 				prefabs.drawInstances();
-				//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 				mobs.updateInstances(world);
 				mobs.drawInstances();
-				//pick.update(target, true);
 				
+				particles.drawInstances(target);
+				
+				//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+				//pick.update(target, true);
 				DebugPaths.draw();
 			}
 		};

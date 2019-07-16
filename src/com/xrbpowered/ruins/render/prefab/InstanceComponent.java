@@ -8,8 +8,9 @@ import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.res.shader.InstanceBuffer;
 import com.xrbpowered.gl.res.shader.Shader;
 import com.xrbpowered.gl.res.texture.Texture;
+import com.xrbpowered.ruins.render.RenderComponent;
 
-public abstract class RenderComponent {
+public abstract class InstanceComponent extends RenderComponent<InstanceInfo> {
 
 	private static int startAttrib = 3;
 	private static final String[] attribNames = {"ins_Position", "ins_RotationY" , "ins_Scale" , "ins_Light"};
@@ -20,17 +21,16 @@ public abstract class RenderComponent {
 	public final Texture texture;
 	public Texture glowTexture = null;
 	
-	protected int instCount;
 	protected InstanceBuffer instBuffer = null;
 	
 	public boolean culling = true;
 
-	public RenderComponent(StaticMesh mesh, Texture texture) {
+	public InstanceComponent(StaticMesh mesh, Texture texture) {
 		this.mesh = mesh;
 		this.texture = texture;
 	}
 	
-	public RenderComponent setGlow(Texture glow) {
+	public InstanceComponent setGlow(Texture glow) {
 		this.glowTexture = glow;
 		return this;
 	}
@@ -39,16 +39,13 @@ public abstract class RenderComponent {
 		return glowTexture!=null;
 	}
 	
-	public RenderComponent setCulling(boolean culling) {
+	public InstanceComponent setCulling(boolean culling) {
 		this.culling = culling;
 		return this;
 	}
 	
-	public int getInstCount() {
-		return instCount;
-	}
-	
-	public void drawInstances() {
+	@Override
+	public void drawInstances(Shader shader) {
 		if(instCount==0)
 			return;
 		if(culling)
@@ -63,10 +60,6 @@ public abstract class RenderComponent {
 		instBuffer.disable();
 		mesh.disableDraw();
 	}
-	
-	public abstract void startCreateInstances();
-	public abstract int addInstance(InstanceInfo info);
-	public abstract void finishCreateInstances();
 	
 	protected boolean createInstanceBuffer(int count) {
 		if(instBuffer!=null)
@@ -92,6 +85,7 @@ public abstract class RenderComponent {
 		instanceData[offs+5] = info.light;
 	}
 	
+	@Override
 	public void releaseInstances() {
 		if(instBuffer!=null)
 			instBuffer.release();
@@ -99,6 +93,7 @@ public abstract class RenderComponent {
 		instCount = 0;
 	}
 	
+	@Override
 	public void release() {
 		mesh.release();
 		texture.release();
@@ -117,7 +112,7 @@ public abstract class RenderComponent {
 	}
 	
 	public static int bindShader(Shader shader, int startAttrib) {
-		RenderComponent.startAttrib = startAttrib;
+		InstanceComponent.startAttrib = startAttrib;
 		return InstanceBuffer.bindAttribLocations(shader, startAttrib, attribNames);
 	}
 }

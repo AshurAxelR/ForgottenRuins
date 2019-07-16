@@ -12,7 +12,7 @@ public class Grass extends SmallObject {
 
 	@Override
 	public float getScaleRange() {
-		return 0.3f;
+		return 0.35f;
 	}
 
 	@Override

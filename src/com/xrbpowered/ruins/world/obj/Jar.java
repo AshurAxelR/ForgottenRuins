@@ -14,7 +14,7 @@ public class Jar extends SmallObject {
 	public int coins = 0;
 	public boolean broken = false;
 	
-	private static int[] witems = {20, 1, 2, 2, 4};
+	private static int[] witems = {20, 1, 2, 2, 3};
 	private static Item[] items = {null, Item.amuletOfEscape, Item.amuletOfRadiance, Item.emptyFlask, Item.healingHerbs};
 	
 	public Jar(World world, Random random) {

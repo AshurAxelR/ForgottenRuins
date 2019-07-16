@@ -1,4 +1,4 @@
-package com.xrbpowered.ruins.render.effects;
+package com.xrbpowered.ruins.render.effect;
 
 import java.awt.Color;
 

@@ -1,28 +1,15 @@
-package com.xrbpowered.ruins.render.prefab;
+package com.xrbpowered.ruins.render;
 
 import java.util.ArrayList;
 
 import com.xrbpowered.gl.res.mesh.ObjMeshLoader;
 import com.xrbpowered.gl.res.mesh.StaticMesh;
+import com.xrbpowered.gl.res.shader.Shader;
 import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.ruins.render.shader.WallShader;
 
-public class ComponentRenderer<C extends RenderComponent> {
+public abstract class ComponentRenderer<C extends RenderComponent<?>> {
 	
-	public static Prefab palm;
-	public static Prefab well;
-	public static Prefab dryWell;
-	public static Prefab tablet;
-	public static Prefab obelisk;
-	public static Prefab obeliskGlow;
-
-	public static Prefab jar1;
-	public static Prefab broken;
-
-	public static PrefabComponent pickedComponent = null; 
-	public static int pickedComponentIndex = -1; 
-	
-
 	protected final String basePath;
 	protected ArrayList<C> components = new ArrayList<>(); 
 	
@@ -49,16 +36,18 @@ public class ComponentRenderer<C extends RenderComponent> {
 		components = null;
 	}
 	
+	protected abstract Shader getShader();
+	
 	public void drawInstances() {
-		ComponentShader shader = ComponentShader.getInstance();
+		Shader shader = getShader();
 		shader.use();
 		for(C comp : components)
 			drawComp(shader, comp);
 		shader.unuse();
 	}
 	
-	protected void drawComp(ComponentShader shader, C comp) {
-		comp.drawInstances();
+	protected void drawComp(Shader shader, C comp) {
+		comp.drawInstances(shader);
 	}
 	
 	public void releaseInstances() {
