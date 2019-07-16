@@ -10,6 +10,7 @@ import com.xrbpowered.ruins.render.prefab.EntityComponent;
 import com.xrbpowered.ruins.render.prefab.InstanceInfo;
 import com.xrbpowered.ruins.render.shader.WallShader;
 import com.xrbpowered.ruins.world.Direction;
+import com.xrbpowered.ruins.world.PathFinder;
 import com.xrbpowered.ruins.world.PathFinder.Token;
 import com.xrbpowered.ruins.world.Tile;
 import com.xrbpowered.ruins.world.TileType;
@@ -48,10 +49,18 @@ public class DebugPaths {
 			dot.allocateInstanceData(maxCount);
 		}
 		dot.startCreateInstances();
-		
-		for(Obelisk obj : world.obelisks.obelisks)
-			if(!obj.visited)
-				tracePath(world, obj.x, obj.z, obj.y);
+
+		int min = PathFinder.maxPathDist;
+		Obelisk nearest = null;
+		for(Obelisk obj : world.obelisks.obelisks) {
+			int d = world.map[obj.x][obj.z][obj.y].pathDist;
+			if(!obj.visited && d<min) {
+				nearest = obj;
+				min = d;
+			}
+		}
+		if(nearest!=null)
+			tracePath(world, nearest.x, nearest.z, nearest.y);
 		
 		dot.finishCreateInstances();
 	}

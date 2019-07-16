@@ -7,6 +7,7 @@ import com.xrbpowered.ruins.render.prefab.InstanceInfo;
 import com.xrbpowered.ruins.world.Tile;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
+import com.xrbpowered.ruins.world.obj.Grass;
 import com.xrbpowered.ruins.world.obj.Jar;
 import com.xrbpowered.ruins.world.obj.SmallObject;
 
@@ -43,20 +44,6 @@ public class SmallObjectGenerator {
 			}
 			return false;
 		}
-		
-		/*public void intersectMove(float dz) {
-			boolean retry = true;
-			while(retry) {
-				retry = false;
-				for(Circle c : list) {
-					if(intersects(c)) {
-						z = c.z+dz*(c.r+r);
-						retry = true;
-						break;
-					}
-				}
-			}
-		}*/
 	}
 	
 	public final World world;
@@ -88,17 +75,23 @@ public class SmallObjectGenerator {
 			return false;
 	}
 	
-	public void fillTile(Token t) {
+	public void fillTile(Token t, int baseCount) {
 		Tile tile = gen.getTile(t);
 		list.clear();
-		int n = random.nextInt(4)+2;
+		int n = random.nextInt(6)+baseCount;
 		for(int i=0; i<n; i++) {
-			SmallObject obj = new Jar(world, random);
-			InstanceInfo info = new InstanceInfo(tile.light);
-			info.scale = randomScale(obj.getScaleRange());
-			info.rotate = random.nextFloat() * 2f * (float)Math.PI;
-			if(tryAdd(obj.getRadius(info.scale), info))
-				obj.place(tile, t, info);
+			SmallObject obj = null;
+			if(random.nextInt(10)<6)
+				obj = new Jar(world, random);
+			else if(tile.light>0 || random.nextInt(3)==0)
+				obj = new Grass(world);
+			if(obj!=null) {
+				InstanceInfo info = new InstanceInfo(tile.light);
+				info.scale = randomScale(obj.getScaleRange());
+				info.rotate = random.nextFloat() * 2f * (float)Math.PI;
+				if(tryAdd(obj.getRadius(info.scale), info))
+					obj.place(tile, t, info);
+			}
 		}
 	}
 	

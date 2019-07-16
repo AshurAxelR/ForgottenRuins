@@ -10,7 +10,6 @@ public class Tile {
 	public Direction rampDir = null;
 	public float light;
 	
-	public boolean canHaveObject = false;
 	public TileObject tileObject = null;
 	public ArrayList<SmallObject> smallObjects = null;
 	
