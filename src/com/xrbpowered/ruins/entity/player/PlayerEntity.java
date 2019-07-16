@@ -128,7 +128,7 @@ public class PlayerEntity extends EntityActor {
 			PathFinder paths = world.pathfinder;
 			if(paths.canUpdate(mapx, mapz, mapy)) {
 				paths.clear();
-				paths.update(mapx, mapz, mapy, 1000);
+				paths.update(mapx, mapz, mapy, PathFinder.maxPathDist);
 			}
 			DebugPaths.update(world);
 			return true;

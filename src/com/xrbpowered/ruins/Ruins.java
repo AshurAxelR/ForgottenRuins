@@ -234,7 +234,7 @@ public class Ruins extends UIClient {
 			observerController.setMouseLook(grab);
 		else
 			player.controller.setMouseLook(grab);
-		player.controller.enabled = grab;
+		player.controller.enabled = !observerActive;
 		if(!grab) {
 			input.setMousePos(getWidth()/2, getHeight()/2);
 		}

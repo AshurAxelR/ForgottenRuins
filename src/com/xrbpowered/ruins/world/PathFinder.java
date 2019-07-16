@@ -4,6 +4,8 @@ import java.util.LinkedList;
 
 public class PathFinder {
 
+	public static final int maxPathDist = 1000;
+	
 	public class Token {
 		public int x, z, y;
 		public Direction d = null;
