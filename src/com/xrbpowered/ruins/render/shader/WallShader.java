@@ -24,7 +24,11 @@ public class WallShader extends CameraShader {
 	protected WallShader(String pathVS, String pathFS) {
 		super(vertexInfo, pathVS, pathFS);
 	}
-	
+
+	protected WallShader(VertexInfo info, String pathVS, String pathFS) {
+		super(info, pathVS, pathFS);
+	}
+
 	public WallShader setEnvironment(ShaderEnvironment env) {
 		this.environment = env;
 		updateEnvironment();

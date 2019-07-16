@@ -6,10 +6,11 @@ import com.xrbpowered.gl.scene.CameraActor;
 import com.xrbpowered.ruins.render.shader.ShaderEnvironment;
 import com.xrbpowered.ruins.render.shader.WallShader;
 
-public class ComponentShader extends WallShader {
+public class InstanceShader extends WallShader {
+	
 	private int highlightInstanceLocation;
 	
-	public ComponentShader(ShaderEnvironment env, CameraActor camera) {
+	public InstanceShader(ShaderEnvironment env, CameraActor camera) {
 		super("tileobj_v.glsl", "tileobj_f.glsl");
 		setEnvironment(env);
 		setCamera(camera);
@@ -35,13 +36,13 @@ public class ComponentShader extends WallShader {
 		GL20.glUniform1i(highlightInstanceLocation, index);
 	}
 	
-	private static ComponentShader instance = null;
+	private static InstanceShader instance = null;
 	
 	public static void createInstance(ShaderEnvironment env, CameraActor camera) {
-		instance = new ComponentShader(env, camera);
+		instance = new InstanceShader(env, camera);
 	}
 	
-	public static ComponentShader getInstance() {
+	public static InstanceShader getInstance() {
 		return instance;
 	}
 	

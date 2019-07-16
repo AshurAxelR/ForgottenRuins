@@ -5,7 +5,7 @@ import java.awt.Color;
 import com.xrbpowered.gl.res.mesh.FastMeshBuilder;
 import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.render.prefab.ComponentShader;
+import com.xrbpowered.ruins.render.prefab.InstanceShader;
 import com.xrbpowered.ruins.render.prefab.EntityComponent;
 import com.xrbpowered.ruins.render.prefab.InstanceInfo;
 import com.xrbpowered.ruins.render.shader.WallShader;
@@ -68,9 +68,9 @@ public class DebugPaths {
 	public static void draw() {
 		if(dot!=null && show) {
 			//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-			ComponentShader shader = ComponentShader.getInstance();
+			InstanceShader shader = InstanceShader.getInstance();
 			shader.use();
-			dot.drawInstances();
+			dot.drawInstances(shader);
 			shader.unuse();
 		}
 	}

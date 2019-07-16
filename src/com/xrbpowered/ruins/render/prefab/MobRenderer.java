@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.render.prefab;
 import com.xrbpowered.ruins.entity.mob.MobEntity;
 import com.xrbpowered.ruins.world.World;
 
-public class MobRenderer extends ComponentRenderer<EntityComponent> {
+public class MobRenderer extends InstanceRenderer<EntityComponent> {
 
 	public static final String prefabPath = "entities/";
 

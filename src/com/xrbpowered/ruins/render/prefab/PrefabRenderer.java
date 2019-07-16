@@ -1,12 +1,13 @@
 package com.xrbpowered.ruins.render.prefab;
 
 import com.xrbpowered.gl.res.mesh.StaticMesh;
+import com.xrbpowered.gl.res.shader.Shader;
 import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.obj.MapObject;
 import com.xrbpowered.ruins.world.obj.TileObject;
 
-public class PrefabRenderer extends ComponentRenderer<PrefabComponent> {
+public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 
 	public static Prefab palm;
 	public static Prefab well;
@@ -49,7 +50,7 @@ public class PrefabRenderer extends ComponentRenderer<PrefabComponent> {
 		PrefabRenderer.portalBroken = new Prefab(false, add(new PrefabComponent(mesh("portal/portal_broken.obj"), portalTex)));
 		
 		final PrefabComponent portalFrameOn = add(new PrefabComponent(portalFrameMesh, portalTex).setGlow(texture("portal/portal_glow.png")));
-		final PrefabComponent portalPane = add(new PrefabComponent(mesh("portal/portal_pane.obj"), RenderComponent.getBlack()).setCulling(false).setGlow(texture("portal/astral.png")));
+		final PrefabComponent portalPane = add(new PrefabComponent(mesh("portal/portal_pane.obj"), InstanceComponent.getBlack()).setCulling(false).setGlow(texture("portal/astral.png")));
 		final PrefabComponent portalInteract = add(new PrefabComponent(mesh("portal/portal_inter.obj"), portalTex));
 		PrefabRenderer.portalFrame = new Prefab(true, add(new PrefabComponent(portalFrameMesh, portalTex)));
 		PrefabRenderer.portal = new Prefab() {
@@ -86,8 +87,8 @@ public class PrefabRenderer extends ComponentRenderer<PrefabComponent> {
 	}
 
 	@Override
-	protected void drawComp(ComponentShader shader, PrefabComponent comp) {
-		shader.updateHighlight(comp==pickedComponent ? pickedComponentIndex : -1);
+	protected void drawComp(Shader shader, PrefabComponent comp) {
+		((InstanceShader) shader).updateHighlight(comp==pickedComponent ? pickedComponentIndex : -1);
 		super.drawComp(shader, comp);
 	}
 	

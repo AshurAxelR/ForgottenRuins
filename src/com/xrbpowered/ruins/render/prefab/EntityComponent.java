@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.render.prefab;
 import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.res.texture.Texture;
 
-public class EntityComponent extends RenderComponent {
+public class EntityComponent extends InstanceComponent {
 
 	private int maxCount = 0;
 	private float[] instanceData = null;

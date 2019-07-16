@@ -170,10 +170,13 @@ public class TileObjectGenerator {
 				}
 			}
 			if(random.nextInt(10)<6) {
-				smallObjects.fillTile(t, 3);
+				smallObjects.fillTile(t, 3, 0.5f);
 				continue;
 			}
-			smallObjects.fillTile(t, -1);
+			if(gen.getTile(t).light>0)
+				smallObjects.fillTile(t, 1, 0.2f);
+			else
+				smallObjects.fillTile(t, -1, 0.75f);
 		}
 	}
 	

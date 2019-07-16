@@ -75,13 +75,13 @@ public class SmallObjectGenerator {
 			return false;
 	}
 	
-	public void fillTile(Token t, int baseCount) {
+	public void fillTile(Token t, int baseCount, float jarProb) {
 		Tile tile = gen.getTile(t);
 		list.clear();
 		int n = random.nextInt(6)+baseCount;
 		for(int i=0; i<n; i++) {
 			SmallObject obj = null;
-			if(random.nextInt(10)<6)
+			if(random.nextFloat()<jarProb)
 				obj = new Jar(world, random);
 			else if(tile.light>0 || random.nextInt(3)==0)
 				obj = new Grass(world);
