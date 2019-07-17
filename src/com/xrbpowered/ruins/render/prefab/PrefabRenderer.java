@@ -19,7 +19,7 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 	public static Prefab portalFrame;
 	public static Prefab portal;
 
-	public static Prefab jar1;
+	public static Prefab[] jars;
 	public static Prefab broken;
 	public static Prefab[] grass;
 
@@ -36,8 +36,13 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 		PrefabRenderer.well = new Prefab(true, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well.png"))));
 		PrefabRenderer.dryWell = new Prefab(false, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well_dry.png"))));
 		PrefabRenderer.tablet = new Prefab(true, add(new PrefabComponent(mesh("tablet/tablet.obj"), texture("tablet/tablet.png"))));
-		PrefabRenderer.jar1 = new Prefab(true, add(new PrefabComponent(mesh("jar/jar1.obj"), texture("jar/jar.png"))));
 		PrefabRenderer.broken = new Prefab(false, add(new PrefabComponent(mesh("jar/broken.obj"), texture("jar/broken.png"))));
+
+		Texture jarTex = texture("jar/jar.png");
+		PrefabRenderer.jars = new Prefab[] {
+			new Prefab(true, add(new PrefabComponent(mesh("jar/jar1.obj"), jarTex))),
+			new Prefab(true, add(new PrefabComponent(mesh("jar/jar2.obj"), jarTex))),
+		};
 		
 		StaticMesh grassMesh = mesh("grass/grass.obj");
 		PrefabRenderer.grass = new Prefab[] {

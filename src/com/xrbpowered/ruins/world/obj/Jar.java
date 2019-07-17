@@ -14,11 +14,15 @@ public class Jar extends SmallObject {
 	public int coins = 0;
 	public boolean broken = false;
 	
-	private static float[] witems = {22.5f, 1f, 2f, 2f, 2.5f};
+	private static float[] wvariants = {2f, 1f};
+	private int variant;
+
+	private static float[] witems = {23.5f, 1f, 2f, 1f, 2.5f};
 	private static Item[] items = {null, Item.amuletOfEscape, Item.amuletOfRadiance, Item.emptyFlask, Item.healingHerbs};
 	
 	public Jar(World world, Random random) {
 		super(world);
+		variant = wrandom(random, wvariants);
 		item = items[wrandom(random, witems)];
 		if(item==null) {
 			coins = random.nextInt(8)-4;
@@ -32,7 +36,7 @@ public class Jar extends SmallObject {
 	
 	@Override
 	public float getScaleRange() {
-		return 0.25f;
+		return 0.35f;
 	}
 	
 	@Override
@@ -42,7 +46,7 @@ public class Jar extends SmallObject {
 
 	@Override
 	public Prefab getPrefab() {
-		return broken ? PrefabRenderer.broken : PrefabRenderer.jar1;
+		return broken ? PrefabRenderer.broken : PrefabRenderer.jars[variant];
 	}
 	
 	@Override
