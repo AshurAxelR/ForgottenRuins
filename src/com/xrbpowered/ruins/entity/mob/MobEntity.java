@@ -1,6 +1,9 @@
 package com.xrbpowered.ruins.entity.mob;
 
 import com.xrbpowered.ruins.entity.EntityActor;
+import com.xrbpowered.ruins.render.effect.particle.Particle;
+import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
+import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.render.prefab.EntityComponent;
 import com.xrbpowered.ruins.render.prefab.InstanceInfo;
 import com.xrbpowered.ruins.world.Direction;
@@ -96,5 +99,25 @@ public abstract class MobEntity extends EntityActor {
 			alive = false;
 		return alive;
 	}
+	
+	public void radiance() {
+		radianceSpark.pivot.set(position);
+		radianceSpark.pivot.y += 0.3f;
+		radianceSpark.generate();
+		alive = false;
+	}
+
+	public static ParticleEffect radianceSpark = new ParticleEffect() {
+		@Override
+		public void generateParticle() {
+			Particle p = new Particle(2f);
+			assign(p);
+			ParticleRenderer.radiance.add(p);
+		}
+		@Override
+		public void generate() {
+			generateParticle();
+		}
+	};
 	
 }

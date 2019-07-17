@@ -9,7 +9,7 @@ import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
-public class DryWell extends TileObject implements WorldEntity{
+public class DryWell extends TileObject implements WorldEntity {
 
 	public static final int count = 50;
 	public static final float maxInitialSpawnDelay = 180f;

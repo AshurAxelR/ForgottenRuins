@@ -6,6 +6,9 @@ import java.awt.event.KeyEvent;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.mob.MobEntity;
 import com.xrbpowered.ruins.entity.player.PlayerEntity;
+import com.xrbpowered.ruins.render.effect.particle.Particle;
+import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
+import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 
 public class AmuletOfRadiance extends Item {
 
@@ -28,12 +31,27 @@ public class AmuletOfRadiance extends Item {
 	@Override
 	public boolean use(PlayerEntity player) {
 		for(MobEntity e : player.world.mobs) {
-			if(player.getDistTo(e)<10f)
-				e.alive = false;
+			if(e.alive && player.getDistTo(e)<10f)
+				e.radiance();
 		}
+		explosion.pivot.set(player.position);
+		explosion.generate();
 		Ruins.ruins.setOverlay(null);
 		Ruins.glare.glare(1.2f);
 		return true;
 	}
+	
+	public static ParticleEffect explosion = new ParticleEffect.Rand(8f) {
+		@Override
+		public void generateParticle() {
+			Particle p = new Particle(random(1.5f, 3f));
+			assign(p);
+			ParticleRenderer.light.add(p);
+		}
+		@Override
+		public void generate() {
+			generate(500);
+		}
+	}.setSpeed(0.25f, 0.5f);
 
 }
