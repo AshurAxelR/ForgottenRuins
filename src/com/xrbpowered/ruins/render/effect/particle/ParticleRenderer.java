@@ -6,11 +6,17 @@ import com.xrbpowered.ruins.render.ComponentRenderer;
 
 public class ParticleRenderer extends ComponentRenderer<ParticleComponent> {
 
-	public static ParticleComponent smookeDot;
+	public static ParticleComponent dark;
+	public static ParticleComponent light;
+	public static ParticleComponent radiance;
+	public static ParticleComponent smoke;
 	
 	public ParticleRenderer() {
 		super("particles/");
-		smookeDot = add(new ParticleComponent(10000, texture("smoke_dot.png")));
+		dark = add(new ParticleComponent(300, texture("dark.png")));
+		light = add(new ParticleComponent(1000, texture("light.png")));
+		radiance = add(new ParticleComponent(50, texture("radiance.png")));
+		smoke = add(new ParticleComponent(100, texture("smoke.png")));
 	}
 
 	@Override
@@ -25,6 +31,11 @@ public class ParticleRenderer extends ComponentRenderer<ParticleComponent> {
 		for(ParticleComponent comp : components)
 			drawComp(shader, comp);
 		shader.unuse();
+	}
+
+	public void clear() {
+		for(ParticleComponent comp : components)
+			comp.clear();
 	}
 
 	public void update(float dt) {

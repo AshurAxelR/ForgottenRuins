@@ -31,7 +31,7 @@ public class ParticleComponent extends RenderComponent<Particle> {
 	}
 
 	public ParticleComponent(int maxCount, Texture texture) {
-		this(maxCount, texture, texture.getWidth()/texture.getHeight(), texture.getHeight()*0.01f);
+		this(maxCount, texture, texture.getWidth()/texture.getHeight(), texture.getHeight()*0.015f);
 	}
 
 	public int getMaxCount() {
@@ -99,15 +99,10 @@ public class ParticleComponent extends RenderComponent<Particle> {
 	protected void updateData() {
 		instCount = particles.size();
 		if(instCount>0) {
-			int index = 0;
-			for(Particle p : particles) {
-				setPointData(pointData, p, index);
-				index++;
-				if(index==maxCount) {
-					instCount = maxCount;
-					break;
-				}
-			}
+			if(instCount>maxCount)
+				instCount = maxCount;
+			for(int i=instCount-1; i>=0; i--)
+				setPointData(pointData, particles.get(i), i);
 			points.updateCountElements(instCount);
 			points.updateVertexData(pointData);
 		}

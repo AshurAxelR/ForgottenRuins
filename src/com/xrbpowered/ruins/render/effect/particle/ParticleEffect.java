@@ -9,13 +9,18 @@ public abstract class ParticleEffect {
 	protected static final Random random = new Random();
 	
 	public Vector3f pivot = new Vector3f();
-	public float rx, rz, ry;
+	public float rx, rz, ymin, ymax;
 	public float speedMin, speedMax;
 
-	public ParticleEffect(float rx, float rz, float ry) {
+	public ParticleEffect(float rx, float rz, float ymin, float ymax) {
 		this.rx = rx;
 		this.rz = rz;
-		this.ry = ry;
+		this.ymin = ymin;
+		this.ymax = ymax;
+	}
+
+	public ParticleEffect(float rx, float rz, float ry) {
+		this(rx, rz, -ry, ry);
 	}
 	
 	public ParticleEffect(float r) {
@@ -46,10 +51,11 @@ public abstract class ParticleEffect {
 	}
 	
 	protected void assignPosition(Particle p) {
-		random(p.position, pivot, rx, rz, ry);
+		random(p.position, pivot, rx, rz, ymin, ymax);
 	}
 
-	protected abstract void assignSpeed(Particle p, float speed);
+	protected void assignSpeed(Particle p, float speed) {
+	}
 	
 	protected void assignSpeed(Particle p) {
 		assignSpeed(p, random(speedMin, speedMax));
@@ -63,24 +69,31 @@ public abstract class ParticleEffect {
 		return random.nextFloat()*(max-min)+min;
 	}
 	
-	protected static Vector3f random(Vector3f out, Vector3f in, float rx, float rz, float ry) {
-		out.x = (in==null ? 0f : in.x) + random(-rx, rx);
-		out.z = (in==null ? 0f : in.z) + random(-rz, rz);
-		out.y = (in==null ? 0f : in.y) + random(-ry, ry);
+	protected static Vector3f random(Vector3f out, Vector3f in, float r) {
+		out.x = (in==null ? 0f : in.x) + random(-r, r);
+		out.z = (in==null ? 0f : in.z) + random(-r, r);
+		out.y = (in==null ? 0f : in.y) + random(-r, r);
 		return out;
 	}
-	
+
+	protected static Vector3f random(Vector3f out, Vector3f in, float rx, float rz, float ymin, float ymax) {
+		out.x = (in==null ? 0f : in.x) + random(-rx, rx);
+		out.z = (in==null ? 0f : in.z) + random(-rz, rz);
+		out.y = (in==null ? 0f : in.y) + random(ymin, ymax);
+		return out;
+	}
+
 	public static abstract class Up extends ParticleEffect {
+		public Up(float rx, float rz, float ymin, float ymax) {
+			super(rx, rz, ymin, ymax);
+		}
 		public Up(float rx, float rz, float ry) {
-			this.rx = rx;
-			this.rz = rz;
-			this.ry = ry;
+			super(rx, rz, ry);
 		}
 		public Up(float r) {
-			this(r, r, r);
+			super(r);
 		}
 		public Up() {
-			this(0f, 0f, 0f);
 		}
 		@Override
 		protected void assignSpeed(Particle p, float speed) {
@@ -89,17 +102,18 @@ public abstract class ParticleEffect {
 	}
 
 	public static abstract class Radial extends ParticleEffect {
+		public Radial(float rx, float rz, float ymin, float ymax) {
+			super(rx, rz, ymin, ymax);
+		}
 		public Radial(float rx, float rz, float ry) {
-			this.rx = rx;
-			this.rz = rz;
-			this.ry = ry;
+			super(rx, rz, ry);
 		}
 		public Radial(float r) {
-			this(r, r, r);
+			super(r);
 		}
 		public Radial() {
-			this(0f, 0f, 0f);
 		}
+
 		@Override
 		protected void assignSpeed(Particle p, float speed) {
 			p.speed.set(p.position);
@@ -110,20 +124,21 @@ public abstract class ParticleEffect {
 	}
 
 	public static abstract class Rand extends ParticleEffect {
+		public Rand(float rx, float rz, float ymin, float ymax) {
+			super(rx, rz, ymin, ymax);
+		}
 		public Rand(float rx, float rz, float ry) {
-			this.rx = rx;
-			this.rz = rz;
-			this.ry = ry;
+			super(rx, rz, ry);
 		}
 		public Rand(float r) {
-			this(r, r, r);
+			super(r);
 		}
 		public Rand() {
-			this(0f, 0f, 0f);
 		}
+
 		@Override
 		protected void assignSpeed(Particle p, float speed) {
-			random(p.speed, null, 1f, 1f, 1f);
+			random(p.speed, null, 1f);
 			p.speed.normalize();
 			p.speed.mul(speed);
 		}

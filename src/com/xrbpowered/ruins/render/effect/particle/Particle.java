@@ -17,6 +17,7 @@ public class Particle implements WorldEntity {
 	
 	public Particle(float duration) {
 		this.duration = duration;
+		this.cycleTime = duration;
 	}
 	
 	private static final Vector3f v = new Vector3f();
@@ -24,7 +25,7 @@ public class Particle implements WorldEntity {
 	@Override
 	public boolean updateTime(float dt) {
 		t += dt;
-		phase = t * cycleTime;
+		phase = t / cycleTime;
 		v.set(speed);
 		v.mul(dt);
 		position.add(v);

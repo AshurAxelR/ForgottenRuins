@@ -1,7 +1,11 @@
 package com.xrbpowered.ruins.world.obj;
 
 import com.xrbpowered.ruins.Ruins;
+import com.xrbpowered.ruins.entity.EntityController;
 import com.xrbpowered.ruins.entity.player.PlayerEntity;
+import com.xrbpowered.ruins.render.effect.particle.Particle;
+import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
+import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;
@@ -36,9 +40,30 @@ public class Well extends TileObject {
 	public void interact() {
 		world.player.hydration = PlayerEntity.baseHydration;
 		EmptyFlask.fill(world.player.inventory);
+		effect.pivot.set(position);
+		effect.pivot.y += 0.5;
+		effect.generate();
 		Ruins.glare.smallGlare();
 		Ruins.hud.popup.popup("Refreshing...");
 		Ruins.hud.updateInventoryPreview();
 	}
 
+	public static ParticleEffect effect = new ParticleEffect.Up(0.5f, 0.5f, 0f) {
+		@Override
+		public void generateParticle() {
+			Particle p = new Particle(random(0.75f, 1.25f)) {
+				@Override
+				public boolean updateTime(float dt) {
+					speed.y -= EntityController.gravity*dt;
+					return super.updateTime(dt);
+				}
+			};
+			assign(p);
+			ParticleRenderer.light.add(p);
+		}
+		@Override
+		public void generate() {
+			generate(20);
+		}
+	}.setSpeed(2.5f, 5f);
 }

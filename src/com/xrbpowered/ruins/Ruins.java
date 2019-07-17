@@ -220,6 +220,7 @@ public class Ruins extends UIClient {
 		if(world!=null) {
 			prefabs.releaseInstances();
 			mobs.releaseInstances();
+			particles.clear();
 			for(WallChunk wall : walls)
 				wall.release();
 		}
