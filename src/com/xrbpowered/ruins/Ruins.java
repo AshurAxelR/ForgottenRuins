@@ -155,7 +155,8 @@ public class Ruins extends UIClient {
 				WallChunk.zsort(walls, camera);
 				
 				GL11.glEnable(GL11.GL_CULL_FACE);
-				pick.update(target);
+				if(!observerActive)
+					pick.update(target);
 
 				super.renderBuffer(target);
 				shader.use();
@@ -279,6 +280,7 @@ public class Ruins extends UIClient {
 		player.invulnerable = enable;
 		hud.setVisible(!enable);
 		if(enable) {
+			pick.reset();
 			player.controller.setMouseLook(false);
 			observerController.setMouseLook(true);
 		}

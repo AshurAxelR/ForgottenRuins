@@ -92,4 +92,21 @@ public class World {
 		return my;
 	}
 	
+	private static long nextSeed(long seed, long add) {
+		// Multiply by Knuth's Random (Linear congruential generator) and add offset
+		seed *= seed * 6364136223846793005L + 1442695040888963407L;
+		seed += add;
+		return seed;
+	}
+
+	public static long seedXZY(long seed, long x, long z, long y) {
+		seed = nextSeed(seed, x);
+		seed = nextSeed(seed, z);
+		seed = nextSeed(seed, y);
+		seed = nextSeed(seed, x);
+		seed = nextSeed(seed, z);
+		seed = nextSeed(seed, y);
+		return seed;
+	}
+
 }

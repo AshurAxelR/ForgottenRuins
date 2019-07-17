@@ -65,7 +65,7 @@ public class WallBuilder extends AdvancedMeshBuilder {
 	protected void addBottom(int x, int z, int y) {
 		x *= 2;
 		z *= 2;
-		long s = 0;
+		long s = World.seedXZY(world.seed+5, x, z, y);
 		Vector3f norm = new Vector3f(0, -1, 0);
 		Face face = newQuad(norm, 0f);
 		face.vertices[0].setPosition(x-1, y, z+1).setTexCoord(atlas.bottom(s, 0, 0));
@@ -77,7 +77,7 @@ public class WallBuilder extends AdvancedMeshBuilder {
 	protected void addSide(int x, int z, int y, Direction d, float light) {
 		x *= 2;
 		z *= 2;
-		long s = 0;
+		long s = World.seedXZY(world.seed+(long)d.ordinal(), x, z, y);
 		int h = y%2;
 		Vector3f norm = new Vector3f(d.dx, 0, d.dz);
 		Face face = newQuad(norm, light);
@@ -116,7 +116,7 @@ public class WallBuilder extends AdvancedMeshBuilder {
 	protected void addRampTop(int x, int z, int y, Direction rampd, float light) {
 		x *= 2;
 		z *= 2;
-		long s = 0;
+		long s = World.seedXZY(world.seed+4, x, z, y);
 		Vector3f norm = new Vector3f(-rampd.dx, 2, -rampd.dz).normalize();
 		Face face = newQuad(norm, light);
 		switch(rampd) {
@@ -156,7 +156,7 @@ public class WallBuilder extends AdvancedMeshBuilder {
 			return;
 		x *= 2;
 		z *= 2;
-		long s = 0;
+		long s = World.seedXZY(world.seed+(long)d.ordinal(), x, z, y);
 		int h = y%2;
 		Vector3f norm = new Vector3f(d.dx, 0, d.dz);
 		Face face = newTriangle(norm, light);

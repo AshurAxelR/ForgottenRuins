@@ -84,7 +84,7 @@ public class SmallObjectGenerator {
 			if(random.nextFloat()<jarProb)
 				obj = new Jar(world, random);
 			else if(tile.light>0 || random.nextInt(3)==0)
-				obj = new Grass(world);
+				obj = new Grass(world, random.nextInt()&0x7fffffff);
 			if(obj!=null) {
 				InstanceInfo info = new InstanceInfo(tile.light);
 				info.scale = randomScale(obj.getScaleRange());

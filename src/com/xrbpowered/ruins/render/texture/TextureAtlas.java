@@ -8,8 +8,10 @@ import com.xrbpowered.gl.res.texture.Texture;
 
 public class TextureAtlas {
 
-	public static final int size = 2;
-	public static final float dtile = 1f/(float)size;
+	public static final int sizex = 4;
+	public static final int sizey = 2;
+	public static final float dtilex = 1f/(float)sizex;
+	public static final float dtiley = 1f/(float)sizey;
 	
 	public static class Sprite {
 		public int u, v;
@@ -18,10 +20,10 @@ public class TextureAtlas {
 			this.v = v;
 		}
 		public Vector2f uv(float du, float dv) {
-			return new Vector2f((u+du)*dtile, (v+dv)*dtile);
+			return new Vector2f((u+du)*dtilex, (v+dv)*dtiley);
 		}
 		public Vector2f uvHalf(float du, float dv, int h) {
-			return new Vector2f((u+du)*dtile, (v+dv*0.5f+h*0.5f)*dtile);
+			return new Vector2f((u+du)*dtilex, (v+dv*0.5f+h*0.5f)*dtiley);
 		}
 	}
 	
@@ -37,12 +39,12 @@ public class TextureAtlas {
 
 		public void addRect(int u1, int v1, int u2, int v2) {
 			for(int u=u1; u<=u2; u++)
-				for(int v=v1; u<=v2; v++)
+				for(int v=v1; v<=v2; v++)
 					add(u, v);
 		}
 
 		public Sprite get(long s) {
-			return super.get((int)s % size());
+			return super.get(((int)(s>>7L) & 0x7fffffff) % size());
 		}
 	}
 	
@@ -52,8 +54,6 @@ public class TextureAtlas {
 	public Versions rampTop;
 	public Versions rampSide;
 
-	public Sprite start;
-	
 	private Texture texture;
 	
 	public TextureAtlas() {
@@ -66,15 +66,13 @@ public class TextureAtlas {
 		bottom.add(0, 0);
 		
 		side = new Versions();
-		side.add(1, 0);
+		side.addRect(1, 0, 3, 1);
 
 		rampTop = new Versions();
 		rampTop.add(0, 1);
 		
 		rampSide = new Versions();
 		rampSide.add(1, 0);
-		
-		start = new Sprite(1, 1);
 	}
 	
 	public Texture getTexture() {
