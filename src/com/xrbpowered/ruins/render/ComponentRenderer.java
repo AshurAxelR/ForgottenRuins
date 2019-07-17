@@ -17,10 +17,14 @@ public abstract class ComponentRenderer<C extends RenderComponent<?>> {
 		this.basePath = basePath;
 	}
 	
-	public StaticMesh mesh(String path) {
-		return ObjMeshLoader.loadObj(basePath+path, 0, 1f, WallShader.vertexInfo, null);
+	public StaticMesh mesh(String path, float scale) {
+		return ObjMeshLoader.loadObj(basePath+path, 0, scale, WallShader.vertexInfo, null);
 	}
-	
+
+	public StaticMesh mesh(String path) {
+		return mesh(path, 1f);
+	}
+
 	public Texture texture(String path) {
 		return new Texture(basePath+path, true, false);
 	}

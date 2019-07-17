@@ -62,15 +62,19 @@ public class TileObjectPicker {
 		}
 		int pickId = pick.finishPicking(target);
 		if(pickId<=0 || pickId>world.objects.size()) {
-			pickObject = null;
-			PrefabRenderer.pickedComponent = null;
-			PrefabRenderer.pickedComponentIndex = -1;
+			reset();
 		}
 		else {
 			pickObject = world.objects.get(pickId-1);
 			PrefabRenderer.pickedComponent = pickObject.getInteractionComp();
 			PrefabRenderer.pickedComponentIndex = pickObject.intractionComponentIndex;
 		}
+	}
+	
+	public void reset() {
+		pickObject = null;
+		PrefabRenderer.pickedComponent = null;
+		PrefabRenderer.pickedComponentIndex = -1;
 	}
 	
 	public void release() {

@@ -21,7 +21,7 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 
 	public static Prefab jar1;
 	public static Prefab broken;
-	public static Prefab grass1;
+	public static Prefab[] grass;
 
 	public static PrefabComponent pickedComponent = null; 
 	public static int pickedComponentIndex = -1; 
@@ -38,7 +38,14 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 		PrefabRenderer.tablet = new Prefab(true, add(new PrefabComponent(mesh("tablet/tablet.obj"), texture("tablet/tablet.png"))));
 		PrefabRenderer.jar1 = new Prefab(true, add(new PrefabComponent(mesh("jar/jar1.obj"), texture("jar/jar.png"))));
 		PrefabRenderer.broken = new Prefab(false, add(new PrefabComponent(mesh("jar/broken.obj"), texture("jar/broken.png"))));
-		PrefabRenderer.grass1 = new Prefab(false, add(new PrefabComponent(mesh("grass/grass.obj"), texture("grass/grass1.png")).setCulling(false)));
+		
+		StaticMesh grassMesh = mesh("grass/grass.obj");
+		PrefabRenderer.grass = new Prefab[] {
+			new Prefab(false, add(new PrefabComponent(grassMesh, texture("grass/grass1.png")).setCulling(false))),
+			new Prefab(false, add(new PrefabComponent(grassMesh, texture("grass/grass2.png")).setCulling(false))),
+			new Prefab(false, add(new PrefabComponent(grassMesh, texture("grass/grass3.png")).setCulling(false))),
+			new Prefab(false, add(new PrefabComponent(mesh("grass/grass.obj", 0.5f), texture("grass/grass4.png")).setCulling(false))),
+		};
 
 		StaticMesh obeliskMesh = mesh("obelisk/obelisk.obj");
 		Texture obeliskTex = texture("obelisk/obelisk.png");

@@ -6,8 +6,11 @@ import com.xrbpowered.ruins.world.World;
 
 public class Grass extends SmallObject {
 
-	public Grass(World world) {
+	private int variant;
+	
+	public Grass(World world, int variant) {
 		super(world);
+		this.variant = variant % PrefabRenderer.grass.length;
 	}
 
 	@Override
@@ -22,7 +25,7 @@ public class Grass extends SmallObject {
 
 	@Override
 	public Prefab getPrefab() {
-		return PrefabRenderer.grass1;
+		return PrefabRenderer.grass[variant];
 	}
 
 }

@@ -14,7 +14,7 @@ public class Jar extends SmallObject {
 	public int coins = 0;
 	public boolean broken = false;
 	
-	private static int[] witems = {20, 1, 2, 2, 3};
+	private static float[] witems = {22.5f, 1f, 2f, 2f, 2.5f};
 	private static Item[] items = {null, Item.amuletOfEscape, Item.amuletOfRadiance, Item.emptyFlask, Item.healingHerbs};
 	
 	public Jar(World world, Random random) {
@@ -77,13 +77,13 @@ public class Jar extends SmallObject {
 		}
 	}
 	
-	public static int wrandom(Random random, int[] w) {
-		int max = 0;
+	public static int wrandom(Random random, float[] w) {
+		float max = 0;
 		for(int i = 0; i < w.length; i++)
 			max += w[i];
-		if(max == 0)
+		if(max<=0f)
 			return 0;
-		int x = random.nextInt(max);
+		float x = random.nextFloat()*max;
 		for(int i = 0;; i++) {
 			if(x < w[i])
 				return i;
