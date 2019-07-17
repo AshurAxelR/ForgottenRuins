@@ -5,6 +5,9 @@ import java.util.Random;
 import com.xrbpowered.ruins.entity.DamageSource;
 import com.xrbpowered.ruins.entity.EntityCollider;
 import com.xrbpowered.ruins.entity.player.PlayerController;
+import com.xrbpowered.ruins.render.effect.particle.Particle;
+import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
+import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.render.prefab.EntityComponent;
 import com.xrbpowered.ruins.render.prefab.MobRenderer;
 import com.xrbpowered.ruins.world.World;
@@ -63,11 +66,35 @@ public class Ghost extends MobEntity {
 		super.updateTime(dt);
 		if(time>spawnTime && this.getDistTo(world.player)<2.8f) {
 			world.player.applyDamage(damage, DamageSource.mob);
+			explosion.pivot.set(position);
+			explosion.pivot.y += height/2f;
+			explosion.generate();
 			alive = false;
 		}
 		if(time>lifespan && !agitated)
 			alive = false;
 		return alive;
 	}
+	
+	public static ParticleEffect explosion = new ParticleEffect.Radial(radius/2f, radius/2f, radius/2f) {
+		@Override
+		public void generateParticle() {
+			Particle p = new Particle(random(0.5f, 1.5f)) {
+				@Override
+				public boolean updateTime(float dt) {
+					float jitter = 25f*dt;
+					random(speed, speed, jitter, jitter, jitter);
+					speed.mul((float)Math.pow(0.2f, dt));
+					return super.updateTime(dt);
+				}
+			};
+			assign(p);
+			ParticleRenderer.smookeDot.add(p);
+		}
+		@Override
+		public void generate() {
+			generate(80);
+		}
+	}.setSpeed(1.5f, 4f);
 	
 }
