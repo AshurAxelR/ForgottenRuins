@@ -142,8 +142,8 @@ public class Ruins extends UIClient {
 					if(observerActive)
 						observerController.update(dt);
 					world.update((dt>dtLimit) ? dtLimit : dt);
+					particles.update(dt);
 				}
-				particles.updateInstances(world, dt);
 				super.updateTime(dt);
 			}
 			

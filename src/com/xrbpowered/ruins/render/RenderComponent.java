@@ -17,6 +17,7 @@ public abstract class RenderComponent<T> {
 	public abstract void releaseInstances();
 	
 	public void release() {
+		releaseInstances();
 	}
 
 

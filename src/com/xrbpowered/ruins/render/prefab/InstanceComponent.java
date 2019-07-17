@@ -101,6 +101,7 @@ public abstract class InstanceComponent extends RenderComponent<InstanceInfo> {
 			black.release();
 			black = null;
 		}
+		super.release();
 	}
 
 	private static Texture black = null;
