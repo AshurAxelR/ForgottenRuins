@@ -95,16 +95,20 @@ public abstract class MobEntity extends EntityActor {
 	public boolean updateTime(float dt) {
 		time += dt;
 		super.updateTime(dt);
-		if(mapy<=0)
-			alive = false;
+		if(position.y<=0)
+			disappear();
 		return alive;
+	}
+	
+	public void disappear() {
+		alive = false;
 	}
 	
 	public void radiance() {
 		radianceSpark.pivot.set(position);
 		radianceSpark.pivot.y += 0.3f;
 		radianceSpark.generate();
-		alive = false;
+		disappear();
 	}
 
 	public static ParticleEffect radianceSpark = new ParticleEffect() {

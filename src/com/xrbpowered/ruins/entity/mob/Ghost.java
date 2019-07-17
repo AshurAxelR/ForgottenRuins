@@ -28,11 +28,13 @@ public class Ghost extends MobEntity {
 	public static final float minLifespan = 150f; 
 	public static final float maxLifespan = 600f; 
 
-	public static final float damage = 30f;
+	public static final float damageMin = 25f;
+	public static final float damageMax = 40f;
 	
 	public float speed;
 	public float agitatedSpeed;
 	public float lifespan;
+	public float damage;
 	
 	public boolean agitated = false;
 	public boolean charging = false;
@@ -43,6 +45,7 @@ public class Ghost extends MobEntity {
 		speed = random.nextFloat()*(speedMax-speedMin)+speedMin;
 		agitatedSpeed = random.nextFloat()*(agitatedSpeedMax-agitatedSpeedMin)+agitatedSpeedMin;
 		lifespan = random.nextFloat()*(maxLifespan-minLifespan)+minLifespan;
+		damage = random.nextFloat()*(damageMax-damageMin)+damageMin;
 	}
 
 	@Override
@@ -66,10 +69,10 @@ public class Ghost extends MobEntity {
 	}
 
 	@Override
-	public void radiance() {
+	public void disappear() {
 		setExplosionPivot(this);
 		explosion.generate(20);
-		super.radiance();
+		super.disappear();
 	}
 	
 	@Override
