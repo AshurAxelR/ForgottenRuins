@@ -12,6 +12,8 @@ import com.xrbpowered.zoomui.UIContainer;
 
 public class UIOverlayInventory extends UIOverlay {
 
+	public static final String keyHint = "Press TAB to open inventory";
+	
 	private final UIButtonPane closeButton;
 	
 	public final UIPane title;
@@ -68,6 +70,7 @@ public class UIOverlayInventory extends UIOverlay {
 			return;
 		items.update(player);
 		info.setVisible(false);
+		Ruins.hud.inventoryHint.setVisible(false);
 		Ruins.ruins.setOverlay(Ruins.overlayInventory);
 	}
 

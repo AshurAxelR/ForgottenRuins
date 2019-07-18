@@ -244,7 +244,7 @@ public class Ruins extends UIClient {
 			observerController.setMouseLook(grab);
 		else
 			player.controller.setMouseLook(grab);
-		player.controller.enabled = !observerActive;
+		player.controller.enabled = grab && !observerActive;
 		if(!grab) {
 			input.setMousePos(getWidth()/2, getHeight()/2);
 		}
@@ -262,6 +262,8 @@ public class Ruins extends UIClient {
 		if(activeOverlay!=null)
 			activeOverlay.setVisible(false);
 		activeOverlay = overlay;
+		if(player!=null)
+			player.controller.enabled = (overlay==null);
 		if(overlay!=null) {
 			hud.popup.dismiss();
 			overlay.setVisible(true);
