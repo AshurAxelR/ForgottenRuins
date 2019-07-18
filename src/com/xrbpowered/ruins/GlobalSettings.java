@@ -16,8 +16,8 @@ public class GlobalSettings {
 	public int windowedHeight = minWindowHeight;
 	public int uiScaling = 0;
 	public int renderScaling = 1;
-	public boolean vsync = true;
-	public int noVsyncSleep = 0;
+	public boolean vsync = false;
+	public int noVsyncSleep = 4;
 	public boolean enableObserver = false;
 	public boolean enableDebugPaths = false;
 	

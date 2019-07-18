@@ -12,6 +12,7 @@ import com.xrbpowered.gl.ui.UINode;
 import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.player.PlayerEntity;
+import com.xrbpowered.ruins.ui.overlay.UIOverlayInventory;
 import com.xrbpowered.zoomui.GraphAssist;
 import com.xrbpowered.zoomui.UIContainer;
 import com.xrbpowered.zoomui.UIElement;
@@ -42,6 +43,7 @@ public class UIHud extends UINode {
 	private final UIInventoryPreview invPreview;
 	
 	public final UIPopup popup;
+	public final UIPane inventoryHint;
 	
 	private String shownPick = null;
 	private String shownAction = "";
@@ -138,6 +140,24 @@ public class UIHud extends UINode {
 		};
 		
 		popup = new UIPopup(this);
+		inventoryHint = new UIPane(this, false) {
+			private float t = 0f;
+			@Override
+			protected void paintSelf(GraphAssist g) {
+				g.graph.setBackground(UIHud.transparent);
+				g.graph.clearRect(0, 0, (int)getWidth(), (int)getHeight());
+				g.setColor(Color.BLACK);
+				g.setFont(UIHud.fontBold);
+				g.drawString(UIOverlayInventory.keyHint, getWidth()/2f, getHeight()/2f, GraphAssist.CENTER, GraphAssist.CENTER);
+			}
+			@Override
+			public void updateTime(float dt) {
+				t += dt;
+				pane.alpha = (float)Math.sin(t*3f)*0.5f+0.5f; 
+				super.updateTime(dt);
+			}
+		};
+		inventoryHint.setSize(300, 30);
 	}
 	
 	@Override
@@ -164,6 +184,7 @@ public class UIHud extends UINode {
 		crosshair.setLocation(getWidth()/2f-crosshair.getWidth()/2f, getHeight()/2f-crosshair.getHeight()/2f);
 		pickPane.setLocation(getWidth()/2f-pickPane.getWidth()/2f, crosshair.getY()+crosshair.getHeight()+s*3);
 		popup.setLocation(getWidth()/2f-popup.getWidth()/2f, getHeight()-120-popup.getHeight());
+		inventoryHint.setLocation(getWidth()/2f-inventoryHint.getWidth()/2f, getHeight()-inventoryHint.getHeight()-s*5);
 		super.layout();
 	}
 
