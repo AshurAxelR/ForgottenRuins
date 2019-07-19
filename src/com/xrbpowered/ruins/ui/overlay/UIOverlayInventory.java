@@ -55,7 +55,8 @@ public class UIOverlayInventory extends UIOverlay {
 	public void keyPressed(char c, int code) {
 		switch(code) {
 			case KeyEvent.VK_TAB:
-				closeAction();
+				if(keyReleased)
+					closeAction();
 				break;
 			default:
 				if(Item.keyPressed(code, Ruins.world.player)) {
