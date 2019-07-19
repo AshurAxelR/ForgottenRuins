@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 
 import com.xrbpowered.gl.client.ClientInput;
 import com.xrbpowered.gl.scene.WalkController;
+import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.DamageSource;
 import com.xrbpowered.ruins.entity.EntityController;
 
@@ -44,6 +45,7 @@ public class PlayerController extends EntityController {
 				PlayerController.this.applyVelocity(velocity, dt);
 			}
 		};
+		inputController.mouseSensitivity = Ruins.settings.mouseSensitivity;
 		inputController.setActor(player);
 	}
 	
