@@ -19,6 +19,7 @@ public class GlobalSettings {
 	public boolean vsync = false;
 	public int noVsyncSleep = 4;
 	public int fov = 75;
+	public float mouseSensitivity = 0.002f;
 	public boolean enableObserver = false;
 	public boolean enableDebugPaths = false;
 	
@@ -80,6 +81,7 @@ public class GlobalSettings {
 		s.enableObserver = getBoolean(values.get("enableObserver"), s.enableObserver);
 		s.enableDebugPaths = getBoolean(values.get("enableDebugPaths"), s.enableDebugPaths);
 		s.fov = getInt(values.get("fov"), 40, 80, s.fov);
+		s.mouseSensitivity = getInt(values.get("mouseSensitivity"), 10, 1000, 100) / 100f * 0.002f;
 
 		return s;
 	}
