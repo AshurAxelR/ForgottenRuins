@@ -12,12 +12,19 @@ public abstract class UIOverlay extends UINode {
 
 	private final UITexture fill;
 	
+	protected boolean keyReleased = false;
 	protected boolean dismissOnRightClick = false;
 	
 	public UIOverlay(UIContainer parent) {
 		super(parent);
 		fill = new UIFill(this, new Color(0x77000000, true));
 		setVisible(false);
+	}
+	
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		keyReleased = false;
 	}
 	
 	@Override
@@ -43,6 +50,13 @@ public abstract class UIOverlay extends UINode {
 	}
 	
 	@Override
+	public void updateTime(float dt) {
+		if(isActive() && !getClient().input.isAnyKeyDown())
+			keyReleased = true;
+		super.updateTime(dt);
+	}
+	
+	@Override
 	public boolean onMouseDown(float x, float y, Button button, int mods) {
 		if(button==Button.right && dismissOnRightClick) {
 			closeAction();
@@ -51,6 +65,8 @@ public abstract class UIOverlay extends UINode {
 	}
 	
 	public void keyPressed(char c, int code) {
+		if(!keyReleased)
+			return;
 		switch(code) {
 			case KeyEvent.VK_ESCAPE:
 				closeAction();
