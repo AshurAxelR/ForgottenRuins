@@ -18,6 +18,7 @@ public class GlobalSettings {
 	public int renderScaling = 1;
 	public boolean vsync = false;
 	public int noVsyncSleep = 4;
+	public int fov = 75;
 	public boolean enableObserver = false;
 	public boolean enableDebugPaths = false;
 	
@@ -78,6 +79,7 @@ public class GlobalSettings {
 		s.noVsyncSleep = getInt(values.get("noVsyncSleep"), 0, 1000, s.noVsyncSleep);
 		s.enableObserver = getBoolean(values.get("enableObserver"), s.enableObserver);
 		s.enableDebugPaths = getBoolean(values.get("enableDebugPaths"), s.enableDebugPaths);
+		s.fov = getInt(values.get("fov"), 40, 80, s.fov);
 
 		return s;
 	}
