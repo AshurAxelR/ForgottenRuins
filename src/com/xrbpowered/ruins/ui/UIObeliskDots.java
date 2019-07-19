@@ -15,6 +15,7 @@ public class UIObeliskDots extends UINode {
 	private Texture dotOn, dotOff;
 	private final UITexture[] offDots;
 	private final UITexture[] onDots;
+	private final UITexture onPortal;
 	
 	public UIObeliskDots(UIContainer parent) {
 		super(parent);
@@ -24,6 +25,7 @@ public class UIObeliskDots extends UINode {
 			offDots[i] = new UITexture(this);
 			onDots[i] = new UITexture(this);
 		}
+		this.onPortal = new UITexture(this);
 	}
 
 	@Override
@@ -41,8 +43,12 @@ public class UIObeliskDots extends UINode {
 			onDots[i].setSize(dotSize, dotSize);
 			onDots[i].setLocation(offDots[i].getX(), offDots[i].getY());
 		}
-		float size = (dotSize+span)*3-span; 
+		float size = (dotSize+span)*3-span;
 		setSize(size, size);
+		onPortal.pane.setTexture(new Texture("icons/portal_open.png", false, false));
+		float portalSize = onPortal.pane.getTexture().getWidth() * s;
+		onPortal.setSize(portalSize, portalSize);
+		onPortal.setLocation(size/2f-portalSize/2f, size/2f-portalSize/2f);
 	}
 	
 	@Override
@@ -60,6 +66,7 @@ public class UIObeliskDots extends UINode {
 			offDots[i].setVisible(!obelisk.visited);
 			onDots[i].setVisible(obelisk.visited);
 		}
+		onPortal.setVisible(obelisks.portal.active);
 	}
 	
 }

@@ -32,6 +32,7 @@ import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.render.shader.ShaderEnvironment;
 import com.xrbpowered.ruins.render.shader.WallShader;
 import com.xrbpowered.ruins.render.texture.TextureAtlas;
+import com.xrbpowered.ruins.ui.UIHint;
 import com.xrbpowered.ruins.ui.UIHud;
 import com.xrbpowered.ruins.ui.UIIcon;
 import com.xrbpowered.ruins.ui.overlay.UIOverlay;
@@ -114,7 +115,7 @@ public class Ruins extends UIClient {
 				environment.setFog(10, 80, clearColor);
 				environment.lightScale = 0.1f;
 				
-				camera = new CameraActor.Perspective().setRange(0.1f, 80f).setAspectRatio(getWidth(), getHeight());
+				camera = new CameraActor.Perspective().setFov(settings.fov).setRange(0.1f, 80f).setAspectRatio(getWidth(), getHeight());
 				pick = new TileObjectPicker(camera);
 				
 				shader = (WallShader) new WallShader().setEnvironment(environment).setCamera(camera);
@@ -195,6 +196,7 @@ public class Ruins extends UIClient {
 		
 		new UIFpsOverlay(this);
 		
+		UIHint.show(UIOverlayInventory.keyHint);
 		overlayMenu.show();
 	}
 	
