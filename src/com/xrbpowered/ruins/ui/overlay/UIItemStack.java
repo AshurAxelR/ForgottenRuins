@@ -51,28 +51,26 @@ public class UIItemStack extends UINode {
 		};
 		
 		if(player!=null) {
-			if(stack.item.isConsumable()) {
-				useButton = new UIButtonPane(this, "Use") {
-					@Override
-					public void onAction() {
+			useButton = new UIButtonPane(this, "Use") {
+				@Override
+				public void onAction() {
+					if(item.isConsumable())
 						useItem();
-					}
-					@Override
-					public void onMouseIn() {
-						super.onMouseIn();
-						showInfo(true);
-					}
-					@Override
-					public void onMouseOut() {
-						super.onMouseOut();
-						showInfo(false);
-					}
-				};
-				useButton.setSize(w-8, useButton.getHeight());
-				useButton.setLocation(4, h);
-			}
-			else
-				useButton = null;
+				}
+				@Override
+				public void onMouseIn() {
+					super.onMouseIn();
+					showInfo(true);
+				}
+				@Override
+				public void onMouseOut() {
+					super.onMouseOut();
+					showInfo(false);
+				}
+			};
+			useButton.enabled = item.isConsumable();
+			useButton.setSize(w-8, useButton.getHeight());
+			useButton.setLocation(4, h);
 			h += UIButtonPane.height;
 		}
 		else
