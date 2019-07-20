@@ -93,7 +93,7 @@ public class Ghost extends MobEntity {
 			alive = false;
 		}
 		if(time>lifespan && !agitated)
-			alive = false;
+			disappear();
 		return alive;
 	}
 	

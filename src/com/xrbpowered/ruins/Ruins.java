@@ -99,6 +99,7 @@ public class Ruins extends UIClient {
 		UIIcon.updatePixelSize(this);
 		
 		AssetManager.defaultAssets = new FileAssetManager("assets", AssetManager.defaultAssets);
+		UIHud.initFonts();
 		
 		new UIOffscreen(getContainer(), settings.renderScaling) {
 			@Override

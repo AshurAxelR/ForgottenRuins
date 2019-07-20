@@ -22,7 +22,7 @@ public class FlashPane extends UINode {
 		private int blackLocation;
 		
 		public FlashShader() {
-			super(PaneShader.vertexInfo, "scrn_v.glsl", "flash_f.glsl");
+			super(PaneShader.vertexInfo, "shaders/scrn_v.glsl", "shaders/flash_f.glsl");
 		}
 		
 		@Override
