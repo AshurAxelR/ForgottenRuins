@@ -3,12 +3,12 @@
 
 _Rogue-like game featuring procedurally generated maze and 90s style 3D graphics._
 
-[![1](screenshots/thumbs/1.png)](https://ashurrafiev.github.io/ForgottenRuins/screenshots/1.png)
-[![2](screenshots/thumbs/2.png)](https://ashurrafiev.github.io/ForgottenRuins/screenshots/2.png)
-[![3](screenshots/thumbs/3.png)](https://ashurrafiev.github.io/ForgottenRuins/screenshots/3.png)
-[![4](screenshots/thumbs/4.png)](https://ashurrafiev.github.io/ForgottenRuins/screenshots/4.png)
-[![5](screenshots/thumbs/5.png)](https://ashurrafiev.github.io/ForgottenRuins/screenshots/5.png)
-[![6](screenshots/thumbs/6.png)](https://ashurrafiev.github.io/ForgottenRuins/screenshots/6.png)
+[![1](screenshots/thumbs/1.png)](https://raw.githubusercontent.com/ashurrafiev/ForgottenRuins/master/screenshots/1.png)
+[![2](screenshots/thumbs/2.png)](https://raw.githubusercontent.com/ashurrafiev/ForgottenRuins/master/screenshots/2.png)
+[![3](screenshots/thumbs/3.png)](https://raw.githubusercontent.com/ashurrafiev/ForgottenRuins/master/screenshots/3.png)
+[![4](screenshots/thumbs/4.png)](https://raw.githubusercontent.com/ashurrafiev/ForgottenRuins/master/screenshots/4.png)
+[![5](screenshots/thumbs/5.png)](https://raw.githubusercontent.com/ashurrafiev/ForgottenRuins/master/screenshots/5.png)
+[![6](screenshots/thumbs/6.png)](https://raw.githubusercontent.com/ashurrafiev/ForgottenRuins/master/screenshots/6.png)
 
 ## Download
 
