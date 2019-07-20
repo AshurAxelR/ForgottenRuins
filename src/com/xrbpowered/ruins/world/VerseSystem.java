@@ -8,7 +8,7 @@ import com.xrbpowered.ruins.ui.overlay.RomanNumerals;
 
 public class VerseSystem {
 
-	private static final String[] verses = {
+	public static final String[] verses = {
 		"True vision is granted at a distance",
 		"Where can you go if you do not know where you come from",
 		"Who would you become if you do not know who you are",
@@ -18,7 +18,6 @@ public class VerseSystem {
 		"He did not know the right thing to do",
 		"When he knew what to do he had no power to do that",
 		"When he became strong enough to do the right thing it was too late",
-		"She could leave her prison at any time but she was too scared to make a single move",
 		"They could save each other if they had found each other but they never did",
 		"They can be forgiven because they can forgive",
 		"They can be free because they can forget",
@@ -29,11 +28,14 @@ public class VerseSystem {
 	private Random random = new Random();
 	
 	public String learned = null;
+	public int verse;
 	public boolean complete = false;
+	
+	public boolean[] completeVerses = new boolean[verses.length];
 	
 	public String access(long seed, boolean learn) {
 		random.setSeed(seed);
-		int verse = random.nextInt(verses.length);
+		verse = random.nextInt(verses.length);
 		String[] words = verses[verse].toUpperCase().split("\\s+");
 		ArrayList<String> unknown = new ArrayList<>();
 		for(String w : words) {
@@ -48,6 +50,8 @@ public class VerseSystem {
 			if(unknown.size()==1)
 				complete = true;
 		}
+		if(complete)
+			completeVerses[verse] = true;
 		StringBuilder text = new StringBuilder();
 		text.append("<p>- ");
 		text.append(RomanNumerals.toRoman(verse+1));

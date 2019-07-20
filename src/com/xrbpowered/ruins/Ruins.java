@@ -262,18 +262,20 @@ public class Ruins extends UIClient {
 	}
 	
 	public void setOverlay(UIOverlay overlay) {
-		if(activeOverlay!=null)
-			activeOverlay.setVisible(false);
-		activeOverlay = overlay;
-		if(player!=null)
-			player.controller.enabled = (overlay==null);
-		if(overlay!=null) {
-			hud.popup.dismiss();
-			overlay.setVisible(true);
-			grabMouse(false);
-		}
-		else {
-			grabMouse(true);
+		if(activeOverlay!=overlay) {
+			if(activeOverlay!=null)
+				activeOverlay.setVisible(false);
+			activeOverlay = overlay;
+			if(player!=null)
+				player.controller.enabled = (overlay==null);
+			if(overlay!=null) {
+				hud.popup.dismiss();
+				overlay.setVisible(true);
+				grabMouse(false);
+			}
+			else {
+				grabMouse(true);
+			}
 		}
 		getContainer().repaint();
 	}
