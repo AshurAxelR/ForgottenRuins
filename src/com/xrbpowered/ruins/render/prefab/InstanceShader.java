@@ -11,7 +11,7 @@ public class InstanceShader extends WallShader {
 	private int highlightInstanceLocation;
 	
 	public InstanceShader(ShaderEnvironment env, CameraActor camera) {
-		super("tileobj_v.glsl", "tileobj_f.glsl");
+		super("shaders/tileobj_v.glsl", "shaders/tileobj_f.glsl");
 		setEnvironment(env);
 		setCamera(camera);
 	}

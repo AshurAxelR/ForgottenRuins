@@ -22,7 +22,7 @@ public class ParticleShader extends WallShader {
 	private int screenHeightLocation;
 	
 	public ParticleShader(ShaderEnvironment env, CameraActor camera) {
-		super(vertexInfo, "point_v.glsl", "point_f.glsl");
+		super(vertexInfo, "shaders/point_v.glsl", "shaders/point_f.glsl");
 		setEnvironment(env);
 		setCamera(camera);
 	}

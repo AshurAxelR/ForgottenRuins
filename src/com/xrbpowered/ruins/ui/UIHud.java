@@ -3,10 +3,9 @@ package com.xrbpowered.ruins.ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.io.FileInputStream;
 import java.io.IOException;
 
-import com.xrbpowered.gl.res.asset.IOUtils;
+import com.xrbpowered.gl.res.asset.AssetManager;
 import com.xrbpowered.gl.res.buffer.RenderTarget;
 import com.xrbpowered.gl.ui.UINode;
 import com.xrbpowered.gl.ui.pane.UIPane;
@@ -20,16 +19,7 @@ public class UIHud extends UINode {
 
 	public static Font font;
 	public static Font fontBold;
-	static {
-		try {
-			font = IOUtils.loadFont(new FileInputStream("assets/font/Cinzel-Bold.ttf")).deriveFont(14f);
-			fontBold = font.deriveFont(18f);
-		}
-		catch(IOException e) {
-			e.printStackTrace();
-			fontBold = null;
-		}
-	}
+
 	public static final Color clearColor = new Color(0x77000000, true);
 	public static final Color transparent = new Color(0, true);
 	
@@ -50,6 +40,18 @@ public class UIHud extends UINode {
 	
 	private int shownCoins = 0;
 	private final UIPane coinsPane;
+	
+	public static void initFonts() {
+		try {
+			font = AssetManager.defaultAssets.loadFont("font/Cinzel-Bold.ttf").deriveFont(14f);
+			fontBold = font.deriveFont(18f);
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+			font = null;
+			fontBold = null;
+		}
+	}
 	
 	public UIHud(UIContainer parent) {
 		super(parent);

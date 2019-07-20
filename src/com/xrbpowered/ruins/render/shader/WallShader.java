@@ -18,7 +18,7 @@ public class WallShader extends CameraShader {
 	public ShaderEnvironment environment = null;
 	
 	public WallShader() {
-		super(vertexInfo, "wall_v.glsl", "wall_f.glsl");
+		super(vertexInfo, "shaders/wall_v.glsl", "shaders/wall_f.glsl");
 	}
 	
 	protected WallShader(String pathVS, String pathFS) {
