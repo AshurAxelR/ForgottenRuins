@@ -30,7 +30,7 @@ public class EntityCollider {
 	}
 
 	public Tile map(int mx, int mz, int my) {
-		if(mx<0 || mx>=World.size || mz<0 || mz>=World.size || my>=World.height)
+		if(mx<0 || mx>=entity.world.size || mz<0 || mz>=entity.world.size || my>=World.height)
 			return emptyCell;
 		return entity.world.map[mx][mz][my];
 	}

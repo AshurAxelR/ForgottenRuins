@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import com.xrbpowered.ruins.world.World;
+
 public class GlobalSettings {
 
 	public static final int minWindowWidth = 1600;
@@ -20,6 +22,8 @@ public class GlobalSettings {
 	public int noVsyncSleep = 4;
 	public int fov = 75;
 	public float mouseSensitivity = 0.002f;
+	
+	public int startLevel = 6;
 	public boolean enableObserver = false;
 	public boolean enableDebugPaths = false;
 	
@@ -80,10 +84,12 @@ public class GlobalSettings {
 		s.renderScaling = getInt(values.get("renderScaling"), 1, 8, s.renderScaling);
 		s.vsync = getBoolean(values.get("vsync"), s.vsync);
 		s.noVsyncSleep = getInt(values.get("noVsyncSleep"), 0, 1000, s.noVsyncSleep);
-		s.enableObserver = getBoolean(values.get("enableObserver"), s.enableObserver);
-		s.enableDebugPaths = getBoolean(values.get("enableDebugPaths"), s.enableDebugPaths);
 		s.fov = getInt(values.get("fov"), 40, 80, s.fov);
 		s.mouseSensitivity = getInt(values.get("mouseSensitivity"), 10, 1000, 100) / 100f * 0.002f;
+
+		s.startLevel = getInt(values.get("startLevel"), 0, World.maxLevel, s.startLevel);
+		s.enableObserver = getBoolean(values.get("enableObserver"), s.enableObserver);
+		s.enableDebugPaths = getBoolean(values.get("enableDebugPaths"), s.enableDebugPaths);
 
 		return s;
 	}

@@ -8,10 +8,12 @@ import org.joml.Vector4f;
 
 import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.scene.CameraActor;
+import com.xrbpowered.ruins.world.World;
 
 public class WallChunk {
 
-	public static final float radius = WallBuilder.chunkSize * (float)Math.sqrt(2); 
+	public static final int size = World.chunkSize;
+	public static final float radius = size * (float)Math.sqrt(2); 
 
 	private static final Comparator<WallChunk> zorder = new Comparator<WallChunk>() {
 		@Override
@@ -32,9 +34,8 @@ public class WallChunk {
 	
 	public WallChunk(StaticMesh mesh, int cx, int cz) {
 		this.mesh = mesh;
-		float s = WallBuilder.chunkSize;
-		float pivotx = cx * s *2f + s;
-		float pivotz = cz * s *2f + s;
+		float pivotx = cx * size *2f + size;
+		float pivotz = cz * size *2f + size;
 		this.pivot.set(pivotx, 0, pivotz, 1);
 	}
 	

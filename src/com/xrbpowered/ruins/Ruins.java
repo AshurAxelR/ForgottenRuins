@@ -48,6 +48,7 @@ public class Ruins extends UIClient {
 
 	public static GlobalSettings settings = new GlobalSettings();
 	
+	public static final float viewDist = 80f;
 	public static final float dtLimit = 0.05f;
 
 	private WallChunk[] walls;
@@ -116,7 +117,7 @@ public class Ruins extends UIClient {
 				environment.setFog(10, 80, clearColor);
 				environment.lightScale = 0.1f;
 				
-				camera = new CameraActor.Perspective().setFov(settings.fov).setRange(0.1f, 80f).setAspectRatio(getWidth(), getHeight());
+				camera = new CameraActor.Perspective().setFov(settings.fov).setRange(0.1f, viewDist).setAspectRatio(getWidth(), getHeight());
 				pick = new TileObjectPicker(camera);
 				
 				shader = (WallShader) new WallShader().setEnvironment(environment).setCamera(camera);
@@ -126,7 +127,6 @@ public class Ruins extends UIClient {
 				observerController.moveSpeed = 10f;
 
 				groundTexture = new Texture("ground.png", true, false);
-				groundMesh = WallBuilder.createGround(80f);
 				
 				InstanceShader.createInstance(environment, camera);
 				prefabs = new PrefabRenderer();
@@ -202,9 +202,10 @@ public class Ruins extends UIClient {
 	}
 	
 	private void createWorldResources() {
-		world = World.createWorld(System.currentTimeMillis());
+		world = World.createWorld(System.currentTimeMillis(), settings.startLevel);
 		player = world.setPlayer(new PlayerEntity(world, input, camera));
 		walls = WallBuilder.createChunks(world, atlas);
+		groundMesh = WallBuilder.createGround(world, viewDist);
 
 		prefabs.createInstances(world);
 		mobs.allocateInstanceData(world);
@@ -227,6 +228,7 @@ public class Ruins extends UIClient {
 			particles.clear();
 			for(WallChunk wall : walls)
 				wall.release();
+			groundMesh.release();
 		}
 	}
 

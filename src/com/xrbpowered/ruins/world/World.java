@@ -11,11 +11,15 @@ import com.xrbpowered.ruins.world.obj.MapObject;
 
 public class World {
 
-	public static final int size = 64;
-	public static final int height = 32;
+	public static final int maxLevel = 9;
+	public static final int chunkSize = 16;
+	public static final int height = 32; // FIXME max level height
 	public static final int maxMobs = 1000;
 
 	public final long seed;
+	public final int level;
+	public final int size;
+	
 	public final Tile[][][] map;
 	public int startx, startz;
 	
@@ -30,8 +34,10 @@ public class World {
 	
 	public PlayerEntity player = null;
 	
-	public World(long seed) {
+	public World(long seed, int level) {
 		this.seed = seed;
+		this.level = Math.min(level, maxLevel);
+		this.size = getSize(this.level);
 		map = new Tile[size][size][height];
 		for(int x=0; x<size; x++)
 			for(int z=0; z<size; z++) {
@@ -58,17 +64,17 @@ public class World {
 		player.updateTime(dt);
 	}
 	
-	public static boolean isEdge(int x, int z) {
+	public boolean isEdge(int x, int z) {
 		return (x==0 || z==0 || x==size-1 || z==size-1);
 	}
 
-	public static boolean isInside(int x, int z) {
+	public boolean isInside(int x, int z) {
 		return (x>=0 && z>=0 && x<size && z<size);
 	}
 	
-	public static World createWorld(long seed) {
+	public static World createWorld(long seed, int level) {
 		for(;;) {
-			World world = new World(seed);
+			World world = new World(seed, level);
 			WorldGenerator gen = new WorldGenerator(world);
 			if(gen.generate())
 				return world;
@@ -90,6 +96,11 @@ public class World {
 		if(my<0)
 			my = 0;
 		return my;
+	}
+	
+	public static int getSize(int level) {
+		int[] s = {1, 2, 3, 3, 4, 4, 5, 5, 6, 8};
+		return chunkSize*s[level];
 	}
 	
 	private static long nextSeed(long seed, long add) {

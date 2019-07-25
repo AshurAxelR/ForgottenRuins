@@ -13,6 +13,8 @@ import com.xrbpowered.ruins.world.World;
 
 public class WallBuilder extends AdvancedMeshBuilder {
 	
+	private static final int chunkSize = World.chunkSize;
+	
 	public final World world;
 	public final TextureAtlas atlas;
 	
@@ -255,10 +257,8 @@ public class WallBuilder extends AdvancedMeshBuilder {
 		return super.create();
 	}
 	
-	public static final int chunkSize = 16;
-	
 	public static WallChunk[] createChunks(World world, TextureAtlas atlas) {
-		int s = World.size / chunkSize;
+		int s = world.size / chunkSize;
 		WallChunk[] chunks = new WallChunk[s*s];
 		for(int cx=0; cx<s; cx++)
 			for(int cz=0; cz<s; cz++) {
@@ -268,16 +268,16 @@ public class WallBuilder extends AdvancedMeshBuilder {
 		return chunks;
 	}
 	
-	public static StaticMesh createGround(float viewDist) {
+	public static StaticMesh createGround(World world, float viewDist) {
 		viewDist *= 0.5f;
-		int s = World.size / chunkSize;
+		int s = world.size / chunkSize;
 
 		float[] vdata = new float[(s+3)*(s+3)*9];
 		int offs = 0;
 		for(int cx=-1; cx<=s+1; cx++)
 			for(int cz=-1; cz<=s+1; cz++) {
-				float x = (cx<0) ? -viewDist : (cx>s) ? (cx-1) * chunkSize + viewDist : cx * chunkSize;
-				float z = (cz<0) ? -viewDist : (cz>s) ? (cz-1) * chunkSize + viewDist : cz * chunkSize;
+				float x = (cx<0) ? -viewDist : (cx>s) ? (cx-1) * World.chunkSize + viewDist : cx * World.chunkSize;
+				float z = (cz<0) ? -viewDist : (cz>s) ? (cz-1) * World.chunkSize + viewDist : cz * World.chunkSize;
 				vdata[offs+0] = x * 2f;
 				vdata[offs+1] = 0;
 				vdata[offs+2] = z * 2f;
