@@ -10,7 +10,7 @@ import com.xrbpowered.zoomui.UIContainer;
 
 public class UIObeliskDots extends UINode {
 	
-	private static final int num = ObeliskSystem.maxObelisks;
+	private static final int num = ObeliskSystem.obeliskCount;
 	
 	private Texture dotOn, dotOff;
 	private final UITexture[] offDots;

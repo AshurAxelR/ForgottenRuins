@@ -15,7 +15,10 @@ import com.xrbpowered.ruins.world.item.EmptyFlask;
 public class Well extends TileObject {
 
 	public static final int genSpan = 16;
-	public static final int extraWells = 10;
+	
+	public static int countExtraWells(int level) {
+		return World.getSize(level)/8;
+	}
 	
 	public Well(World world, Token objToken) {
 		super(world, objToken);

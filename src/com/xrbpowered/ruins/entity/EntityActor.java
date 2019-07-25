@@ -25,7 +25,7 @@ public abstract class EntityActor extends Actor implements WorldEntity {
 		int x = World.mapx(position.x);
 		int z = World.mapz(position.z);
 		int y = World.mapy(position.y);
-		while(y>0 && (!World.isInside(x, z) || world.map[x][z][y-1].type!=TileType.solid))
+		while(y>0 && (!world.isInside(x, z) || world.map[x][z][y-1].type!=TileType.solid))
 			y--;
 		if(mapx!=x || mapz!=z || mapy!=y) {
 			mapx = x;

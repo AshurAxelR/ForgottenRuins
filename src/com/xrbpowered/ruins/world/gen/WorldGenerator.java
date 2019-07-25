@@ -11,9 +11,8 @@ import com.xrbpowered.ruins.world.World;
 
 public class WorldGenerator {
 
-	public static final int size = World.size;
 	public static final int height = World.height;
-	public static final int airReserve = 24;
+	//public static final int airReserve = 24;
 
 	public class TileInfo {
 		public Token objToken = null;
@@ -43,6 +42,7 @@ public class WorldGenerator {
 	}
 	
 	public final World world;
+	public final int size;
 	public final Tile[][][] map;
 	public final Random random;
 
@@ -55,6 +55,7 @@ public class WorldGenerator {
 
 	public WorldGenerator(World world) {
 		this.world = world;
+		this.size = world.size;
 		this.map = world.map;
 		this.random = new Random(world.seed);
 		
@@ -288,7 +289,7 @@ public class WorldGenerator {
 			for(int z=0; z<size; z++) {
 				boolean adj = false;
 				for(Direction d : Direction.values()) {
-					if(!World.isInside(x+d.dx, z+d.dz))
+					if(!world.isInside(x+d.dx, z+d.dz))
 						continue;
 					if(colInfo[x+d.dx][z+d.dz].height>=0) {
 						adj = true;
@@ -370,6 +371,9 @@ public class WorldGenerator {
 	}
 
 	public boolean generate() {
+		// FIXME air reserve for level size
+		int airReserve = 24; // size/2 - 8;
+		System.out.printf("Air reserve = %d\n", airReserve);
 		for(int i=0; i<airReserve; i++) {
 			for(int j=i; j<size-i; j++) {
 				for(int y=height-1; y>=height-(airReserve-i); y--) {

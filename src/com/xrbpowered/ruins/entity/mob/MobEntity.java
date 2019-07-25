@@ -65,7 +65,7 @@ public abstract class MobEntity extends EntityActor {
 		int x = mapx;
 		int z = mapz;
 		int y = mapy;
-		if(World.isInside(x, z) && mapy>0) {
+		if(world.isInside(x, z) && mapy>0) {
 			Tile tile = world.map[x][z][y];
 			Direction d = tile.pathDir;
 			if(d!=null) {

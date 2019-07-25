@@ -45,8 +45,8 @@ public class PathFinder {
 	}
 	
 	public void clear() {
-		for(int x=0; x<World.size; x++)
-			for(int z=0; z<World.size; z++)
+		for(int x=0; x<world.size; x++)
+			for(int z=0; z<world.size; z++)
 				for(int y=0; y<World.height; y++) {
 					world.map[x][z][y].pathDir = null;
 					world.map[x][z][y].pathDist = 0;
@@ -54,7 +54,7 @@ public class PathFinder {
 	}
 	
 	private Token move(int x, int z, int y, Direction d, int dist) {
-		if(x<0 || x>=World.size || z<0 || z>=World.size)
+		if(x<0 || x>=world.size || z<0 || z>=world.size)
 			return null;
 		Token t = new Token(x, z, y, d, dist);
 		Tile tile = world.map[t.x][t.z][t.y];
@@ -94,7 +94,7 @@ public class PathFinder {
 	}
 	
 	public boolean canUpdate(int x0, int z0, int y0) {
-		return y0>0 && World.isInside(x0, z0);
+		return y0>0 && world.isInside(x0, z0);
 	}
 	
 	public void update(int x0, int z0, int y0, int maxDist) {
