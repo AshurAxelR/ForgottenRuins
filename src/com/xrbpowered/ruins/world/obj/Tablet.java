@@ -31,7 +31,7 @@ public class Tablet extends TileObject {
 	
 	@Override
 	public void interact() {
-		Ruins.overlayVerse.updateAndShow(world.verses, this);
+		Ruins.overlayVerse.updateAndShow(world.player.verses, this);
 		visited = true;
 		Ruins.hud.updatePickText(getPickName());
 	}

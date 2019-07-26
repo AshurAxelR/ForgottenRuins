@@ -13,7 +13,7 @@ public class World {
 
 	public static final int maxLevel = 9;
 	public static final int chunkSize = 16;
-	public static final int height = 32; // FIXME max level height
+	public static final int height = 32;
 	public static final int maxMobs = 1000;
 
 	public final long seed;
@@ -26,7 +26,6 @@ public class World {
 	public PathFinder pathfinder = new PathFinder(this);
 	
 	public ObeliskSystem obelisks = new ObeliskSystem(this);
-	public VerseSystem verses = new VerseSystem();
 	
 	public final ArrayList<MapObject> objects = new ArrayList<>();
 	public final ArrayList<WorldEntity> objectEntities = new ArrayList<>();
@@ -102,7 +101,13 @@ public class World {
 		int[] s = {1, 2, 3, 3, 4, 4, 5, 5, 6, 8};
 		return chunkSize*s[level];
 	}
-	
+
+	public static int getHeight(int level) {
+		int[] s = {1, 1, 2, 3, 3, 4, 4, 4, 4, 4};
+		int h = chunkSize/2*s[level];
+		return h>height ? height : h;
+	}
+
 	private static long nextSeed(long seed, long add) {
 		// Multiply by Knuth's Random (Linear congruential generator) and add offset
 		seed *= seed * 6364136223846793005L + 1442695040888963407L;

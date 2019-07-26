@@ -11,9 +11,6 @@ import com.xrbpowered.ruins.world.World;
 
 public class WorldGenerator {
 
-	public static final int height = World.height;
-	//public static final int airReserve = 24;
-
 	public class TileInfo {
 		public Token objToken = null;
 		public boolean preferBlock = false;
@@ -43,6 +40,7 @@ public class WorldGenerator {
 	
 	public final World world;
 	public final int size;
+	public final int height;
 	public final Tile[][][] map;
 	public final Random random;
 
@@ -56,6 +54,7 @@ public class WorldGenerator {
 	public WorldGenerator(World world) {
 		this.world = world;
 		this.size = world.size;
+		this.height = World.getHeight(world.level);
 		this.map = world.map;
 		this.random = new Random(world.seed);
 		
@@ -370,12 +369,11 @@ public class WorldGenerator {
 				}
 	}
 
-	public boolean generate() {
-		// FIXME air reserve for level size
-		int airReserve = 24; // size/2 - 8;
-		for(int i=0; i<airReserve; i++) {
+	private void reserveEmpty() {
+		int baseHeight = height/4;
+		for(int i=0; i<height-baseHeight; i++) {
 			for(int j=i; j<size-i; j++) {
-				for(int y=height-1; y>=height-(airReserve-i); y--) {
+				for(int y=height-1; y>=baseHeight+i; y--) {
 					map[i][j][y].type = TileType.empty;
 					map[size-1-i][j][y].type = TileType.empty;
 					map[j][i][y].type = TileType.empty;
@@ -383,9 +381,21 @@ public class WorldGenerator {
 				}
 			}
 		}
+		int big = World.height*2; 
+		if(size>big) {
+			int centerHeight = height - height*(size-big)*3/4/big;
+			for(int i=0; i<height-centerHeight; i++) {
+				for(int j=i; j<size-i; j++) {
+					for(int y=height-1; y>=centerHeight+i; y--) {
+						map[size/2+i][j][y].type = TileType.empty;
+						map[size/2-1-i][j][y].type = TileType.empty;
+						map[j][size/2+i][y].type = TileType.empty;
+						map[j][size/2-1-i][y].type = TileType.empty;
+					}
+				}
+			}
+		}
 		
-		world.startx = size/2;
-		world.startz = 1;
 		for(int x=-2; x<=2; x++) {
 			fillColumn(world.startx+x, world.startz, TileType.empty);
 			for(int z=0; z<size/4; z++)
@@ -393,17 +403,24 @@ public class WorldGenerator {
 					map[world.startx+x][world.startz+z][y].type = TileType.empty;
 				}
 		}
+	}
+	
+	public boolean generate() {
+		world.startx = size/2;
+		world.startz = 1;
+		reserveEmpty();
 		map[world.startx][world.startz][0].type = TileType.solid;
 		
 		Token startToken = new Token(world.startx, world.startz, 1, Direction.north);
 		tokens.add(startToken);
 		processTokens(random);
 		fillUndefined();
-		if(calculateCoverage()<0.5f)
+		if(calculateCoverage()<0.75f)
 			return false;
 		
 		filterObjectTokens();
-		new TileObjectGenerator(this, random).generateObjects(startToken);
+		if(!new TileObjectGenerator(this, random).generateObjects(startToken))
+			return false;
 		return true;
 	}
 	

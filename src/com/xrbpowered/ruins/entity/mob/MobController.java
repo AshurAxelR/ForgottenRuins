@@ -28,22 +28,24 @@ public class MobController extends EntityController {
 	
 	@Override
 	protected void updateVelocity(Vector3f velocity, Vector3f move, float dt) {
-		v.set(random.nextFloat(), 0f, random.nextFloat());
-		v.mul(0.2f);
-		for(MobEntity e : entity.world.mobs) {
-			f.set(entity.position);
-			f.sub(e.position);
-			float dist = f.length();
-			if(dist>0f && dist<4f) {
-				f.mul(0.5f/dist/dist);
-				v.add(f);
+		if(!noTarget) {
+			v.set(random.nextFloat(), 0f, random.nextFloat());
+			v.mul(0.2f);
+			for(MobEntity e : entity.world.mobs) {
+				f.set(entity.position);
+				f.sub(e.position);
+				float dist = f.length();
+				if(dist>0f && dist<4f) {
+					f.mul(0.5f/dist/dist);
+					v.add(f);
+				}
+					
 			}
-				
+			v.y = 0f;
+			move.add(v);
+			move.normalize();
 		}
-		v.y = 0f;
-		move.add(v);
-		move.normalize();
-		super.updateVelocity(velocity, move, dt); // TODO prefent mobs from falling?
+		super.updateVelocity(velocity, move, dt);
 	}
 
 	@Override

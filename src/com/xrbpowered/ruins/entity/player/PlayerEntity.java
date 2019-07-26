@@ -8,6 +8,7 @@ import com.xrbpowered.ruins.entity.EntityActor;
 import com.xrbpowered.ruins.entity.EntityCollider;
 import com.xrbpowered.ruins.render.DebugPaths;
 import com.xrbpowered.ruins.world.PathFinder;
+import com.xrbpowered.ruins.world.VerseSystem;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
 import com.xrbpowered.ruins.world.item.ItemList;
@@ -37,7 +38,8 @@ public class PlayerEntity extends EntityActor {
 	public float hydration = baseHydration;
 	public int coins = 0;
 	
-	public ItemList inventory = new ItemList();
+	public final ItemList inventory;
+	public final VerseSystem verses;
 	
 	public PlayerEntity(World world, PlayerEntity prev, ClientInput input, CameraActor camera) {
 		super(world);
@@ -48,17 +50,21 @@ public class PlayerEntity extends EntityActor {
 		returnToStart();
 
 		alive = true;
-		health = baseHealth;
-		hydration = baseHydration;
-		coins = 0;
-		inventory.clear();
-		if(prev==null) {
+		if(prev==null || !prev.alive) {
+			health = baseHealth;
+			hydration = baseHydration;
+			coins = 0;
+			inventory =  new ItemList();
 			inventory.add(Item.emptyFlask, 2);
 			inventory.add(Item.amuletOfEscape, 1);
+			verses = new VerseSystem();
 		}
 		else {
-			// TODO copy verse system to next level
-			prev.inventory.moveTo(inventory);
+			health = prev.health;
+			hydration = prev.hydration;
+			coins = prev.coins;
+			inventory = prev.inventory;
+			verses = prev.verses;
 		}
 		if(Ruins.flash!=null)
 			Ruins.flash.reset();
