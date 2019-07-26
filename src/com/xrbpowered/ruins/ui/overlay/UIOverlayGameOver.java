@@ -26,7 +26,7 @@ public class UIOverlayGameOver extends UIOverlay {
 
 		box = new UISolidPane.Black(this);
 		box.setSize(boxWidth, boxHeight);
-		text = new UIText(box);
+		text = new UIText(box, 20, 15);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class UIOverlayGameOver extends UIOverlay {
 	
 	@Override
 	public void closeAction() {
-		Ruins.ruins.restart();
+		Ruins.ruins.restart(Ruins.world.level, null, false);
 		dismiss();
 	}
 	
@@ -46,6 +46,7 @@ public class UIOverlayGameOver extends UIOverlay {
 		if(!isActive()) {
 			text.setHtml("<p>"+message+"</p>");
 			text.repaint();
+			Ruins.ruins.enableObserver(true);
 			Ruins.ruins.setOverlay(Ruins.overlayGameOver);
 		}
 	}

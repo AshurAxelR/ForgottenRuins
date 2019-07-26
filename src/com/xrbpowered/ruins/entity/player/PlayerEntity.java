@@ -39,7 +39,7 @@ public class PlayerEntity extends EntityActor {
 	
 	public ItemList inventory = new ItemList();
 	
-	public PlayerEntity(World world, ClientInput input, CameraActor camera) {
+	public PlayerEntity(World world, PlayerEntity prev, ClientInput input, CameraActor camera) {
 		super(world);
 		this.camera = camera;
 		controller = new PlayerController(input, this);
@@ -52,8 +52,14 @@ public class PlayerEntity extends EntityActor {
 		hydration = baseHydration;
 		coins = 0;
 		inventory.clear();
-		inventory.add(Item.emptyFlask, 2);
-		inventory.add(Item.amuletOfEscape, 1);
+		if(prev==null) {
+			inventory.add(Item.emptyFlask, 2);
+			inventory.add(Item.amuletOfEscape, 1);
+		}
+		else {
+			// TODO copy verse system to next level
+			prev.inventory.moveTo(inventory);
+		}
 		if(Ruins.flash!=null)
 			Ruins.flash.reset();
 	}

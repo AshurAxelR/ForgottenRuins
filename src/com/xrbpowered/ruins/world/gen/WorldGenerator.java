@@ -373,7 +373,6 @@ public class WorldGenerator {
 	public boolean generate() {
 		// FIXME air reserve for level size
 		int airReserve = 24; // size/2 - 8;
-		System.out.printf("Air reserve = %d\n", airReserve);
 		for(int i=0; i<airReserve; i++) {
 			for(int j=i; j<size-i; j++) {
 				for(int y=height-1; y>=height-(airReserve-i); y--) {

@@ -2,6 +2,7 @@ package com.xrbpowered.ruins.ui;
 
 import java.awt.Color;
 
+import com.xrbpowered.gl.res.buffer.RenderTarget;
 import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.ui.overlay.UIFill;
@@ -38,6 +39,12 @@ public class UIHint extends UIFill {
 	@Override
 	public void layout() {
 		setLocation(getParent().getWidth()/2f-getWidth()/2f, getParent().getHeight()-getHeight()-30);
+	}
+	
+	@Override
+	public void render(RenderTarget target) {
+		if(!Ruins.ruins.isOverlayActive())
+			super.render(target);
 	}
 	
 	private static UIHint hintPane = null; 

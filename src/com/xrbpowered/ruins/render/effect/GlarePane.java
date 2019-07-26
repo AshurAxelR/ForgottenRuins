@@ -10,6 +10,8 @@ public class GlarePane extends UITexture {
 
 	private static final float falloff = 1f;
 	
+	public boolean paused = false;
+	
 	private float power = 0f;
 	
 	public GlarePane(UIContainer parent) {
@@ -42,7 +44,7 @@ public class GlarePane extends UITexture {
 	
 	@Override
 	public void updateTime(float dt) {
-		if(pane.isVisible()) {
+		if(pane.isVisible() && !paused) {
 			power -= falloff*dt;
 			if(power<0.01f)
 				clear();
