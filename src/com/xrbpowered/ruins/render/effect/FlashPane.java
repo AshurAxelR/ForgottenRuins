@@ -91,6 +91,10 @@ public class FlashPane extends UINode {
 		flashPain(damage/healthBefore + 0.02f);
 	}
 	
+	public void blackScreen(boolean enable) {
+		blackOutLevel = enable ? 1f : 0f;
+	}
+	
 	public void blackOut() {
 		blackOut = true;
 	}

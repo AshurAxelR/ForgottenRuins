@@ -9,6 +9,7 @@ import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.ObeliskSystem;
+import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
 public class Portal extends TileObject implements WorldEntity {
@@ -41,9 +42,14 @@ public class Portal extends TileObject implements WorldEntity {
 	@Override
 	public void interact() {
 		if(active) {
-			Ruins.ruins.enableObserver(true);
-			Ruins.flash.blackOut();
-			Ruins.overlayVictory.show();
+			if(world.level>=World.maxLevel) {
+				Ruins.ruins.enableObserver(true);
+				Ruins.flash.blackOut();
+				Ruins.overlayVictory.show();
+			}
+			else {
+				Ruins.ruins.restart(world.level+1, world.player, false);
+			}
 		}
 		else
 			Ruins.hud.popup.popup("Activate all obelisks to open");

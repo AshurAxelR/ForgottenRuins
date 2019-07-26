@@ -38,6 +38,7 @@ import com.xrbpowered.ruins.ui.UIIcon;
 import com.xrbpowered.ruins.ui.overlay.UIOverlay;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayGameOver;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayInventory;
+import com.xrbpowered.ruins.ui.overlay.UIOverlayLevelStart;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayMenu;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVerse;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVictory;
@@ -82,11 +83,13 @@ public class Ruins extends UIClient {
 
 	private UIOverlay activeOverlay = null;
 	
-	public static UIOverlayMenu overlayMenu;
+	public static UIOverlayInventory overlayInventory;
 	public static UIOverlayVerse overlayVerse;
+	
+	public static UIOverlayMenu overlayMenu;
+	public static UIOverlayLevelStart overlayLevelStart;
 	public static UIOverlayGameOver overlayGameOver;
 	public static UIOverlayVictory overlayVictory;
-	public static UIOverlayInventory overlayInventory;
 	
 	public Ruins() {
 		super("Forgotten Ruins", settings.uiScaling/100f);
@@ -133,7 +136,7 @@ public class Ruins extends UIClient {
 				mobs = new MobRenderer();
 				ParticleShader.createInstance(environment, camera);
 				particles = new ParticleRenderer();
-				createWorldResources();
+				restart(true);
 				
 				super.setupResources();
 			}
@@ -189,11 +192,13 @@ public class Ruins extends UIClient {
 		
 		overlayInventory = new UIOverlayInventory(getContainer());
 		hud = new UIHud(getContainer());
-		
+
 		overlayVerse = new UIOverlayVerse(getContainer());
+
+		overlayMenu = new UIOverlayMenu(getContainer());
+		overlayLevelStart = new UIOverlayLevelStart(getContainer());
 		overlayGameOver = new UIOverlayGameOver(getContainer());
 		overlayVictory = new UIOverlayVictory(getContainer());
-		overlayMenu = new UIOverlayMenu(getContainer());
 		
 		new UIFpsOverlay(this);
 		
@@ -201,9 +206,9 @@ public class Ruins extends UIClient {
 		overlayMenu.show();
 	}
 	
-	private void createWorldResources() {
-		world = World.createWorld(System.currentTimeMillis(), settings.startLevel);
-		player = world.setPlayer(new PlayerEntity(world, input, camera));
+	private void createWorldResources(int level, PlayerEntity prev) {
+		world = World.createWorld(System.currentTimeMillis(), level);
+		player = world.setPlayer(new PlayerEntity(world, prev, input, camera));
 		walls = WallBuilder.createChunks(world, atlas);
 		groundMesh = WallBuilder.createGround(world, viewDist);
 
@@ -212,8 +217,9 @@ public class Ruins extends UIClient {
 		pick.setWorld(world, walls);
 
 		glare.glare(1.0f);
-		if(!preview)
-			enableObserver(false);
+		if(!preview) {
+			overlayLevelStart.show(world);
+		}
 		else {
 			camera.position.z = -8f;
 			camera.position.y = World.height/4f;
@@ -232,14 +238,14 @@ public class Ruins extends UIClient {
 		}
 	}
 
-	public void restart() {
-		restart(false);
-	}
-
 	public void restart(boolean preview) {
+		restart(settings.startLevel, null, preview);
+	}
+	
+	public void restart(int level, PlayerEntity player, boolean preview) {
 		releaseWorldResources();
 		Ruins.preview = preview;
-		createWorldResources();
+		createWorldResources(level, player);
 	}
 	
 	public void grabMouse(boolean grab) {
@@ -250,9 +256,9 @@ public class Ruins extends UIClient {
 		else
 			player.controller.setMouseLook(grab);
 		player.controller.enabled = grab && !observerActive;
-		if(!grab) {
+		/*if(!grab) { // FIXME mouse pos vs consequent setOverlay
 			input.setMousePos(getFrameWidth()/2, getFrameHeight()/2);
-		}
+		}*/
 	}
 	
 	public boolean isOverlayActive() {

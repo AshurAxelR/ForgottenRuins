@@ -34,7 +34,8 @@ public abstract class UIOverlay extends UINode {
 	}
 
 	public void dismiss() {
-		Ruins.ruins.setOverlay(null);
+		if(isActive())
+			Ruins.ruins.setOverlay(null);
 	}
 	
 	public void defaultAction() {

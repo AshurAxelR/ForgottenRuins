@@ -83,8 +83,8 @@ public class UIOverlayMenu extends UIOverlay {
 	}
 	
 	public void restart() {
-		Ruins.ruins.restart();
 		dismiss();
+		Ruins.ruins.restart(false);
 	}
 	
 	public void show() {
