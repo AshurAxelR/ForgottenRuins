@@ -152,33 +152,39 @@ public class TileObjectGenerator {
 		}
 	}
 	
-	public void generateObjects(Token startToken) {
-		new StartLocation(world, startToken).place();
-		generateWells();
-		generatePortal();
-		generateObelisks();
-		
-		for(Token t : objTokens) {
-			if(random.nextInt(10)<4 && isAdjTop(t, 2)) {
-				new Palm(world, t).place();
-				continue;
-			}
-			if(random.nextInt(10)<3) {
-				Direction d = dWall(t, 2, 2);
-				if(d!=null) {
-					t.d = d;
-					new Tablet(world, t).place();
+	public boolean generateObjects(Token startToken) {
+		try {
+			new StartLocation(world, startToken).place();
+			generateWells();
+			generatePortal();
+			generateObelisks();
+			
+			for(Token t : objTokens) {
+				if(random.nextInt(10)<4 && isAdjTop(t, 2)) {
+					new Palm(world, t).place();
 					continue;
 				}
+				if(random.nextInt(10)<3) {
+					Direction d = dWall(t, 2, 2);
+					if(d!=null) {
+						t.d = d;
+						new Tablet(world, t).place();
+						continue;
+					}
+				}
+				if(random.nextInt(10)<6) {
+					smallObjects.fillTile(t, 3, 0.5f);
+					continue;
+				}
+				if(gen.getTile(t).light>0)
+					smallObjects.fillTile(t, 1, 0.2f);
+				else
+					smallObjects.fillTile(t, -1, 0.75f);
 			}
-			if(random.nextInt(10)<6) {
-				smallObjects.fillTile(t, 3, 0.5f);
-				continue;
-			}
-			if(gen.getTile(t).light>0)
-				smallObjects.fillTile(t, 1, 0.2f);
-			else
-				smallObjects.fillTile(t, -1, 0.75f);
+			return true;
+		}
+		catch(Exception e) {
+			return false;
 		}
 	}
 	
