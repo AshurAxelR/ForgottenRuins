@@ -12,7 +12,7 @@ public class UIOverlayGameOver extends UIOverlay {
 	public final UIText text;
 
 	public UIOverlayGameOver(UIContainer parent) {
-		this(parent, 560, 60, "Restart");
+		this(parent, 560, 60, "Respawn");
 	}
 
 	protected UIOverlayGameOver(UIContainer parent, int boxWidth, int boxHeight, String buttonLabel) {

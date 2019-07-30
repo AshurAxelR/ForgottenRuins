@@ -122,7 +122,6 @@ public class WorldGenerator {
 		if(prev.type==TileType.ramp)
 			return (prev.rampDir==rampd) ? prev : null;
 		if(prev.type==TileType.undefined) {
-			// TODO check ramp neighbours
 			map[x][z][y] = new Tile(TileType.ramp);
 			map[x][z][y].rampDir = rampd;
 			return prev;

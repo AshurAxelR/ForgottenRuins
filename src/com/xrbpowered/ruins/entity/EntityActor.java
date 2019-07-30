@@ -1,5 +1,9 @@
 package com.xrbpowered.ruins.entity;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import org.joml.Vector3f;
 
 import com.xrbpowered.gl.scene.Actor;
@@ -21,6 +25,24 @@ public abstract class EntityActor extends Actor implements WorldEntity {
 	
 	public abstract void setEntityDimensions(EntityCollider collider);
 	
+	public void loadState(DataInputStream in) throws IOException {
+		position.x = in.readFloat();
+		position.y = in.readFloat();
+		position.z = in.readFloat();
+		rotation.x = in.readFloat();
+		rotation.y = in.readFloat();
+		updateTransform();
+		updateMapPosition();
+	}
+	
+	public void saveState(DataOutputStream out) throws IOException {
+		out.writeFloat(position.x);
+		out.writeFloat(position.y);
+		out.writeFloat(position.z);
+		out.writeFloat(rotation.x);
+		out.writeFloat(rotation.y);
+	}
+
 	protected boolean updateMapPosition() {
 		int x = World.mapx(position.x);
 		int z = World.mapz(position.z);

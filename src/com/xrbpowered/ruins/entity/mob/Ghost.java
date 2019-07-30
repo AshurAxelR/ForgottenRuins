@@ -1,5 +1,8 @@
 package com.xrbpowered.ruins.entity.mob;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Random;
 
 import com.xrbpowered.ruins.entity.DamageSource;
@@ -15,6 +18,8 @@ import com.xrbpowered.ruins.world.World;
 
 public class Ghost extends MobEntity {
 
+	public static final int typeId = 0;
+	
 	public static final float radius = 0.3f;
 	public static final float height = 1.7f;
 	
@@ -42,10 +47,35 @@ public class Ghost extends MobEntity {
 
 	public Ghost(World world, Random random) {
 		super(world, speedMin);
-		speed = random.nextFloat()*(speedMax-speedMin)+speedMin;
-		agitatedSpeed = random.nextFloat()*(agitatedSpeedMax-agitatedSpeedMin)+agitatedSpeedMin;
-		lifespan = random.nextFloat()*(maxLifespan-minLifespan)+minLifespan;
-		damage = random.nextFloat()*(damageMax-damageMin)+damageMin;
+		if(random!=null) {
+			speed = random.nextFloat()*(speedMax-speedMin)+speedMin;
+			agitatedSpeed = random.nextFloat()*(agitatedSpeedMax-agitatedSpeedMin)+agitatedSpeedMin;
+			lifespan = random.nextFloat()*(maxLifespan-minLifespan)+minLifespan;
+			damage = random.nextFloat()*(damageMax-damageMin)+damageMin;
+		}
+	}
+	
+	@Override
+	public int getTypeId() {
+		return typeId;
+	}
+	
+	@Override
+	public void loadState(DataInputStream in) throws IOException {
+		super.loadState(in);
+		speed = in.readFloat();
+		agitatedSpeed = in.readFloat();
+		lifespan = in.readFloat();
+		damage = in.readFloat();
+	}
+	
+	@Override
+	public void saveState(DataOutputStream out) throws IOException {
+		super.saveState(out);
+		out.writeFloat(speed);
+		out.writeFloat(agitatedSpeed);
+		out.writeFloat(lifespan);
+		out.writeFloat(damage);
 	}
 
 	@Override
