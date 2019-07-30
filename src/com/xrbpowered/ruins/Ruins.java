@@ -42,6 +42,7 @@ import com.xrbpowered.ruins.ui.overlay.UIOverlayLevelStart;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayMenu;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVerse;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVictory;
+import com.xrbpowered.ruins.world.Save;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
 
@@ -136,7 +137,22 @@ public class Ruins extends UIClient {
 				mobs = new MobRenderer();
 				ParticleShader.createInstance(environment, camera);
 				particles = new ParticleRenderer();
-				restart(true);
+				
+				if(Save.autosave.exists()) {
+					preview = false;
+					pause = true;
+					world = Save.autosave.load();
+					if(world!=null) {
+						world.player.setClient(input, camera);
+						createWorldResources();
+					}
+					else {
+						restart(true);
+					}
+				}
+				else {
+					restart(true);
+				}
 				
 				super.setupResources();
 			}
@@ -206,9 +222,8 @@ public class Ruins extends UIClient {
 		overlayMenu.show();
 	}
 	
-	private void createWorldResources(int level, PlayerEntity prev) {
-		world = World.createWorld(System.currentTimeMillis(), level);
-		player = world.setPlayer(new PlayerEntity(world, prev, input, camera));
+	private void createWorldResources() {
+		player = world.player;
 		walls = WallBuilder.createChunks(world, atlas);
 		groundMesh = WallBuilder.createGround(world, viewDist);
 
@@ -237,6 +252,11 @@ public class Ruins extends UIClient {
 			groundMesh.release();
 		}
 	}
+	
+	public void save() {
+		if(world!=null && !preview)
+			Save.autosave.save(world);
+	}
 
 	public void restart(boolean preview) {
 		restart(settings.startLevel, null, preview);
@@ -245,7 +265,9 @@ public class Ruins extends UIClient {
 	public void restart(int level, PlayerEntity player, boolean preview) {
 		releaseWorldResources();
 		Ruins.preview = preview;
-		createWorldResources(level, player);
+		world = World.createWorld(System.currentTimeMillis(), level);
+		world.setPlayer(new PlayerEntity(world, player, input, camera));
+		createWorldResources();
 	}
 	
 	public void grabMouse(boolean grab) {
@@ -355,6 +377,12 @@ public class Ruins extends UIClient {
 				pick.pickObject.interact();
 		}
 		super.mouseDown(x, y, button);
+	}
+	
+	@Override
+	public void destroyWindow() {
+		save();
+		super.destroyWindow();
 	}
 	
 	public static void main(String[] args) {

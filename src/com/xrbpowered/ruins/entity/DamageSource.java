@@ -4,11 +4,20 @@ public enum DamageSource {
 	fall("Watch your step..."),
 	drown("Beware of quicksands..."),
 	dehydrate("Drink more water..."),
-	mob("Slain, defeated..."); // TODO better words for being killed by a mob
+	mob("Slain, defeated...");
 
 	public final String gameOverMessage;
 	
 	private DamageSource(String gameOverMessage) {
 		this.gameOverMessage = gameOverMessage;
 	}
+	
+	public static DamageSource fromInt(int i) {
+		return (i<0) ? null : values()[i];
+	}
+	
+	public static int toInt(DamageSource d) {
+		return (d==null) ? -1 : d.ordinal();
+	}
+
 }

@@ -1,5 +1,8 @@
 package com.xrbpowered.ruins.world;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -45,6 +48,32 @@ public class World {
 					map[x][z][y] = new Tile(type);
 				}
 			}
+	}
+	
+	public void loadState(DataInputStream in) throws IOException {
+		for(MapObject obj : objects)
+			obj.loadState(in);
+		int numMobs = in.readInt();
+		for(int i=0; i<numMobs; i++) {
+			MobEntity mob = MobEntity.createFromTypeId(this, in.readInt());
+			mob.loadState(in);
+			mobs.add(mob);
+		}
+		player = new PlayerEntity(this, null, null, null);
+		player.loadState(in);
+	}
+	
+	public void saveState(DataOutputStream out) throws IOException {
+		for(MapObject obj : objects)
+			obj.saveState(out);
+		out.writeInt(mobs.size());
+		for(MobEntity mob : mobs) {
+			if(mob.alive) {
+				out.writeInt(mob.getTypeId());
+				mob.saveState(out);
+			}
+		}
+		player.saveState(out);
 	}
 	
 	public PlayerEntity setPlayer(PlayerEntity player) {

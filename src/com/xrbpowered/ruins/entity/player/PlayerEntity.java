@@ -1,5 +1,9 @@
 package com.xrbpowered.ruins.entity.player;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import com.xrbpowered.gl.client.ClientInput;
 import com.xrbpowered.gl.scene.CameraActor;
 import com.xrbpowered.ruins.Ruins;
@@ -25,22 +29,21 @@ public class PlayerEntity extends EntityActor {
 	public static final float cameraHeight = 1.5f;
 	public static final float cameraDeathHeight = 0.3f;
 	
-	public final PlayerController controller;
+	public PlayerController controller;
 	public CameraActor camera;
-	
-	private float cameraLevel = cameraHeight;
-	
-	public DamageSource lastDamageSource = null;
-	public float deathTimer = 0f;
 	
 	public boolean invulnerable = false;
 	public float health = baseHealth;
 	public float hydration = baseHydration;
 	public int coins = 0;
-	
+
 	public final ItemList inventory;
 	public final VerseSystem verses;
-	
+
+	private float cameraLevel = cameraHeight;
+	public DamageSource lastDamageSource = null;
+	public float deathTimer = 0f;
+
 	public PlayerEntity(World world, PlayerEntity prev, ClientInput input, CameraActor camera) {
 		super(world);
 		this.camera = camera;
@@ -68,6 +71,41 @@ public class PlayerEntity extends EntityActor {
 		}
 		if(Ruins.flash!=null)
 			Ruins.flash.reset();
+	}
+	
+	public void setClient(ClientInput input, CameraActor camera) {
+		this.camera = camera;
+		controller = new PlayerController(input, this); // FIXME state lost?
+	}
+	
+	@Override
+	public void loadState(DataInputStream in) throws IOException {
+		super.loadState(in);
+		// TODO load controller state
+		invulnerable = in.readBoolean();
+		health = in.readFloat();
+		hydration = in.readFloat();
+		coins = in.readInt();
+		// TODO load inventory
+		// TODO load verses
+		cameraLevel = in.readFloat();
+		lastDamageSource = DamageSource.fromInt(in.readInt());
+		deathTimer = in.readFloat();
+	}
+	
+	@Override
+	public void saveState(DataOutputStream out) throws IOException {
+		super.saveState(out);
+		// TODO save controller state
+		out.writeBoolean(invulnerable);
+		out.writeFloat(health);
+		out.writeFloat(hydration);
+		out.writeInt(coins);
+		// TODO save inventory
+		// TODO save verses
+		out.writeFloat(cameraLevel);
+		out.writeInt(DamageSource.toInt(lastDamageSource));
+		out.writeFloat(deathTimer);
 	}
 	
 	public void returnToStart() {

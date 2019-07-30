@@ -1,5 +1,9 @@
 package com.xrbpowered.ruins.entity.mob;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import com.xrbpowered.ruins.entity.EntityActor;
 import com.xrbpowered.ruins.render.effect.particle.Particle;
 import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
@@ -18,13 +22,26 @@ public abstract class MobEntity extends EntityActor {
 	protected final InstanceInfo instInfo = new InstanceInfo();
 	
 	public float time = 0f;
-	public boolean alive = true;
 	
 	protected final MobController controller;
 	
 	public MobEntity(World world, float walkSpeed) {
 		super(world);
 		controller = new MobController(this, walkSpeed);
+	}
+	
+	public abstract int getTypeId();
+
+	@Override
+	public void loadState(DataInputStream in) throws IOException {
+		super.loadState(in);
+		time = in.readFloat();
+	}
+	
+	@Override
+	public void saveState(DataOutputStream out) throws IOException {
+		super.saveState(out);
+		out.writeFloat(time);
 	}
 	
 	public MobEntity spawn(int tx, int tz, int ty, Direction d) {
@@ -123,5 +140,14 @@ public abstract class MobEntity extends EntityActor {
 			generateParticle();
 		}
 	};
+	
+	public static MobEntity createFromTypeId(World world, int id) {
+		switch(id) {
+			case Ghost.typeId:
+				return new Ghost(world, null);
+			default:
+				return null;
+		}
+	}
 	
 }

@@ -1,5 +1,9 @@
 package com.xrbpowered.ruins.world.obj;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import org.joml.Vector3f;
 
 import com.xrbpowered.gl.scene.Actor;
@@ -24,6 +28,14 @@ public abstract class MapObject {
 		world.objects.add(this);
 		if(this instanceof WorldEntity)
 			world.objectEntities.add((WorldEntity) this);
+	}
+	
+	public void loadState(DataInputStream in) throws IOException {
+		// TODO load map object state
+	}
+	
+	public void saveState(DataOutputStream out) throws IOException {
+		// TODO load map object state
 	}
 	
 	public abstract Prefab getPrefab();
