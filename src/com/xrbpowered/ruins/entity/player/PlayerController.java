@@ -20,8 +20,6 @@ public class PlayerController extends EntityController {
 	public final static float jumpSpeed = 6.0f;
 	public final static float airAccel = 0.8f;
 	
-	private boolean drowning = false;
-	
 	private final WalkController inputController;
 	
 	public PlayerController(ClientInput input, final PlayerEntity player) {
@@ -53,19 +51,13 @@ public class PlayerController extends EntityController {
 		inputController.setMouseLook(enable);
 	}
 
-	@Override
-	public void reset() {
-		super.reset();
-		drowning = false;
-	}
-	
-	public boolean isDrowning() {
-		return drowning;
+	public PlayerEntity getPlayer() {
+		return (PlayerEntity) entity;
 	}
 	
 	@Override
 	protected void updateVelocity(Vector3f velocity, Vector3f move, float dt) {
-		if(drowning) {
+		if(getPlayer().drowning) {
 			move.mul(0.25f);
 			resetQueueJump();
 		}
@@ -76,14 +68,14 @@ public class PlayerController extends EntityController {
 	protected void applyFallDamage(float speedy) {
 		float damage = Math.max((speedy*speedy-120f)*0.3f, 0);
 		if(damage>0.1f)
-			((PlayerEntity) entity).applyDamage(damage, DamageSource.fall);
+			getPlayer().applyDamage(damage, DamageSource.fall);
 	}
 	
 	@Override
 	protected void applyVelocity(Vector3f velocity, float dt) {
 		super.applyVelocity(velocity, dt);
 		if(entity.position.y==0)
-			drowning = true;
+			getPlayer().drowning = true;
 	}
 	
 	@Override

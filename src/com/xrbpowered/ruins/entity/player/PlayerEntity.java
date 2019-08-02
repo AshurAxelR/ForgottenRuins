@@ -43,6 +43,7 @@ public class PlayerEntity extends EntityActor {
 	private float cameraLevel = cameraHeight;
 	public DamageSource lastDamageSource = null;
 	public float deathTimer = 0f;
+	public boolean drowning = false;
 
 	public PlayerEntity(World world, PlayerEntity prev, ClientInput input, CameraActor camera) {
 		super(world);
@@ -75,19 +76,22 @@ public class PlayerEntity extends EntityActor {
 	
 	public void setClient(ClientInput input, CameraActor camera) {
 		this.camera = camera;
-		controller = new PlayerController(input, this); // FIXME state lost?
+		controller = new PlayerController(input, this);
 	}
 	
 	@Override
 	public void loadState(DataInputStream in) throws IOException {
 		super.loadState(in);
-		// TODO load controller state
 		invulnerable = in.readBoolean();
 		health = in.readFloat();
 		hydration = in.readFloat();
 		coins = in.readInt();
-		// TODO load inventory
-		// TODO load verses
+		drowning = in.readBoolean();
+		
+		inventory.load(in);
+		verses.load(in);
+		Ruins.overlayVerse.updateCompletedVerses(verses);
+		
 		cameraLevel = in.readFloat();
 		lastDamageSource = DamageSource.fromInt(in.readInt());
 		deathTimer = in.readFloat();
@@ -96,13 +100,15 @@ public class PlayerEntity extends EntityActor {
 	@Override
 	public void saveState(DataOutputStream out) throws IOException {
 		super.saveState(out);
-		// TODO save controller state
 		out.writeBoolean(invulnerable);
 		out.writeFloat(health);
 		out.writeFloat(hydration);
 		out.writeInt(coins);
-		// TODO save inventory
-		// TODO save verses
+		out.writeBoolean(drowning);
+		
+		inventory.save(out);
+		verses.save(out);
+		
 		out.writeFloat(cameraLevel);
 		out.writeInt(DamageSource.toInt(lastDamageSource));
 		out.writeFloat(deathTimer);
@@ -111,6 +117,7 @@ public class PlayerEntity extends EntityActor {
 	public void returnToStart() {
 		controller.reset();
 		
+		drowning = false;
 		position.x = world.startx * 2f;
 		position.z = world.startz * 2f;
 		position.y = 1f;
@@ -195,7 +202,7 @@ public class PlayerEntity extends EntityActor {
 	@Override
 	public boolean updateTime(float dt) {
 		super.updateTime(dt);
-		if(alive && controller.isDrowning()) {
+		if(alive && drowning) {
 			cameraLevel -= dt*0.25f;
 			if(cameraLevel<=cameraDeathHeight) {
 				cameraLevel = cameraDeathHeight;

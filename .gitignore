@@ -3,6 +3,7 @@
 /lib/
 /lib_src/
 /ForgottenRuins/
+*.save
 
 # Compiled class file
 *.class

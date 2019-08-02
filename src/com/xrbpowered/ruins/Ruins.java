@@ -264,6 +264,7 @@ public class Ruins extends UIClient {
 		world = World.createWorld(System.currentTimeMillis(), level);
 		world.setPlayer(new PlayerEntity(world, player, input, camera));
 		createWorldResources();
+		save();
 		glare.glare(1.0f);
 		if(!preview)
 			overlayLevelStart.show(world);
@@ -358,9 +359,6 @@ public class Ruins extends UIClient {
 							DebugPaths.update(world);
 					}
 					break;
-				case KeyEvent.VK_F3:
-					save();
-					break;
 				default:
 					if(!observerActive && player.alive && Item.keyPressed(code, player)) {
 						hud.updateInventoryPreview();
@@ -383,7 +381,7 @@ public class Ruins extends UIClient {
 	
 	@Override
 	public void destroyWindow() {
-		// save();
+		save();
 		super.destroyWindow();
 	}
 	
