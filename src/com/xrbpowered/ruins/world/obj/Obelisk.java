@@ -1,5 +1,9 @@
 package com.xrbpowered.ruins.world.obj;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
@@ -15,6 +19,17 @@ public class Obelisk extends TileObject {
 		super(system.world, objToken);
 		this.system = system;
 		system.add(this);
+	}
+	
+	@Override
+	public void loadState(DataInputStream in) throws IOException {
+		if(in.readBoolean())
+			system.visit(this);
+	}
+	
+	@Override
+	public void saveState(DataOutputStream out) throws IOException {
+		out.writeBoolean(visited);
 	}
 
 	@Override

@@ -31,11 +31,9 @@ public abstract class MapObject {
 	}
 	
 	public void loadState(DataInputStream in) throws IOException {
-		// TODO load map object state
 	}
 	
 	public void saveState(DataOutputStream out) throws IOException {
-		// TODO load map object state
 	}
 	
 	public abstract Prefab getPrefab();

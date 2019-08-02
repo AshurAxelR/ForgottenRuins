@@ -1,5 +1,9 @@
 package com.xrbpowered.ruins.world.obj;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
@@ -14,6 +18,16 @@ public class Tablet extends TileObject {
 		super(world, objToken);
 	}
 
+	@Override
+	public void loadState(DataInputStream in) throws IOException {
+		visited = in.readBoolean();
+	}
+	
+	@Override
+	public void saveState(DataOutputStream out) throws IOException {
+		out.writeBoolean(visited);
+	}
+	
 	@Override
 	public Prefab getPrefab() {
 		return PrefabRenderer.tablet;
