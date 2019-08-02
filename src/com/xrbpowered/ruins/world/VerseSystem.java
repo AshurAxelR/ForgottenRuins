@@ -1,5 +1,8 @@
 package com.xrbpowered.ruins.world;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
@@ -32,6 +35,24 @@ public class VerseSystem {
 	public boolean complete = false;
 	
 	public boolean[] completeVerses = new boolean[verses.length];
+	
+	public void load(DataInputStream in) throws IOException {
+		for(int i=0; i<verses.length; i++)
+			completeVerses[i] = in.readBoolean();
+		int num = in.readInt();
+		for(int i=0; i<num; i++) {
+			known.add(in.readUTF());
+		}
+	}
+	
+	public void save(DataOutputStream out) throws IOException {
+		for(int i=0; i<verses.length; i++)
+			out.writeBoolean(completeVerses[i]);
+		out.writeInt(known.size());
+		for(String s : known) {
+			out.writeUTF(s);
+		}
+	}
 	
 	public String access(long seed, boolean learn) {
 		random.setSeed(seed);

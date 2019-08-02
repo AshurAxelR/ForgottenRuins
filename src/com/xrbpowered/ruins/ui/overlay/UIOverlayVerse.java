@@ -64,6 +64,12 @@ public class UIOverlayVerse extends UIOverlay {
 		super.layout();
 	}
 
+	public void updateCompletedVerses(VerseSystem verses) {
+		for(int i=0; i<VerseSystem.verses.length; i++) {
+			listButtons[i].setEnabled(verses.completeVerses[i]);
+		}
+	}
+	
 	public void show(int verse) {
 		String html = String.format("<p>- %s -</p><p>%s</p>", RomanNumerals.toRoman(verse+1), VerseSystem.verses[verse].toUpperCase());
 		text.setHtml(html);

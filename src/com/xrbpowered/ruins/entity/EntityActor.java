@@ -16,6 +16,7 @@ public abstract class EntityActor extends Actor implements WorldEntity {
 	public boolean alive = true;
 	
 	public final Vector3f speed = new Vector3f();
+	public boolean inAir = false;
 
 	public int mapx, mapz, mapy;
 	
@@ -31,6 +32,10 @@ public abstract class EntityActor extends Actor implements WorldEntity {
 		position.z = in.readFloat();
 		rotation.x = in.readFloat();
 		rotation.y = in.readFloat();
+		speed.x = in.readFloat();
+		speed.y = in.readFloat();
+		speed.z = in.readFloat();
+		inAir = in.readBoolean();
 		updateTransform();
 		updateMapPosition();
 	}
@@ -41,6 +46,10 @@ public abstract class EntityActor extends Actor implements WorldEntity {
 		out.writeFloat(position.z);
 		out.writeFloat(rotation.x);
 		out.writeFloat(rotation.y);
+		out.writeFloat(speed.x);
+		out.writeFloat(speed.y);
+		out.writeFloat(speed.z);
+		out.writeBoolean(inAir);
 	}
 
 	protected boolean updateMapPosition() {

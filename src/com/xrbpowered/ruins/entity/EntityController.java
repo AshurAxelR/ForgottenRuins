@@ -16,7 +16,6 @@ public abstract class EntityController {
 	
 	private boolean queueJump = false;
 	private boolean jumpReset = true;
-	private boolean inAir = false;
 	
 	public boolean enabled = true;
 
@@ -35,7 +34,7 @@ public abstract class EntityController {
 	}
 	
 	public void reset() {
-		inAir = false;
+		entity.inAir = false;
 		jumpReset = true;
 		entity.speed.zero();
 	}
@@ -50,7 +49,7 @@ public abstract class EntityController {
 	}
 	
 	protected void updateVelocity(Vector3f velocity, Vector3f move, float dt) {
-		if(inAir) {
+		if(entity.inAir) {
 			entity.speed.add(move.mul(airAccel * walkSpeed * dt));
 		}
 		else {
@@ -58,14 +57,14 @@ public abstract class EntityController {
 			entity.speed.mul(walkSpeed);
 		}
 		if(entity.alive && enabled && queueJump) {
-			if(jumpReset && !inAir) {
+			if(jumpReset && !entity.inAir) {
 				entity.speed.y = jumpSpeed;
 				
-				inAir = true;
+				entity.inAir = true;
 				jumpReset = false;
 			}
 		}
-		else if(!inAir) {
+		else if(!entity.inAir) {
 			jumpReset = true;
 		}
 		velocity.set(entity.speed);
@@ -99,15 +98,15 @@ public abstract class EntityController {
 			collider.clipxz(velocity, entity.position);
 
 			float ny = collider.clipy(entity.position);
-			if(inAir && !collider.falling && ny>entity.position.y) {
-				inAir = false;
+			if(entity.inAir && !collider.falling && ny>entity.position.y) {
+				entity.inAir = false;
 				applyFallDamage(entity.speed.y);
 				entity.speed.y = 0f;
 			}
 			if(collider.falling) {
-				inAir = true;
+				entity.inAir = true;
 			}
-			if(!inAir) {
+			if(!entity.inAir) {
 				entity.position.y = ny;
 			}
 			else {
