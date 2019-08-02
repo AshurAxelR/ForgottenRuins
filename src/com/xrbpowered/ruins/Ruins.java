@@ -140,11 +140,11 @@ public class Ruins extends UIClient {
 				
 				if(Save.autosave.exists()) {
 					preview = false;
-					pause = true;
 					world = Save.autosave.load();
 					if(world!=null) {
 						world.player.setClient(input, camera);
 						createWorldResources();
+						world.update(0f);
 					}
 					else {
 						restart(true);
@@ -153,6 +153,7 @@ public class Ruins extends UIClient {
 				else {
 					restart(true);
 				}
+				overlayMenu.show();
 				
 				super.setupResources();
 			}
@@ -219,7 +220,6 @@ public class Ruins extends UIClient {
 		new UIFpsOverlay(this);
 		
 		UIHint.show(UIOverlayInventory.keyHint);
-		overlayMenu.show();
 	}
 	
 	private void createWorldResources() {
@@ -231,11 +231,7 @@ public class Ruins extends UIClient {
 		mobs.allocateInstanceData(world);
 		pick.setWorld(world, walls);
 
-		glare.glare(1.0f);
-		if(!preview) {
-			overlayLevelStart.show(world);
-		}
-		else {
+		if(preview) {
 			camera.position.z = -8f;
 			camera.position.y = World.height/4f;
 			camera.updateTransform();
@@ -268,6 +264,9 @@ public class Ruins extends UIClient {
 		world = World.createWorld(System.currentTimeMillis(), level);
 		world.setPlayer(new PlayerEntity(world, player, input, camera));
 		createWorldResources();
+		glare.glare(1.0f);
+		if(!preview)
+			overlayLevelStart.show(world);
 	}
 	
 	public void grabMouse(boolean grab) {
@@ -359,6 +358,9 @@ public class Ruins extends UIClient {
 							DebugPaths.update(world);
 					}
 					break;
+				case KeyEvent.VK_F3:
+					save();
+					break;
 				default:
 					if(!observerActive && player.alive && Item.keyPressed(code, player)) {
 						hud.updateInventoryPreview();
@@ -381,7 +383,7 @@ public class Ruins extends UIClient {
 	
 	@Override
 	public void destroyWindow() {
-		save();
+		// save();
 		super.destroyWindow();
 	}
 	

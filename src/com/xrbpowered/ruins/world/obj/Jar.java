@@ -1,5 +1,8 @@
 package com.xrbpowered.ruins.world.obj;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Random;
 
 import com.xrbpowered.ruins.Ruins;
@@ -32,6 +35,20 @@ public class Jar extends SmallObject {
 					broken = true;
 			}
 		}
+	}
+	
+	@Override
+	public void loadState(DataInputStream in) throws IOException {
+		broken = in.readBoolean();
+		if(broken) {
+			item = null;
+			coins = 0;
+		}
+	}
+	
+	@Override
+	public void saveState(DataOutputStream out) throws IOException {
+		out.writeBoolean(broken);
 	}
 	
 	@Override

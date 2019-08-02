@@ -23,7 +23,7 @@ public class GlobalSettings {
 	public int fov = 75;
 	public float mouseSensitivity = 0.002f;
 	
-	public int startLevel = 6;
+	public int startLevel = 0;
 	public boolean enableObserver = false;
 	public boolean enableDebugPaths = false;
 	

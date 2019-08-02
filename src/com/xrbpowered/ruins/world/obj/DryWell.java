@@ -1,5 +1,8 @@
 package com.xrbpowered.ruins.world.obj;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Random;
 
 import com.xrbpowered.ruins.entity.WorldEntity;
@@ -20,6 +23,7 @@ public class DryWell extends TileObject implements WorldEntity {
 	
 	private float timeToSpawn;
 	private Ghost ghost = null;
+	private int ghostId = -1;
 	
 	private Random random = new Random();
 	
@@ -27,6 +31,18 @@ public class DryWell extends TileObject implements WorldEntity {
 		super(world, objToken);
 		random.setSeed(this.seed);
 		timeToSpawn = spawnDelay*maxInitialSpawnDelay;
+	}
+	
+	@Override
+	public void loadState(DataInputStream in) throws IOException {
+		timeToSpawn = in.readFloat();
+		ghostId = in.readInt();
+	}
+	
+	@Override
+	public void saveState(DataOutputStream out) throws IOException {
+		out.writeFloat(timeToSpawn);
+		out.writeInt(ghost==null ? -1 : world.mobs.indexOf(ghost));
 	}
 
 	@Override
@@ -36,6 +52,10 @@ public class DryWell extends TileObject implements WorldEntity {
 
 	@Override
 	public boolean updateTime(float dt) {
+		if(ghostId>=0) {
+			ghost = (Ghost) world.mobs.get(ghostId);
+			ghostId = -1;
+		}
 		if(ghost==null) {
 			timeToSpawn -= dt;
 			if(timeToSpawn<0f) {
