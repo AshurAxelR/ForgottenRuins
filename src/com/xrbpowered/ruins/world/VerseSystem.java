@@ -83,7 +83,7 @@ public class VerseSystem {
 		
 		for(String w : words) {
 			if(!known.contains(w))
-				text.append("...");
+				text.append("&bull;");
 			else if(w.equals(learned))
 				text.append("<span class=\"e\">"+w+"<span>");
 			else

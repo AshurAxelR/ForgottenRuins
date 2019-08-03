@@ -51,7 +51,7 @@ public class WallShader extends CameraShader {
 		GL20.glUseProgram(pId);
 		GL20.glUniform1f(GL20.glGetUniformLocation(pId, "fogNear"), environment.fogNear);
 		GL20.glUniform1f(GL20.glGetUniformLocation(pId, "fogFar"), environment.fogFar);
-		uniform(GL20.glGetUniformLocation(pId, "fogColor"), environment.fogColor);
+		uniform(GL20.glGetUniformLocation(pId, "fogColor"), environment.horizonColor);
 		uniform(GL20.glGetUniformLocation(pId, "lightDirection"), environment.lightDirection);
 		GL20.glUniform1f(GL20.glGetUniformLocation(pId, "ambient"), environment.ambient);
 		GL20.glUniform1f(GL20.glGetUniformLocation(pId, "lightScale"), environment.lightScale);

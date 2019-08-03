@@ -10,6 +10,7 @@ import com.xrbpowered.gl.client.UIClient;
 import com.xrbpowered.gl.res.asset.AssetManager;
 import com.xrbpowered.gl.res.asset.FileAssetManager;
 import com.xrbpowered.gl.res.buffer.RenderTarget;
+import com.xrbpowered.gl.res.mesh.FastMeshBuilder;
 import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.gl.scene.CameraActor;
@@ -30,6 +31,7 @@ import com.xrbpowered.ruins.render.prefab.InstanceShader;
 import com.xrbpowered.ruins.render.prefab.MobRenderer;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.render.shader.ShaderEnvironment;
+import com.xrbpowered.ruins.render.shader.SkyShader;
 import com.xrbpowered.ruins.render.shader.WallShader;
 import com.xrbpowered.ruins.render.texture.TextureAtlas;
 import com.xrbpowered.ruins.ui.UIHint;
@@ -62,6 +64,8 @@ public class Ruins extends UIClient {
 	
 	private StaticMesh groundMesh;
 	private Texture groundTexture;
+	private SkyShader skyShader;
+	private StaticMesh skyMesh;
 
 	private PlayerEntity player;
 	private CameraActor camera;
@@ -117,8 +121,9 @@ public class Ruins extends UIClient {
 			public void setupResources() {
 				Item.loadIcons();
 				
-				clearColor = new Color(0xe5efee);
-				environment.setFog(10, 80, clearColor);
+				clearColor = new Color(0xf7f7ee);
+				environment.setSkyColor(new Color(0xd5e5ff), new Color(0xe5efee), clearColor, 0.4f);
+				environment.setFog(10, viewDist-0.1f);
 				environment.lightScale = 0.1f;
 				
 				camera = new CameraActor.Perspective().setFov(settings.fov).setRange(0.1f, viewDist).setAspectRatio(getWidth(), getHeight());
@@ -131,6 +136,9 @@ public class Ruins extends UIClient {
 				observerController.moveSpeed = 10f;
 
 				groundTexture = new Texture("ground.png", true, false);
+
+				skyShader = (SkyShader) new SkyShader().setEnvironment(environment).setCamera(camera);
+				skyMesh = FastMeshBuilder.sphere(viewDist-0.1f, 64, SkyShader.vertexInfo, null);
 				
 				InstanceShader.createInstance(environment, camera);
 				prefabs = new PrefabRenderer();
@@ -138,7 +146,7 @@ public class Ruins extends UIClient {
 				ParticleShader.createInstance(environment, camera);
 				particles = new ParticleRenderer();
 				
-				if(Save.autosave.exists()) {
+				if(!settings.skipLoad && Save.autosave.exists()) {
 					preview = false;
 					world = Save.autosave.load();
 					if(world!=null) {
@@ -191,6 +199,10 @@ public class Ruins extends UIClient {
 				groundTexture.bind(0);
 				groundMesh.draw();
 				shader.unuse();
+				
+				skyShader.use();
+				skyMesh.draw();
+				skyShader.unuse();
 				
 				prefabs.drawInstances();
 				mobs.updateInstances(world);
