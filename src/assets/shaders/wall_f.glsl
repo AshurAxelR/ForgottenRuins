@@ -1,7 +1,5 @@
 #version 150 core
 
-uniform mat4 viewMatrix;
-
 uniform sampler2D texDiffuse;
 
 uniform float fogNear = 10;
