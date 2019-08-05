@@ -262,7 +262,7 @@ public class Ruins extends UIClient {
 	}
 	
 	public void save() {
-		if(world!=null && !preview)
+		if(world!=null && !preview && !settings.skipLoad)
 			Save.autosave.save(world);
 	}
 

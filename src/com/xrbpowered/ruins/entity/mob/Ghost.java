@@ -1,5 +1,7 @@
 package com.xrbpowered.ruins.entity.mob;
 
+import static com.xrbpowered.ruins.render.effect.particle.RandomUtils.*;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,15 +25,15 @@ public class Ghost extends MobEntity {
 	public static final float radius = 0.3f;
 	public static final float height = 1.7f;
 	
-	public static final float speedMin = 0.5f;
-	public static final float speedMax = 1.0f;
+	public static final float speedMin = 0.75f;
+	public static final float speedMax = 1.25f;
 	public static final float agitatedSpeedMin = 1.5f;
 	public static final float agitatedSpeedMax = 1.7f;
 	public static final int agitationDist = 25;
 	public static final int chargeDist = 5;
 	
-	public static final float minLifespan = 150f; 
-	public static final float maxLifespan = 600f; 
+	public static final float minLifespan = 120f; // 150f; 
+	public static final float maxLifespan = 180f; // 600f; 
 
 	public static final float damageMin = 25f;
 	public static final float damageMax = 40f;
@@ -48,10 +50,10 @@ public class Ghost extends MobEntity {
 	public Ghost(World world, Random random) {
 		super(world, speedMin);
 		if(random!=null) {
-			speed = random.nextFloat()*(speedMax-speedMin)+speedMin;
-			agitatedSpeed = random.nextFloat()*(agitatedSpeedMax-agitatedSpeedMin)+agitatedSpeedMin;
-			lifespan = random.nextFloat()*(maxLifespan-minLifespan)+minLifespan;
-			damage = random.nextFloat()*(damageMax-damageMin)+damageMin;
+			speed = random(random, speedMin, speedMax);
+			agitatedSpeed = random(random, agitatedSpeedMin, agitatedSpeedMax);
+			lifespan = random(random, minLifespan, maxLifespan);
+			damage = random(random, damageMin, damageMax);
 		}
 	}
 	
@@ -132,17 +134,22 @@ public class Ghost extends MobEntity {
 		explosion.pivot.y += height/2f;
 	}
 	
+	public static class DotParticle extends Particle {
+		public DotParticle() {
+			super(random(0.5f, 1.5f));
+		}
+		@Override
+		public boolean updateTime(float dt) {
+			random(speed, speed, 25f*dt);
+			speed.mul((float)Math.pow(0.15f, dt));
+			return super.updateTime(dt);
+		}
+	}
+	
 	public static ParticleEffect explosion = new ParticleEffect.Radial(radius/2f) {
 		@Override
 		public void generateParticle() {
-			Particle p = new Particle(random(0.5f, 1.5f)) {
-				@Override
-				public boolean updateTime(float dt) {
-					random(speed, speed, 25f*dt);
-					speed.mul((float)Math.pow(0.15f, dt));
-					return super.updateTime(dt);
-				}
-			};
+			Particle p = new DotParticle();
 			assign(p);
 			ParticleRenderer.dark.add(p);
 		}

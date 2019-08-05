@@ -12,11 +12,11 @@ _Rogue-like game featuring procedurally generated maze and 90s style 3D graphics
 
 ## Download
 
-[ForgottenRuins.zip](https://github.com/ashurrafiev/ForgottenRuins/releases/download/pre-a.0.5/ForgottenRuins.zip) (3.67 MB)
+[ForgottenRuins.zip](https://github.com/ashurrafiev/ForgottenRuins/releases/download/a.0.6/ForgottenRuins.zip) (3.69 MB)
 
 ## Game Objective
 
-Find and activate all 8 _Obelisks_ to open the _Exit Portal_. Interact with the portal (right-click) to complete the level.
+Find and activate all 8 _Obelisks_ to open the _Exit Portal_. Interact with the portal (right-click) to exit to the next level.
 
 Optional: Decode all tablets.
 
@@ -24,8 +24,6 @@ Optional: Decode all tablets.
 
 The following limitations are in place:
 
-* Only one level.
-* Game difficulty is set to hard to showcase later levels of the game.
 * No options menu (edit the [config](ruins.cfg) file instead).
 * Controls cannot be changed.
 * No sound.

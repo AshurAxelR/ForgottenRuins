@@ -9,6 +9,7 @@ import com.xrbpowered.ruins.entity.player.PlayerEntity;
 import com.xrbpowered.ruins.render.effect.particle.Particle;
 import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
+import com.xrbpowered.ruins.render.effect.particle.RandomUtils;
 
 public class AmuletOfRadiance extends Item {
 
@@ -44,7 +45,7 @@ public class AmuletOfRadiance extends Item {
 	public static ParticleEffect explosion = new ParticleEffect.Rand(8f) {
 		@Override
 		public void generateParticle() {
-			Particle p = new Particle(random(1.5f, 3f));
+			Particle p = new Particle(RandomUtils.random(1.5f, 3f));
 			assign(p);
 			ParticleRenderer.light.add(p);
 		}

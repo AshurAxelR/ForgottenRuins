@@ -20,7 +20,7 @@ public class Jar extends SmallObject {
 	private static float[] wvariants = {2f, 1f};
 	private int variant;
 
-	private static float[] witems = {23.5f, 1f, 2f, 1f, 2.5f};
+	private static float[] witems = {23.5f, 1f, 2.5f, 1f, 2f};
 	private static Item[] items = {null, Item.amuletOfEscape, Item.amuletOfRadiance, Item.emptyFlask, Item.healingHerbs};
 	
 	public Jar(World world, Random random) {

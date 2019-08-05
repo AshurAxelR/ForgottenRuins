@@ -6,6 +6,7 @@ import com.xrbpowered.ruins.entity.player.PlayerEntity;
 import com.xrbpowered.ruins.render.effect.particle.Particle;
 import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
+import com.xrbpowered.ruins.render.effect.particle.RandomUtils;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;
@@ -54,7 +55,7 @@ public class Well extends TileObject {
 	public static ParticleEffect effect = new ParticleEffect.Up(0.5f, 0.5f, 0f) {
 		@Override
 		public void generateParticle() {
-			Particle p = new Particle(random(0.75f, 1.25f)) {
+			Particle p = new Particle(RandomUtils.random(0.75f, 1.25f)) {
 				@Override
 				public boolean updateTime(float dt) {
 					speed.y -= EntityController.gravity*dt;

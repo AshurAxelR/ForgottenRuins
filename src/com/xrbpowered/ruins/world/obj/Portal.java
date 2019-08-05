@@ -6,6 +6,7 @@ import com.xrbpowered.ruins.render.effect.particle.Particle;
 import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleGenerator;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
+import com.xrbpowered.ruins.render.effect.particle.RandomUtils;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.ObeliskSystem;
@@ -65,7 +66,7 @@ public class Portal extends TileObject implements WorldEntity {
 	public static ParticleEffect effect = new ParticleEffect(0.9f, 0.9f, 0f, 3f) {
 		@Override
 		public void generateParticle() {
-			Particle p = new Particle(random(0.75f, 1.5f));
+			Particle p = new Particle(RandomUtils.random(0.75f, 1.5f));
 			assign(p);
 			ParticleRenderer.light.add(p);
 		}
