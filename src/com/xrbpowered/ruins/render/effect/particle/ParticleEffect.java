@@ -1,13 +1,11 @@
 package com.xrbpowered.ruins.render.effect.particle;
 
-import java.util.Random;
+import static com.xrbpowered.ruins.render.effect.particle.RandomUtils.*;
 
 import org.joml.Vector3f;
 
 public abstract class ParticleEffect {
 
-	protected static final Random random = new Random();
-	
 	public Vector3f pivot = new Vector3f();
 	public float rx, rz, ymin, ymax;
 	public float speedMin, speedMax;
@@ -59,28 +57,6 @@ public abstract class ParticleEffect {
 	
 	protected void assignSpeed(Particle p) {
 		assignSpeed(p, random(speedMin, speedMax));
-	}
-
-	protected static int random(int min, int max) {
-		return random.nextInt(max-min)+min;
-	}
-	
-	protected static float random(float min, float max) {
-		return random.nextFloat()*(max-min)+min;
-	}
-	
-	protected static Vector3f random(Vector3f out, Vector3f in, float r) {
-		out.x = (in==null ? 0f : in.x) + random(-r, r);
-		out.z = (in==null ? 0f : in.z) + random(-r, r);
-		out.y = (in==null ? 0f : in.y) + random(-r, r);
-		return out;
-	}
-
-	protected static Vector3f random(Vector3f out, Vector3f in, float rx, float rz, float ymin, float ymax) {
-		out.x = (in==null ? 0f : in.x) + random(-rx, rx);
-		out.z = (in==null ? 0f : in.z) + random(-rz, rz);
-		out.y = (in==null ? 0f : in.y) + random(ymin, ymax);
-		return out;
 	}
 
 	public static abstract class Up extends ParticleEffect {

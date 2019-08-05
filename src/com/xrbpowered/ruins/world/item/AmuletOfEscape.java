@@ -8,6 +8,7 @@ import com.xrbpowered.ruins.entity.player.PlayerEntity;
 import com.xrbpowered.ruins.render.effect.particle.Particle;
 import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
+import com.xrbpowered.ruins.render.effect.particle.RandomUtils;
 
 public class AmuletOfEscape extends Item {
 
@@ -40,7 +41,7 @@ public class AmuletOfEscape extends Item {
 	public static ParticleEffect effect = new ParticleEffect.Up(1f, 1f, 0f, 2f) {
 		@Override
 		public void generateParticle() {
-			Particle p = new Particle(random(1f, 1.5f));
+			Particle p = new Particle(RandomUtils.random(1f, 1.5f));
 			assign(p);
 			ParticleRenderer.light.add(p);
 		}

@@ -125,15 +125,16 @@ public class World {
 			my = 0;
 		return my;
 	}
-	
+
+	public static final int[] baseSize = {1, 2, 3, 3, 4, 4, 5, 5, 6, 8};
+	public static final int[] baseHeight = {1, 1, 2, 3, 3, 4, 4, 4, 4, 4};
+
 	public static int getSize(int level) {
-		int[] s = {1, 2, 3, 3, 4, 4, 5, 5, 6, 8};
-		return chunkSize*s[level];
+		return chunkSize*baseSize[level];
 	}
 
 	public static int getHeight(int level) {
-		int[] s = {1, 1, 2, 3, 3, 4, 4, 4, 4, 4};
-		int h = chunkSize/2*s[level];
+		int h = chunkSize/2*baseHeight[level];
 		return h>height ? height : h;
 	}
 

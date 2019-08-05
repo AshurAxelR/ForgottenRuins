@@ -1,13 +1,16 @@
 package com.xrbpowered.ruins.world.gen;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
 
 import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.Tile;
 import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
+import com.xrbpowered.ruins.world.obj.MapObject;
 
 public class WorldGenerator {
 
@@ -297,8 +300,8 @@ public class WorldGenerator {
 				if(adj)
 					coverage++;
 			}
-		System.out.printf("Total platforms: %d, coverage: %d/%d (%.1f%%)\n",
-				totalPlatforms, coverage, maxCoverage, coverage*100f/(float)maxCoverage);
+		// System.out.printf("Total platforms: %d, coverage: %d/%d (%.1f%%)\n",
+		//		totalPlatforms, coverage, maxCoverage, coverage*100f/(float)maxCoverage);
 		return coverage / (float)maxCoverage;
 	}
 	
@@ -404,6 +407,21 @@ public class WorldGenerator {
 		}
 	}
 	
+	public void debugListObjects() {
+		HashMap<String, Integer> count = new HashMap<>();
+		for(MapObject obj : world.objects) {
+			String cls = obj.getClass().getSimpleName();
+			if(!count.containsKey(cls))
+				count.put(cls, 1);
+			else
+				count.put(cls, count.get(cls)+1);
+		}
+		System.out.print("Map objects: [");
+		for(Map.Entry<String, Integer> e : count.entrySet())
+			System.out.printf("%s (%d), ", e.getKey(), e.getValue());
+		System.out.println("]");
+	}
+	
 	public boolean generate() {
 		world.startx = size/2;
 		world.startz = 1;
@@ -420,6 +438,8 @@ public class WorldGenerator {
 		filterObjectTokens();
 		if(!new TileObjectGenerator(this, random).generateObjects(startToken))
 			return false;
+		
+		// debugListObjects();
 		return true;
 	}
 	

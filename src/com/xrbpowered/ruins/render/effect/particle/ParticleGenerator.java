@@ -13,6 +13,16 @@ public class ParticleGenerator {
 		this.maxDelay = maxDelay;
 	}
 	
+	public void setDelay(float minDelay, float maxDelay) {
+		this.minDelay = minDelay;
+		this.maxDelay = maxDelay;
+	}
+
+	public void setDelay(float delay) {
+		this.minDelay = delay;
+		this.maxDelay = delay;
+	}
+
 	public void reset() {
 		t = 0f;
 	}
@@ -21,7 +31,7 @@ public class ParticleGenerator {
 		t += dt;
 		while(t>0f) {
 			effect.generateParticle();
-			t -= ParticleEffect.random(minDelay, maxDelay);
+			t -= RandomUtils.random(minDelay, maxDelay);
 		}
 	}
 
