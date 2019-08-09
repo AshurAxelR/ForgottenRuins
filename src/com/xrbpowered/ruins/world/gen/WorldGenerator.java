@@ -439,7 +439,7 @@ public class WorldGenerator {
 		if(!new TileObjectGenerator(this, random).generateObjects(startToken))
 			return false;
 		
-		// debugListObjects();
+		debugListObjects();
 		return true;
 	}
 	
