@@ -10,8 +10,8 @@ public class WaterFlask extends Item {
 
 	public static final int restore = 20;
 	
-	public WaterFlask() {
-		super("Flask of Water", "icons/water_flask.png", new Color(0x0055aaee),
+	public WaterFlask(int id) {
+		super(id, "Flask of Water", "icons/water_flask.png", new Color(0x0055aaee),
 				String.format("Use: %+d Water", restore));
 		hotkey = KeyEvent.VK_F;
 	}

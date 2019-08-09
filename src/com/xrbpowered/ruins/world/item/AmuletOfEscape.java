@@ -10,19 +10,14 @@ import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.render.effect.particle.RandomUtils;
 
-public class AmuletOfEscape extends Item {
+public class AmuletOfEscape extends Amulet {
 
-	public AmuletOfEscape() {
-		super("Amulet of Escape", "icons/return.png", new Color(0xbaa670),
+	public AmuletOfEscape(int id) {
+		super(id, "Escape", "icons/return.png", new Color(0xbaa670),
 				"Use: instantly returns you to the starting location");
 		hotkey = KeyEvent.VK_E;
 	}
 
-	@Override
-	protected String indefArticle() {
-		return "an";
-	}
-	
 	@Override
 	public boolean isConsumable() {
 		return true;

@@ -11,19 +11,14 @@ import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.render.effect.particle.RandomUtils;
 
-public class AmuletOfRadiance extends Item {
+public class AmuletOfRadiance extends Amulet {
 
-	public AmuletOfRadiance() {
-		super("Amulet of Radiance", "icons/radiance.png", new Color(0xd0ecff),
+	public AmuletOfRadiance(int id) {
+		super(id, "Radiance", "icons/radiance.png", new Color(0xd0ecff),
 				"Use: destroys all undead up to 4 tiles away");
 		hotkey = KeyEvent.VK_R;
 	}
 
-	@Override
-	protected String indefArticle() {
-		return "an";
-	}
-	
 	@Override
 	public boolean isConsumable() {
 		return true;

@@ -15,7 +15,6 @@ import com.xrbpowered.ruins.world.PathFinder;
 import com.xrbpowered.ruins.world.VerseSystem;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
-import com.xrbpowered.ruins.world.item.ItemList;
 
 public class PlayerEntity extends EntityActor {
 
@@ -37,7 +36,7 @@ public class PlayerEntity extends EntityActor {
 	public float hydration = baseHydration;
 	public int coins = 0;
 
-	public final ItemList inventory;
+	public final PlayerInventory inventory;
 	public final VerseSystem verses;
 
 	private float cameraLevel = cameraHeight;
@@ -58,7 +57,7 @@ public class PlayerEntity extends EntityActor {
 			health = baseHealth;
 			hydration = baseHydration;
 			coins = 0;
-			inventory =  new ItemList();
+			inventory =  new PlayerInventory();
 			inventory.add(Item.emptyFlask, 2);
 			inventory.add(Item.amuletOfEscape, 1);
 			verses = new VerseSystem();
