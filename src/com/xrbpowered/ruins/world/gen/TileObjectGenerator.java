@@ -8,6 +8,7 @@ import com.xrbpowered.ruins.world.ObeliskSystem;
 import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
+import com.xrbpowered.ruins.world.obj.Chest;
 import com.xrbpowered.ruins.world.obj.DryWell;
 import com.xrbpowered.ruins.world.obj.Obelisk;
 import com.xrbpowered.ruins.world.obj.Palm;
@@ -162,6 +163,10 @@ public class TileObjectGenerator {
 			for(Token t : objTokens) {
 				if(random.nextInt(10)<4 && isAdjTop(t, 2)) {
 					new Palm(world, t).place();
+					continue;
+				}
+				if(random.nextInt(10)<1) {
+					new Chest(world, t).place();
 					continue;
 				}
 				if(random.nextInt(10)<3) {

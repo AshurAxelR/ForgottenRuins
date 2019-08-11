@@ -1,5 +1,7 @@
 package com.xrbpowered.ruins.render.effect.particle;
 
+import com.xrbpowered.ruins.RandomUtils;
+
 public class ParticleGenerator {
 
 	public final ParticleEffect effect;

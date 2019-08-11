@@ -3,12 +3,12 @@ package com.xrbpowered.ruins.world.item;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
+import com.xrbpowered.ruins.RandomUtils;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.player.PlayerEntity;
 import com.xrbpowered.ruins.render.effect.particle.Particle;
 import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
-import com.xrbpowered.ruins.render.effect.particle.RandomUtils;
 
 public class AmuletOfEscape extends Amulet {
 

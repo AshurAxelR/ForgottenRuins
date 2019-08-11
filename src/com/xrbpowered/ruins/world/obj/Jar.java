@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Random;
 
+import com.xrbpowered.ruins.RandomUtils;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
@@ -25,8 +26,8 @@ public class Jar extends SmallObject {
 	
 	public Jar(World world, Random random) {
 		super(world);
-		variant = wrandom(random, wvariants);
-		item = items[wrandom(random, witems)];
+		variant = RandomUtils.weighted(random, wvariants);
+		item = items[RandomUtils.weighted(random, witems)];
 		if(item==null) {
 			coins = random.nextInt(8)-4;
 			if(coins<0) {
@@ -98,17 +99,4 @@ public class Jar extends SmallObject {
 		}
 	}
 	
-	public static int wrandom(Random random, float[] w) {
-		float max = 0;
-		for(int i = 0; i < w.length; i++)
-			max += w[i];
-		if(max<=0f)
-			return 0;
-		float x = random.nextFloat()*max;
-		for(int i = 0;; i++) {
-			if(x < w[i])
-				return i;
-			x -= w[i];
-		}
-	}
 }

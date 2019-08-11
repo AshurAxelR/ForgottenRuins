@@ -35,10 +35,6 @@ public class WorldGenerator {
 			this.y = y;
 			this.d = d;
 		}
-		
-		public long getSeed(World world) {
-			return 0;
-		}
 	}
 	
 	public final World world;

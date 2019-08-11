@@ -1,6 +1,6 @@
 package com.xrbpowered.ruins.entity.mob;
 
-import static com.xrbpowered.ruins.render.effect.particle.RandomUtils.*;
+import static com.xrbpowered.ruins.RandomUtils.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

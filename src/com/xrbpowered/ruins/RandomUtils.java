@@ -1,4 +1,4 @@
-package com.xrbpowered.ruins.render.effect.particle;
+package com.xrbpowered.ruins;
 
 import java.util.Random;
 
@@ -38,5 +38,18 @@ public class RandomUtils {
 		return random.nextFloat()*(max-min)+min;
 	}
 	
+	public static int weighted(Random random, float[] w) {
+		float max = 0;
+		for(int i = 0; i < w.length; i++)
+			max += w[i];
+		if(max<=0f)
+			return 0;
+		float x = random.nextFloat()*max;
+		for(int i = 0;; i++) {
+			if(x < w[i])
+				return i;
+			x -= w[i];
+		}
+	}
 
 }

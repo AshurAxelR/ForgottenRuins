@@ -1,6 +1,6 @@
 package com.xrbpowered.ruins.render.effect.particle;
 
-import static com.xrbpowered.ruins.render.effect.particle.RandomUtils.*;
+import static com.xrbpowered.ruins.RandomUtils.*;
 
 import org.joml.Vector3f;
 
