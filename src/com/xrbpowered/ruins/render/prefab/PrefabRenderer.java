@@ -21,6 +21,8 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 
 	public static Prefab[] jars;
 	public static Prefab broken;
+	public static Prefab chest;
+	public static Prefab chestOpen;
 	public static Prefab[] grass;
 
 	public static PrefabComponent pickedComponent = null; 
@@ -43,6 +45,10 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 			new Prefab(true, add(new PrefabComponent(mesh("jar/jar1.obj"), jarTex))),
 			new Prefab(true, add(new PrefabComponent(mesh("jar/jar2.obj"), jarTex))),
 		};
+		
+		Texture chestTex = texture("chest/chest.png");
+		chest = new Prefab(true, add(new PrefabComponent(mesh("chest/chest.obj", 0.75f), chestTex)));
+		chestOpen = new Prefab(true, add(new PrefabComponent(mesh("chest/chest_open.obj", 0.75f), chestTex)));
 		
 		StaticMesh grassMesh = mesh("grass/grass.obj");
 		PrefabRenderer.grass = new Prefab[] {

@@ -1,12 +1,12 @@
 package com.xrbpowered.ruins.world.obj;
 
+import com.xrbpowered.ruins.RandomUtils;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.EntityController;
 import com.xrbpowered.ruins.entity.player.PlayerEntity;
 import com.xrbpowered.ruins.render.effect.particle.Particle;
 import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
-import com.xrbpowered.ruins.render.effect.particle.RandomUtils;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;

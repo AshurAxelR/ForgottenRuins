@@ -40,6 +40,7 @@ import com.xrbpowered.ruins.ui.UIIcon;
 import com.xrbpowered.ruins.ui.overlay.UIOverlay;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayGameOver;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayInventory;
+import com.xrbpowered.ruins.ui.overlay.UIOverlayItems;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayLevelStart;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayMenu;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVerse;
@@ -89,6 +90,7 @@ public class Ruins extends UIClient {
 	private UIOverlay activeOverlay = null;
 	
 	public static UIOverlayInventory overlayInventory;
+	public static UIOverlayItems overlayItems;
 	public static UIOverlayVerse overlayVerse;
 	
 	public static UIOverlayMenu overlayMenu;
@@ -222,6 +224,7 @@ public class Ruins extends UIClient {
 		overlayInventory = new UIOverlayInventory(getContainer());
 		hud = new UIHud(getContainer());
 
+		overlayItems = new UIOverlayItems(getContainer());
 		overlayVerse = new UIOverlayVerse(getContainer());
 
 		overlayMenu = new UIOverlayMenu(getContainer());
@@ -358,7 +361,7 @@ public class Ruins extends UIClient {
 					break;
 				case KeyEvent.VK_TAB:
 					if(!observerActive)
-						overlayInventory.updateAndShow(player);
+						overlayInventory.showInventory(player);
 					break;
 				case KeyEvent.VK_F1:
 					if(settings.enableObserver)

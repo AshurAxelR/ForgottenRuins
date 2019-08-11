@@ -73,11 +73,10 @@ public class ItemList {
 		return true;
 	}
 	
-	public void moveTo(ItemList list) {
+	public void addTo(ItemList list) {
 		for(ItemStack s : stacks.values()) {
 			list.add(s.item, s.count);
 		}
-		stacks.clear();
 	}
 	
 }
