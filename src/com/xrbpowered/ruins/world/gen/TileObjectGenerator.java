@@ -141,7 +141,28 @@ public class TileObjectGenerator {
 			maxh--;
 		}
 	}
-	
+
+	private void generateRoyalChest() {
+		Token ct = null;
+		int min = world.size;
+		for(Token t : objTokens) {
+			int dist = Math.abs(t.x-world.size/2)+Math.abs(t.z-world.size/2)+t.y;
+			if(dist<min) {
+				ct = t;
+				min = dist;
+			}
+		}
+		if(ct!=null) {
+			new Chest(world, ct, true).place();
+			objTokens.remove(ct);
+			if(world.level>0) {
+				Token t = objTokens.get(random.nextInt(objTokens.size()));
+				new Chest(world, t, false).addRoyalKey().place();
+				objTokens.remove(t);
+			}
+		}
+	}
+
 	private void generateObelisks() {
 		for(int count = 0; count<ObeliskSystem.obeliskCount;) {
 			Token t = objTokens.get(random.nextInt(objTokens.size()));
@@ -159,6 +180,7 @@ public class TileObjectGenerator {
 			generateWells();
 			generatePortal();
 			generateObelisks();
+			generateRoyalChest();
 			
 			for(Token t : objTokens) {
 				if(random.nextInt(10)<4 && isAdjTop(t, 2)) {
@@ -166,7 +188,7 @@ public class TileObjectGenerator {
 					continue;
 				}
 				if(random.nextInt(10)<1) {
-					new Chest(world, t).place();
+					new Chest(world, t, false).place();
 					continue;
 				}
 				if(random.nextInt(10)<3) {

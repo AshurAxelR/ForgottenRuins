@@ -6,7 +6,7 @@ import java.util.HashMap;
 import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.ruins.entity.player.PlayerEntity;
 
-public abstract class Item {
+public class Item {
 
 	private static HashMap<Integer, Item> items = new HashMap<>();
 
@@ -15,6 +15,8 @@ public abstract class Item {
 	public static final Item healingHerbs = new HealingHerbs(2);
 	public static final Item amuletOfEscape = new AmuletOfEscape(3);
 	public static final Item amuletOfRadiance = new AmuletOfRadiance(4);
+	public static final Item key = new Item(5, "Key", "icons/key.png", new Color(0xb1b278), "Unlocks a Chest");
+	public static final Item royalKey = new Item(6, "Royal Key", "icons/key_gold.png", new Color(0xffe994), "Unlocks a Royal Chest");
 	
 	public final int id;
 	public final String name;
