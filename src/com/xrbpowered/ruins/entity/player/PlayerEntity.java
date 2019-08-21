@@ -60,6 +60,8 @@ public class PlayerEntity extends EntityActor {
 			inventory =  new PlayerInventory();
 			inventory.add(Item.emptyFlask, 2);
 			inventory.add(Item.amuletOfEscape, 1);
+			if(world.level==0)
+				inventory.add(Item.royalKey, 1);
 			verses = new VerseSystem();
 		}
 		else {
