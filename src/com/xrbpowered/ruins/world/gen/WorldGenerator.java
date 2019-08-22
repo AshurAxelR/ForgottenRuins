@@ -10,6 +10,7 @@ import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.Tile;
 import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
+import com.xrbpowered.ruins.world.obj.Jar;
 import com.xrbpowered.ruins.world.obj.MapObject;
 
 public class WorldGenerator {
@@ -405,17 +406,21 @@ public class WorldGenerator {
 	
 	public void debugListObjects() {
 		HashMap<String, Integer> count = new HashMap<>();
+		int totalCoins = 0;
 		for(MapObject obj : world.objects) {
 			String cls = obj.getClass().getSimpleName();
 			if(!count.containsKey(cls))
 				count.put(cls, 1);
 			else
 				count.put(cls, count.get(cls)+1);
+			if(obj instanceof Jar)
+				totalCoins += ((Jar) obj).coins;
 		}
 		System.out.print("Map objects: [");
 		for(Map.Entry<String, Integer> e : count.entrySet())
 			System.out.printf("%s (%d), ", e.getKey(), e.getValue());
 		System.out.println("]");
+		System.out.printf("Total coins: %d \n", totalCoins);
 	}
 	
 	public boolean generate() {

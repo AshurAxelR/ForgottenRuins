@@ -21,9 +21,7 @@ public class Jar extends SmallObject {
 	private static float[] wvariants = {2f, 1f};
 	private int variant;
 
-//	private static float[] witems = {23.5f, 1f, 2.5f, 1f, 2f};
-//	private static Item[] items = {null, Item.amuletOfEscape, Item.amuletOfRadiance, Item.emptyFlask, Item.healingHerbs};
-	private static float[] witems = {23.5f, 0.5f, 3f, 0.5f, 2.5f};
+	private static float[] witems = {26f, 0.1f, 1.7f, 0.2f, 2f};
 	private static Item[] items = {null, Item.amuletOfEscape, Item.key, Item.emptyFlask, Item.healingHerbs};
 	
 	public Jar(World world, Random random) {

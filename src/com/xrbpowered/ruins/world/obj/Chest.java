@@ -22,11 +22,11 @@ public class Chest extends TileObject {
 	public boolean locked = false;
 	public boolean visited = false;
 	
-	private static final int minItems = 3;
-	private static final int maxItems = 7;
+	private static final int minItems = 2;
+	private static final int maxItems = 4;
 	private static final int royalMultiplier = 3;
 	
-	private static float[] witems = {1f, 0.1f, 1f, 2.5f, 1f, 0.4f};
+	private static float[] witems = {0.7f, 0.1f, 0.5f, 2f, 0.5f, 0.2f};
 	private static Item[] items = {Item.key, Item.royalKey, Item.amuletOfEscape, Item.amuletOfRadiance, Item.emptyFlask, Item.healingHerbs};
 	
 	private static final Random random = new Random();
