@@ -18,10 +18,9 @@ import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
 public class DryWell extends TileObject implements WorldEntity {
 
-	public static final float maxInitialSpawnDelay = 60f; //180f;
-	public static final float spawnPeriod = 10f; // 60f;
-	public static final float triggerDistance = 12f; 
-	public static final float triggerTime = 10f; 
+	public static final float maxInitialSpawnDelay = 60f;
+	public static final float spawnPeriod = 15f;
+	public static final float triggerTime = 10f;
 
 	public static final int[] baseCount = {1, 1, 1, 2, 3, 4, 5, 6, 6, 6};
 
@@ -68,6 +67,10 @@ public class DryWell extends TileObject implements WorldEntity {
 		return PrefabRenderer.dryWell;
 	}
 
+	public float getTriggerDistance() {
+		return 2f*(6+2*world.level);
+	}
+	
 	@Override
 	public boolean updateTime(float dt) {
 		if(ghostId>=0) {
@@ -92,7 +95,7 @@ public class DryWell extends TileObject implements WorldEntity {
 			}
 			else if(armed) {
 				float dist = position.distance(world.player.position);
-				if(dist<triggerDistance) {
+				if(dist<getTriggerDistance()) {
 					armed = false;
 					timeToSpawn = triggerTime; 
 				}
