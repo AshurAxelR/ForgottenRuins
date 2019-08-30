@@ -187,7 +187,7 @@ public class TileObjectGenerator {
 					new Palm(world, t).place();
 					continue;
 				}
-				if(random.nextInt(10)<1) {
+				if(random.nextInt(12)<1) {
 					new Chest(world, t, false).place();
 					continue;
 				}
