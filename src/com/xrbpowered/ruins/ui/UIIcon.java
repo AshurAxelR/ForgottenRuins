@@ -7,7 +7,8 @@ import com.xrbpowered.zoomui.UIContainer;
 
 public class UIIcon extends UITexture {
 
-	public static int pixelSize = 2;
+	public static int pixelSize = 4;
+	public static int minPixelSize = 4;
 	
 	public final String icon;
 	
@@ -35,8 +36,9 @@ public class UIIcon extends UITexture {
 		setTexture(new Texture(icon, false, false));
 	}
 
-	public static void updatePixelSize(UIClient client) {
-		pixelSize = Math.round(client.getContainer().getBaseScale() * 3f);
+	public static void setPixelSize(int size, UIClient client) {
+		pixelSize = size;
+		client.getContainer().setBaseScale(size * 0.3f);
 	}
 	
 }
