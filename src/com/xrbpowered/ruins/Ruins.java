@@ -99,15 +99,14 @@ public class Ruins extends UIClient {
 	public static UIOverlayVictory overlayVictory;
 	
 	public Ruins() {
-		super("Forgotten Ruins", settings.uiScaling/100f);
+		super("Forgotten Ruins");
 		fullscreen = settings.fullscreen;
 		windowedWidth = settings.windowedWidth;
 		windowedHeight = settings.windowedHeight;
 		vsync = settings.vsync;
 		noVsyncSleep = settings.noVsyncSleep;
-		
+		updatePixelSize();
 		ruins = this;
-		UIIcon.updatePixelSize(this);
 		
 		AssetManager.defaultAssets = new FileAssetManager("assets", AssetManager.defaultAssets);
 		UIHud.initFonts();
@@ -235,6 +234,20 @@ public class Ruins extends UIClient {
 		new UIFpsOverlay(this);
 		
 		UIHint.show(UIOverlayInventory.keyHint);
+	}
+	
+	public void updatePixelSize() {
+		int s = Math.max(UIIcon.minPixelSize, Math.min(settings.uiScaling,
+				Math.min(getFrameWidth() / (GlobalSettings.minWindowWidth/4), getFrameHeight() / (GlobalSettings.minWindowHeight/4)
+			)));
+		if(s!=UIIcon.pixelSize)
+			UIIcon.setPixelSize(s, this);
+	}
+	
+	@Override
+	public void resizeResources() {
+		updatePixelSize();
+		super.resizeResources();
 	}
 	
 	private void createWorldResources() {

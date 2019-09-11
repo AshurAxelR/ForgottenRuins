@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import com.xrbpowered.ruins.ui.UIIcon;
 import com.xrbpowered.ruins.world.World;
 
 public class GlobalSettings {
@@ -16,7 +17,7 @@ public class GlobalSettings {
 	public boolean fullscreen = false;
 	public int windowedWidth = minWindowWidth;
 	public int windowedHeight = minWindowHeight;
-	public int uiScaling = 0;
+	public int uiScaling = UIIcon.minPixelSize;
 	public int renderScaling = 1;
 	public boolean vsync = false;
 	public int noVsyncSleep = 4;
@@ -79,10 +80,8 @@ public class GlobalSettings {
 		s.fullscreen = getBoolean(values.get("fullscreen"), s.fullscreen);
 		s.windowedWidth = getInt(values.get("windowedWidth"), minWindowWidth, Integer.MAX_VALUE, s.windowedWidth);
 		s.windowedHeight = getInt(values.get("windowedHeight"), minWindowHeight, Integer.MAX_VALUE, s.windowedHeight);
-		s.uiScaling = getInt(values.get("uiScaling"), 0, 200, s.uiScaling);
-		if(s.uiScaling<100)
-			s.uiScaling = 0;
-		s.renderScaling = getInt(values.get("renderScaling"), 1, 8, s.renderScaling);
+		s.uiScaling = getInt(values.get("uiScaling"), 2, 8, s.uiScaling);
+		s.renderScaling = getInt(values.get("renderScaling"), 1, 16, s.renderScaling);
 		s.vsync = getBoolean(values.get("vsync"), s.vsync);
 		s.noVsyncSleep = getInt(values.get("noVsyncSleep"), 0, 1000, s.noVsyncSleep);
 		s.fov = getInt(values.get("fov"), 40, 80, s.fov);
