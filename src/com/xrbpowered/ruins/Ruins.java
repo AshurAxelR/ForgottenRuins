@@ -43,8 +43,10 @@ import com.xrbpowered.ruins.ui.overlay.UIOverlayInventory;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayItems;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayLevelStart;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayMenu;
+import com.xrbpowered.ruins.ui.overlay.UIOverlayNewGame;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVerse;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVictory;
+import com.xrbpowered.ruins.world.DifficultyMode;
 import com.xrbpowered.ruins.world.Save;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
@@ -94,6 +96,7 @@ public class Ruins extends UIClient {
 	public static UIOverlayVerse overlayVerse;
 	
 	public static UIOverlayMenu overlayMenu;
+	public static UIOverlayNewGame overlayNewGame;
 	public static UIOverlayLevelStart overlayLevelStart;
 	public static UIOverlayGameOver overlayGameOver;
 	public static UIOverlayVictory overlayVictory;
@@ -156,11 +159,11 @@ public class Ruins extends UIClient {
 						world.update(0f);
 					}
 					else {
-						restart(true);
+						restartPreview();
 					}
 				}
 				else {
-					restart(true);
+					restartPreview();
 				}
 				overlayMenu.show();
 				
@@ -227,6 +230,7 @@ public class Ruins extends UIClient {
 		overlayVerse = new UIOverlayVerse(getContainer());
 
 		overlayMenu = new UIOverlayMenu(getContainer());
+		overlayNewGame = new UIOverlayNewGame(getContainer());
 		overlayLevelStart = new UIOverlayLevelStart(getContainer());
 		overlayGameOver = new UIOverlayGameOver(getContainer());
 		overlayVictory = new UIOverlayVictory(getContainer());
@@ -282,14 +286,18 @@ public class Ruins extends UIClient {
 			Save.autosave.save(world);
 	}
 
-	public void restart(boolean preview) {
-		restart(settings.startLevel, null, preview);
+	public void restartPreview() {
+		restart(DifficultyMode.peaceful, settings.startLevel, null, true);
 	}
 	
-	public void restart(int level, PlayerEntity player, boolean preview) {
+	public void restart(DifficultyMode difficulty) {
+		restart(difficulty, settings.startLevel, null, false);
+	}
+	
+	public void restart(DifficultyMode difficulty, int level, PlayerEntity player, boolean preview) {
 		releaseWorldResources();
 		Ruins.preview = preview;
-		world = World.createWorld(System.currentTimeMillis(), level);
+		world = World.createWorld(difficulty, System.currentTimeMillis(), level);
 		world.setPlayer(new PlayerEntity(world, player, input, camera));
 		createWorldResources();
 		save();

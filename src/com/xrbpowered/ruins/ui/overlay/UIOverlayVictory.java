@@ -15,7 +15,7 @@ public class UIOverlayVictory extends UIOverlayGameOver {
 	@Override
 	public void closeAction() {
 		dismiss();
-		Ruins.ruins.restart(true);
+		Ruins.ruins.restartPreview();
 		Ruins.overlayMenu.show();
 	}
 	

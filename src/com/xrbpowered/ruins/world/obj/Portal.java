@@ -49,7 +49,7 @@ public class Portal extends TileObject implements WorldEntity {
 				Ruins.overlayVictory.show();
 			}
 			else {
-				Ruins.ruins.restart(world.level+1, world.player, false);
+				Ruins.ruins.restart(world.difficulty, world.level+1, world.player, false);
 			}
 		}
 		else

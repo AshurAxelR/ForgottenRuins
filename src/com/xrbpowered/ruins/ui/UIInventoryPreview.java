@@ -14,6 +14,7 @@ import com.xrbpowered.zoomui.UIContainer;
 public class UIInventoryPreview extends UIPane {
 
 	private static final float itemWidth = 40f;
+	private static final Color treasureColor = new Color(0xffdd55);	
 	
 	public UIInventoryPreview(UIContainer parent) {
 		super(parent, false);
@@ -26,7 +27,7 @@ public class UIInventoryPreview extends UIPane {
 		g.setColor(UIHud.clearColor);
 		g.fillRect(x, 4, itemWidth, getHeight()-4);
 		g.setFont(UIHud.font);
-		g.setColor(Color.WHITE);
+		g.setColor(s.item==Item.treasure ? treasureColor : Color.WHITE);
 		g.drawString(Integer.toString(s.count), x+itemWidth/2, getHeight()/2+3, GraphAssist.CENTER, GraphAssist.CENTER);
 	}
 	

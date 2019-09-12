@@ -14,7 +14,7 @@ public class Save {
 	public static final Save autosave = new Save(new File("ruins.save"));
 
 	private static final int formatCode = 47862;
-	private static final int saveVersion = 0;
+	private static final int saveVersion = 1;
 
 	public final File file;
 
@@ -39,9 +39,10 @@ public class Save {
 			if(version!=saveVersion)
 				throw new RuntimeException("Save version is different");
 			
+			DifficultyMode difficulty = DifficultyMode.values()[in.readByte()];
 			long seed = in.readLong();
 			int level = in.readInt();
-			world = World.createWorld(seed, level);
+			world = World.createWorld(difficulty, seed, level);
 			world.loadState(in);
 		}
 		catch(Exception e) {
@@ -64,6 +65,7 @@ public class Save {
 			out.writeInt(formatCode);
 			out.writeInt(saveVersion);
 
+			out.writeByte(world.difficulty.ordinal());
 			out.writeLong(world.seed);
 			out.writeInt(world.level);
 			world.saveState(out);
