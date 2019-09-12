@@ -39,7 +39,7 @@ public class Chest extends TileObject {
 		int n = RandomUtils.random(random, minItems, maxItems);
 		if(royal) {
 			n *= royalMultiplier;
-			// TODO add treasure
+			loot.add(Item.treasure, 1);
 		}
 		for(int i=0; i<n; i++) {
 			Item item = items[RandomUtils.weighted(random, witems)];

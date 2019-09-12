@@ -13,6 +13,7 @@ import com.xrbpowered.ruins.render.effect.particle.ParticleGenerator;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
+import com.xrbpowered.ruins.world.DifficultyMode;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
@@ -73,6 +74,9 @@ public class DryWell extends TileObject implements WorldEntity {
 	
 	@Override
 	public boolean updateTime(float dt) {
+		if(world.difficulty==DifficultyMode.peaceful)
+			return false;
+		
 		if(ghostId>=0) {
 			ghost = (Ghost) world.mobs.get(ghostId);
 			ghostId = -1;

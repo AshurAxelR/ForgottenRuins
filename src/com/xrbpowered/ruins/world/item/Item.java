@@ -17,6 +17,7 @@ public class Item {
 	public static final Item amuletOfRadiance = new AmuletOfRadiance(4);
 	public static final Item key = new Item(5, "Key", "icons/key.png", new Color(0xb1b278), "Unlocks a Chest");
 	public static final Item royalKey = new Item(6, "Royal Key", "icons/key_gold.png", new Color(0xffe994), "Unlocks a Royal Chest");
+	public static final Item treasure = new Item(7, "Royal Treasure", "icons/treasure.png", new Color(0xfed466), "You are rich!");
 	
 	public final int id;
 	public final String name;

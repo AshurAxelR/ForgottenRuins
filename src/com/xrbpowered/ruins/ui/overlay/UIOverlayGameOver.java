@@ -2,6 +2,7 @@ package com.xrbpowered.ruins.ui.overlay;
 
 import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
+import com.xrbpowered.ruins.world.DifficultyMode;
 import com.xrbpowered.zoomui.UIContainer;
 
 public class UIOverlayGameOver extends UIOverlay {
@@ -38,8 +39,15 @@ public class UIOverlayGameOver extends UIOverlay {
 	
 	@Override
 	public void closeAction() {
-		Ruins.ruins.restart(Ruins.world.level, null, false);
-		dismiss();
+		if(Ruins.world.difficulty==DifficultyMode.hardcore) {
+			Ruins.ruins.restartPreview();
+			dismiss();
+			Ruins.overlayNewGame.show();
+		}
+		else {
+			Ruins.ruins.restart(Ruins.world.difficulty, Ruins.world.level, null, false);
+			dismiss();
+		}
 	}
 	
 	public void show(String message) {

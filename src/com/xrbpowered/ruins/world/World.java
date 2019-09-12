@@ -19,6 +19,7 @@ public class World {
 	public static final int height = 32;
 	public static final int maxMobs = 1000;
 
+	public final DifficultyMode difficulty;
 	public final long seed;
 	public final int level;
 	public final int size;
@@ -36,7 +37,8 @@ public class World {
 	
 	public PlayerEntity player = null;
 	
-	public World(long seed, int level) {
+	public World(DifficultyMode difficulty, long seed, int level) {
+		this.difficulty = difficulty;
 		this.seed = seed;
 		this.level = Math.min(level, maxLevel);
 		this.size = getSize(this.level);
@@ -100,9 +102,9 @@ public class World {
 		return (x>=0 && z>=0 && x<size && z<size);
 	}
 	
-	public static World createWorld(long seed, int level) {
+	public static World createWorld(DifficultyMode difficulty, long seed, int level) {
 		for(;;) {
-			World world = new World(seed, level);
+			World world = new World(difficulty, seed, level);
 			WorldGenerator gen = new WorldGenerator(world);
 			if(gen.generate())
 				return world;

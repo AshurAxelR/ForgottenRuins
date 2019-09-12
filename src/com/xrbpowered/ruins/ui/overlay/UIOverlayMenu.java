@@ -84,7 +84,8 @@ public class UIOverlayMenu extends UIOverlay {
 	
 	public void restart() {
 		dismiss();
-		Ruins.ruins.restart(false);
+		//Ruins.ruins.restart(false);
+		Ruins.overlayNewGame.show();
 	}
 	
 	public void show() {
