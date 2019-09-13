@@ -44,6 +44,7 @@ import com.xrbpowered.ruins.ui.overlay.UIOverlayItems;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayLevelStart;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayMenu;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayNewGame;
+import com.xrbpowered.ruins.ui.overlay.UIOverlayPortal;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVerse;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVictory;
 import com.xrbpowered.ruins.world.DifficultyMode;
@@ -94,6 +95,7 @@ public class Ruins extends UIClient {
 	public static UIOverlayInventory overlayInventory;
 	public static UIOverlayItems overlayItems;
 	public static UIOverlayVerse overlayVerse;
+	public static UIOverlayPortal overlayPortal;
 	
 	public static UIOverlayMenu overlayMenu;
 	public static UIOverlayNewGame overlayNewGame;
@@ -228,6 +230,7 @@ public class Ruins extends UIClient {
 
 		overlayItems = new UIOverlayItems(getContainer());
 		overlayVerse = new UIOverlayVerse(getContainer());
+		overlayPortal = new UIOverlayPortal(getContainer());
 
 		overlayMenu = new UIOverlayMenu(getContainer());
 		overlayNewGame = new UIOverlayNewGame(getContainer());

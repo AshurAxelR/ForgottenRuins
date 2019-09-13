@@ -4,7 +4,8 @@ public enum DamageSource {
 	fall("Watch your step..."),
 	drown("Beware of quicksands..."),
 	dehydrate("Drink more water..."),
-	mob("Slain, defeated...");
+	mob("Slain, defeated..."),
+	portal("Your sacrificed too much...");
 
 	public final String gameOverMessage;
 	
