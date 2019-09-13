@@ -25,6 +25,7 @@ public class GlobalSettings {
 	public float mouseSensitivity = 0.002f;
 	
 	public int startLevel = 0;
+	public boolean unlockHardcore = false;
 	public boolean skipLoad = false;
 	public boolean enableObserver = false;
 	public boolean enableDebugPaths = false;
@@ -88,6 +89,7 @@ public class GlobalSettings {
 		s.mouseSensitivity = getInt(values.get("mouseSensitivity"), 10, 1000, 100) / 100f * 0.002f;
 
 		s.startLevel = getInt(values.get("startLevel"), 0, World.maxLevel, s.startLevel);
+		s.unlockHardcore = getBoolean(values.get("unlockHardcore"), s.unlockHardcore);
 		s.skipLoad = getBoolean(values.get("skipLoad"), s.skipLoad);
 		s.enableObserver = getBoolean(values.get("enableObserver"), s.enableObserver);
 		s.enableDebugPaths = getBoolean(values.get("enableDebugPaths"), s.enableDebugPaths);

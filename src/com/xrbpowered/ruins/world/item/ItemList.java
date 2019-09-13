@@ -52,6 +52,10 @@ public class ItemList {
 		return stacks.size();
 	}
 	
+	public void removeAll(Item item) {
+		stacks.remove(item.id);
+	}
+	
 	public void add(Item item, int count) {
 		ItemStack s = getStack(item);
 		if(s==null) {

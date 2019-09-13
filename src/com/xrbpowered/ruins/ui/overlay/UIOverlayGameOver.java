@@ -13,7 +13,7 @@ public class UIOverlayGameOver extends UIOverlay {
 	public final UIText text;
 
 	public UIOverlayGameOver(UIContainer parent) {
-		this(parent, 560, 60, "Respawn");
+		this(parent, 560, 60, null);
 	}
 
 	protected UIOverlayGameOver(UIContainer parent, int boxWidth, int boxHeight, String buttonLabel) {
@@ -54,6 +54,7 @@ public class UIOverlayGameOver extends UIOverlay {
 		if(!isActive()) {
 			text.setHtml("<p>"+message+"</p>");
 			text.repaint();
+			restartButton.label = (Ruins.world.difficulty==DifficultyMode.hardcore) ? "The End" : "Respawn";
 			Ruins.ruins.enableObserver(true);
 			Ruins.ruins.setOverlay(Ruins.overlayGameOver);
 		}

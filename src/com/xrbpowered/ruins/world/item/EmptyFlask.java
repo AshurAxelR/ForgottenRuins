@@ -19,5 +19,11 @@ public class EmptyFlask extends Item {
 		inventory.add(Item.emptyFlask, -count);
 		inventory.add(Item.waterFlask, count);
 	}
-	
+
+	public static void empty(ItemList inventory) {
+		int count = inventory.count(Item.waterFlask);
+		inventory.add(Item.waterFlask, -count);
+		inventory.add(Item.emptyFlask, count);
+	}
+
 }

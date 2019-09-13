@@ -10,7 +10,7 @@ import com.xrbpowered.zoomui.UIContainer;
 public class UIOverlayNewGame extends UIOverlay {
 
 	private final UIButtonPane closeButton;
-	private final UIButtonPane[] startButtons;
+	private final UIChoicePane[] startButtons;
 	
 	public final UITextOnly title;
 
@@ -27,17 +27,18 @@ public class UIOverlayNewGame extends UIOverlay {
 		};
 		
 		DifficultyMode[] modes = DifficultyMode.values();
-		startButtons = new UIButtonPane[modes.length];
+		startButtons = new UIChoicePane[modes.length];
 		for(int i=0; i<modes.length; i++) {
 			final DifficultyMode mode = modes[i];
-			startButtons[i] = new UIButtonPane(this, mode.title) {
+			startButtons[i] = new UIChoicePane(this, mode.title, mode.description, "Alpha version: edit config to unlock") {
 				@Override
 				public void onAction() {
 					dismiss();
 					Ruins.ruins.restart(mode);
 				}
 			};
-			startButtons[i].setSize(400, startButtons[i].getHeight());
+			if(mode==DifficultyMode.hardcore && !Ruins.settings.unlockHardcore)
+				startButtons[i].setEnabled(false);
 		}
 
 		this.title = new UITextOnly(this, "Start New Game").setFont(UIHud.fontBold).setColor(Color.WHITE);
