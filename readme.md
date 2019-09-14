@@ -17,6 +17,7 @@ _Rogue-like game featuring procedurally generated maze and 90s style 3D graphics
 ## Game Objective
 
 Find and activate all 8 _Obelisks_ to open the _Exit Portal_. Interact with the portal (right-click) to exit to the next level.
+There are a total of 10 increasingly difficult levels.
 
 Optional: Decode all tablets.
 
