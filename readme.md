@@ -12,7 +12,7 @@ _Rogue-like game featuring procedurally generated maze and 90s style 3D graphics
 
 ## Download
 
-[ForgottenRuins.zip](https://github.com/ashurrafiev/ForgottenRuins/releases/download/a.0.6/ForgottenRuins.zip) (3.69 MB)
+[ForgottenRuins.zip](https://github.com/ashurrafiev/ForgottenRuins/releases/download/a.0.7/ForgottenRuins.zip) (3.76 MB)
 
 ## Game Objective
 
