@@ -28,7 +28,7 @@ public class DebugPaths {
 		Tile tile = world.map[t.x][t.z][t.y];
 		float dy = tile.type==TileType.ramp ? 0.7f : 0.2f;
 		dot.addInstance(new InstanceInfo(t.x*2, t.z*2, t.y+dy, 1f));
-		Direction d = tile.pathDir;
+		Direction d = tile.pathDir[world.pathfinder.activePathLayer];
 		if(d!=null) {
 			Token dt = t.move(d.opposite());
 			if(dt!=null)
@@ -53,7 +53,7 @@ public class DebugPaths {
 		int min = PathFinder.maxPathDist;
 		Obelisk nearest = null;
 		for(Obelisk obj : world.obelisks.obelisks) {
-			int d = world.map[obj.x][obj.z][obj.y].pathDist;
+			int d = world.map[obj.x][obj.z][obj.y].pathDist[world.pathfinder.activePathLayer];
 			if(!obj.visited && d<min) {
 				nearest = obj;
 				min = d;

@@ -188,6 +188,11 @@ public class Ruins extends UIClient {
 				if(world==null)
 					return;
 				
+				if(PlayerEntity.pathsThread.requestRefresh) {
+					PlayerEntity.pathsThread.requestRefresh = false;
+					DebugPaths.update(world);
+				}
+				
 				WallChunk.zsort(walls, camera);
 				
 				GL11.glEnable(GL11.GL_CULL_FACE);
