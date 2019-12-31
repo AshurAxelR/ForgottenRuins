@@ -84,7 +84,7 @@ public abstract class MobEntity extends EntityActor {
 		int y = mapy;
 		if(world.isInside(x, z) && mapy>0) {
 			Tile tile = world.map[x][z][y];
-			Direction d = tile.pathDir;
+			Direction d = tile.pathDir[world.pathfinder.activePathLayer];
 			if(d!=null) {
 				d = d.opposite();
 				int dy = (tile.type==TileType.ramp && tile.rampDir==d) ? 1 : 0;
@@ -94,7 +94,7 @@ public abstract class MobEntity extends EntityActor {
 				controller.target.x = x*2f;
 				controller.target.z = z*2f;
 				controller.target.y = y;
-				controller.targetDist = world.map[mapx][mapz][mapy].pathDist;
+				controller.targetDist = world.map[mapx][mapz][mapy].pathDist[world.pathfinder.activePathLayer];
 				controller.noTarget = false;
 			}
 		}

@@ -10,8 +10,7 @@ import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.DamageSource;
 import com.xrbpowered.ruins.entity.EntityActor;
 import com.xrbpowered.ruins.entity.EntityCollider;
-import com.xrbpowered.ruins.render.DebugPaths;
-import com.xrbpowered.ruins.world.PathFinder;
+import com.xrbpowered.ruins.world.PathFinderThread;
 import com.xrbpowered.ruins.world.VerseSystem;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
@@ -44,12 +43,15 @@ public class PlayerEntity extends EntityActor {
 	public float deathTimer = 0f;
 	public boolean drowning = false;
 
+	public static PathFinderThread pathsThread = new PathFinderThread();
+	
 	public PlayerEntity(World world, PlayerEntity prev, ClientInput input, CameraActor camera) {
 		super(world);
 		this.camera = camera;
 		controller = new PlayerController(input, this);
 		
-		world.pathfinder.clear();
+		pathsThread.setWorld(world);
+		world.pathfinder.clearAll();
 		returnToStart();
 
 		alive = true;
@@ -183,12 +185,10 @@ public class PlayerEntity extends EntityActor {
 	@Override
 	protected boolean updateMapPosition() {
 		if(super.updateMapPosition()) {
-			PathFinder paths = world.pathfinder;
-			if(paths.canUpdate(mapx, mapz, mapy)) {
-				paths.clear();
-				paths.update(mapx, mapz, mapy, PathFinder.maxPathDist);
-			}
-			DebugPaths.update(world);
+			pathsThread.mapx = mapx;
+			pathsThread.mapy = mapy;
+			pathsThread.mapz = mapz;
+			pathsThread.requestUpdate = true;
 			return true;
 		}
 		else

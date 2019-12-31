@@ -13,8 +13,8 @@ public class Tile {
 	public TileObject tileObject = null;
 	public ArrayList<SmallObject> smallObjects = null;
 	
-	public Direction pathDir = null;
-	public int pathDist = 0;
+	public Direction[] pathDir = {null, null};
+	public int[] pathDist = {0, 0};
 	
 	public Tile(TileType type) {
 		this.type = type;
