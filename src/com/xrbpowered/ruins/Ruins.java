@@ -223,7 +223,6 @@ public class Ruins extends UIClient {
 				
 				//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 				//pick.update(target, true);
-				DebugPaths.draw();
 			}
 		};
 		

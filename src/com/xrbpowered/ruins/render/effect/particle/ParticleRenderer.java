@@ -3,6 +3,7 @@ package com.xrbpowered.ruins.render.effect.particle;
 import com.xrbpowered.gl.res.buffer.RenderTarget;
 import com.xrbpowered.gl.res.shader.Shader;
 import com.xrbpowered.ruins.render.ComponentRenderer;
+import com.xrbpowered.ruins.world.PathFinder;
 
 public class ParticleRenderer extends ComponentRenderer<ParticleComponent> {
 
@@ -10,6 +11,9 @@ public class ParticleRenderer extends ComponentRenderer<ParticleComponent> {
 	public static ParticleComponent light;
 	public static ParticleComponent radiance;
 	public static ParticleComponent smoke;
+	public static ParticleComponent trace;
+	
+	public float globalTime = 0f; 
 	
 	public ParticleRenderer() {
 		super("particles/");
@@ -17,6 +21,7 @@ public class ParticleRenderer extends ComponentRenderer<ParticleComponent> {
 		light = add(new ParticleComponent(1000, texture("light.png")));
 		radiance = add(new ParticleComponent(50, texture("radiance.png")));
 		smoke = add(new ParticleComponent(100, texture("smoke.png")));
+		trace = add(new ParticleComponent(PathFinder.maxPathDist, texture("trace.png")));
 	}
 
 	@Override
@@ -39,6 +44,7 @@ public class ParticleRenderer extends ComponentRenderer<ParticleComponent> {
 	}
 
 	public void update(float dt) {
+		globalTime += dt;
 		for(ParticleComponent comp : components)
 			comp.update(dt);
 	}

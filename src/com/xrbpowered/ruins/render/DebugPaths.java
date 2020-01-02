@@ -1,14 +1,11 @@
 package com.xrbpowered.ruins.render;
 
-import java.awt.Color;
+import java.util.Random;
 
-import com.xrbpowered.gl.res.mesh.FastMeshBuilder;
-import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.render.prefab.InstanceShader;
-import com.xrbpowered.ruins.render.prefab.EntityComponent;
-import com.xrbpowered.ruins.render.prefab.InstanceInfo;
-import com.xrbpowered.ruins.render.shader.WallShader;
+import com.xrbpowered.ruins.render.effect.particle.Particle;
+import com.xrbpowered.ruins.render.effect.particle.ParticleLoop;
+import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.PathFinder;
 import com.xrbpowered.ruins.world.PathFinder.Token;
@@ -16,18 +13,21 @@ import com.xrbpowered.ruins.world.Tile;
 import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.obj.Obelisk;
+import com.xrbpowered.ruins.world.obj.TileObject;
 
 public class DebugPaths {
 
 	public static boolean show = false;
 	
-	private static final int maxCount = 1000;
-	private static EntityComponent dot;
-
+	private static Random random = new Random();
+	
 	private static void tracePath(World world, Token t) {
 		Tile tile = world.map[t.x][t.z][t.y];
 		float dy = tile.type==TileType.ramp ? 0.7f : 0.2f;
-		dot.addInstance(new InstanceInfo(t.x*2, t.z*2, t.y+dy, 1f));
+		random.setSeed(World.seedXZY(world.seed+1458393, t.x, t.z, t.y));
+		Particle p = new ParticleLoop(1f, random.nextFloat());
+		p.position.set(t.x*2, t.y+dy, t.z*2);
+		ParticleRenderer.trace.add(p);
 		Direction d = tile.pathDir[world.pathfinder.activePathLayer];
 		if(d!=null) {
 			Token dt = t.move(d.opposite());
@@ -44,35 +44,24 @@ public class DebugPaths {
 		if(Ruins.preview || !show)
 			return;
 		
-		if(dot==null) {
-			dot = new EntityComponent(FastMeshBuilder.cube(0.2f, WallShader.vertexInfo, null), new Texture(Color.RED));
-			dot.allocateInstanceData(maxCount);
-		}
-		dot.startCreateInstances();
+		ParticleRenderer.trace.clear();
 
 		int min = PathFinder.maxPathDist;
-		Obelisk nearest = null;
-		for(Obelisk obj : world.obelisks.obelisks) {
-			int d = world.map[obj.x][obj.z][obj.y].pathDist[world.pathfinder.activePathLayer];
-			if(!obj.visited && d<min) {
-				nearest = obj;
-				min = d;
+		TileObject nearest = null;
+		if(world.obelisks.portal.active) {
+			nearest = world.obelisks.portal;
+		}
+		else {
+			for(Obelisk obj : world.obelisks.obelisks) {
+				int d = world.map[obj.x][obj.z][obj.y].pathDist[world.pathfinder.activePathLayer];
+				if(!obj.visited && d<min) {
+					nearest = obj;
+					min = d;
+				}
 			}
 		}
 		if(nearest!=null)
 			tracePath(world, nearest.x, nearest.z, nearest.y);
-		
-		dot.finishCreateInstances();
 	}
 	
-	public static void draw() {
-		if(dot!=null && show) {
-			//GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-			InstanceShader shader = InstanceShader.getInstance();
-			shader.use();
-			dot.drawInstances(shader);
-			shader.unuse();
-		}
-	}
-
 }
