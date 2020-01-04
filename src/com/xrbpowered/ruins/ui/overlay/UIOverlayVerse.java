@@ -86,7 +86,7 @@ public class UIOverlayVerse extends UIOverlay {
 			infoText.setHtml("<p>You thoroughly studied the tablet and learned the word for <span class=\"e\">" + verses.learned + "</span>.</p>");
 		else
 			infoText.setHtml("<p>You read the tablet but didn't learn any new words.</p>");
-		listButtons[verses.verse].setEnabled(verses.complete);
+		updateCompletedVerses(verses);
 		Ruins.ruins.setOverlay(Ruins.overlayVerse);
 	}
 
