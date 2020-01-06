@@ -30,6 +30,7 @@ public class UIHud extends UINode {
 	private final UIBar waterBar;
 	private final UIObeliskDots obeliskDots;
 	private final UIInventoryPreview invPreview;
+	private final UIBuffPreview buffPreview;
 	
 	public final UIPopup popup;
 	
@@ -100,6 +101,7 @@ public class UIHud extends UINode {
 		
 		obeliskDots = new UIObeliskDots(this);
 		invPreview = new UIInventoryPreview(this);
+		buffPreview = new UIBuffPreview(this);
 		
 		pickPane = new UIPane(this, false) {
 			@Override
@@ -162,6 +164,7 @@ public class UIHud extends UINode {
 
 		obeliskDots.setLocation(getWidth()-obeliskDots.getWidth()-s*5, getHeight()-obeliskDots.getHeight()-s*5);
 		invPreview.setLocation(obeliskDots.getX()-invPreview.getWidth() - s*5, getHeight()-invPreview.getHeight()-s*5);
+		buffPreview.setLocation(getWidth()-buffPreview.getWidth()-s*4, s);
 		
 		crosshair.setLocation(getWidth()/2f-crosshair.getWidth()/2f, getHeight()/2f-crosshair.getHeight()/2f);
 		pickPane.setLocation(getWidth()/2f-pickPane.getWidth()/2f, crosshair.getY()+crosshair.getHeight()+s*3);

@@ -30,12 +30,13 @@ public class PlayerEntity extends EntityActor {
 	public PlayerController controller;
 	public CameraActor camera;
 	
-	public boolean invulnerable = false;
+	public boolean intangible = false;
 	public float health = baseHealth;
 	public float hydration = baseHydration;
 	public int coins = 0;
 
 	public final PlayerInventory inventory;
+	public final PlayerBuffs buffs;
 	public final VerseSystem verses;
 
 	private float cameraLevel = cameraHeight;
@@ -62,6 +63,7 @@ public class PlayerEntity extends EntityActor {
 			inventory =  new PlayerInventory();
 			inventory.add(Item.emptyFlask, 2);
 			inventory.add(Item.amuletOfEscape, 1);
+			buffs = new PlayerBuffs();
 			if(world.level==0)
 				inventory.add(Item.royalKey, 1);
 			verses = new VerseSystem();
@@ -71,6 +73,7 @@ public class PlayerEntity extends EntityActor {
 			hydration = prev.hydration;
 			coins = prev.coins;
 			inventory = prev.inventory;
+			buffs = prev.buffs;
 			verses = prev.verses;
 		}
 		if(Ruins.flash!=null)
@@ -85,7 +88,7 @@ public class PlayerEntity extends EntityActor {
 	@Override
 	public void loadState(DataInputStream in) throws IOException {
 		super.loadState(in);
-		invulnerable = in.readBoolean();
+		intangible = in.readBoolean();
 		health = in.readFloat();
 		hydration = in.readFloat();
 		coins = in.readInt();
@@ -103,7 +106,7 @@ public class PlayerEntity extends EntityActor {
 	@Override
 	public void saveState(DataOutputStream out) throws IOException {
 		super.saveState(out);
-		out.writeBoolean(invulnerable);
+		out.writeBoolean(intangible);
 		out.writeFloat(health);
 		out.writeFloat(hydration);
 		out.writeInt(coins);
@@ -161,7 +164,7 @@ public class PlayerEntity extends EntityActor {
 	}
 	
 	public void applyDamage(float damage, boolean flash, DamageSource source) {
-		if(health<=0 || damage<0.1f || invulnerable)
+		if(health<=0 || damage<0.1f || intangible)
 			return;
 		if(flash)
 			Ruins.flash.flashPain(damage, health);
@@ -212,7 +215,8 @@ public class PlayerEntity extends EntityActor {
 			}
 		}
 		if(alive) {
-			if(!invulnerable) {
+			buffs.update(dt);
+			if(!intangible) {
 				hydration -= hydrationLoss*dt;
 				if(hydration<=0f) {
 					hydration = 0f;

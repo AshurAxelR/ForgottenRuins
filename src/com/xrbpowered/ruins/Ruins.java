@@ -19,10 +19,11 @@ import com.xrbpowered.gl.ui.common.UIFpsOverlay;
 import com.xrbpowered.gl.ui.pane.UIOffscreen;
 import com.xrbpowered.ruins.entity.player.PlayerController;
 import com.xrbpowered.ruins.entity.player.PlayerEntity;
-import com.xrbpowered.ruins.render.DebugPaths;
+import com.xrbpowered.ruins.entity.player.buff.Buff;
 import com.xrbpowered.ruins.render.TileObjectPicker;
 import com.xrbpowered.ruins.render.WallBuilder;
 import com.xrbpowered.ruins.render.WallChunk;
+import com.xrbpowered.ruins.render.effect.TracePathEffect;
 import com.xrbpowered.ruins.render.effect.FlashPane;
 import com.xrbpowered.ruins.render.effect.GlarePane;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
@@ -126,6 +127,7 @@ public class Ruins extends UIClient {
 			@Override
 			public void setupResources() {
 				Item.loadIcons();
+				Buff.loadIcons();
 				
 				clearColor = new Color(0xf7f7ee);
 				environment.setSkyColor(new Color(0xd5e5ff), new Color(0xe5efee), clearColor, 0.4f);
@@ -190,7 +192,7 @@ public class Ruins extends UIClient {
 				
 				if(PlayerEntity.pathsThread.requestRefresh) {
 					PlayerEntity.pathsThread.requestRefresh = false;
-					DebugPaths.update(world);
+					TracePathEffect.update(world);
 				}
 				
 				WallChunk.zsort(walls, camera);
@@ -357,7 +359,7 @@ public class Ruins extends UIClient {
 		observerActive = enable;
 		player.camera = enable ? null : camera;
 		player.controller.enabled = !enable;
-		player.invulnerable = enable;
+		player.intangible = enable;
 		hud.setVisible(!enable);
 		if(enable) {
 			pick.reset();
@@ -397,10 +399,12 @@ public class Ruins extends UIClient {
 					break;
 				case KeyEvent.VK_F2:
 					if(settings.enableDebugPaths) {
-						DebugPaths.show = !DebugPaths.show;
-						if(DebugPaths.show)
-							DebugPaths.update(world);
+						TracePathEffect.show = !TracePathEffect.show;
+						TracePathEffect.update(world);
 					}
+					break;
+				case KeyEvent.VK_F3:
+					world.player.buffs.add(settings.grantBuff);
 					break;
 				default:
 					if(!observerActive && player.alive && Item.keyPressed(code, player)) {

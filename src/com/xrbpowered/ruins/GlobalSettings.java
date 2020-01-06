@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import com.xrbpowered.ruins.entity.player.buff.Buff;
 import com.xrbpowered.ruins.ui.UIIcon;
 import com.xrbpowered.ruins.world.World;
 
@@ -29,6 +30,7 @@ public class GlobalSettings {
 	public boolean skipLoad = false;
 	public boolean enableObserver = false;
 	public boolean enableDebugPaths = false;
+	public Buff grantBuff = null;
 	
 	public static HashMap<String, String> loadValues() {
 		try {
@@ -93,6 +95,7 @@ public class GlobalSettings {
 		s.skipLoad = getBoolean(values.get("skipLoad"), s.skipLoad);
 		s.enableObserver = getBoolean(values.get("enableObserver"), s.enableObserver);
 		s.enableDebugPaths = getBoolean(values.get("enableDebugPaths"), s.enableDebugPaths);
+		s.grantBuff = Buff.buffById(getInt(values.get("grantBuff"), -1, Buff.buffs.size()-1, -1));
 
 		return s;
 	}
