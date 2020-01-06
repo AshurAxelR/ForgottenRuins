@@ -1,4 +1,4 @@
-package com.xrbpowered.ruins.render;
+package com.xrbpowered.ruins.render.effect;
 
 import java.util.Random;
 
@@ -15,7 +15,7 @@ import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.obj.Obelisk;
 import com.xrbpowered.ruins.world.obj.TileObject;
 
-public class DebugPaths {
+public class TracePathEffect {
 
 	public static boolean show = false;
 	
@@ -41,10 +41,9 @@ public class DebugPaths {
 	}
 
 	public static void update(World world) {
+		ParticleRenderer.trace.clear();
 		if(Ruins.preview || !show)
 			return;
-		
-		ParticleRenderer.trace.clear();
 
 		int min = PathFinder.maxPathDist;
 		TileObject nearest = null;

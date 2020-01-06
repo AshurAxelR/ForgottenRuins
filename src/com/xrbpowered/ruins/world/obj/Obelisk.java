@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.render.DebugPaths;
+import com.xrbpowered.ruins.render.effect.TracePathEffect;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.ObeliskSystem;
@@ -55,7 +55,7 @@ public class Obelisk extends TileObject {
 				Ruins.hud.popup.popup(String.format("%d remaining...", system.remaining));
 			else
 				Ruins.hud.popup.popup("The exit portal is now open");
-			DebugPaths.update(world);
+			TracePathEffect.update(world);
 			Ruins.prefabs.updateAllInstances(world);
 		}
 	}
