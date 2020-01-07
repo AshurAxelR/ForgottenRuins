@@ -10,6 +10,7 @@ import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.DamageSource;
 import com.xrbpowered.ruins.entity.EntityActor;
 import com.xrbpowered.ruins.entity.EntityCollider;
+import com.xrbpowered.ruins.entity.player.buff.Buff;
 import com.xrbpowered.ruins.world.PathFinderThread;
 import com.xrbpowered.ruins.world.VerseSystem;
 import com.xrbpowered.ruins.world.World;
@@ -141,10 +142,10 @@ public class PlayerEntity extends EntityActor {
 		collider.setEntityDimensions(radius, cameraHeight, PlayerController.dyPoints);
 	}
 	
-	public void updateHealth(float dh, DamageSource souce) {
+	public void updateHealth(float dh, DamageSource source) {
 		if(!alive)
 			return;
-		lastDamageSource = souce;
+		lastDamageSource = source;
 		health += dh;
 		if(health>baseHealth)
 			health = baseHealth;
@@ -166,6 +167,12 @@ public class PlayerEntity extends EntityActor {
 	public void applyDamage(float damage, boolean flash, DamageSource source) {
 		if(health<=0 || damage<0.1f || intangible)
 			return;
+		if(source==DamageSource.mob && world.player.buffs.has(Buff.shield) ||
+				source==DamageSource.fall && world.player.buffs.has(Buff.feather)) {
+			if(flash)
+				Ruins.glare.smallGlare();
+			return;
+		}
 		if(flash)
 			Ruins.flash.flashPain(damage, health);
 		updateHealth(-damage, source);
