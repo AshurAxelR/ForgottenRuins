@@ -7,11 +7,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Random;
 
-import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.DamageSource;
 import com.xrbpowered.ruins.entity.EntityCollider;
 import com.xrbpowered.ruins.entity.player.PlayerController;
-import com.xrbpowered.ruins.entity.player.buff.Buff;
 import com.xrbpowered.ruins.render.effect.particle.Particle;
 import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleGenerator;
@@ -119,10 +117,7 @@ public class Ghost extends MobEntity {
 		else
 			chargeParticles.reset();
 		if(time>spawnTime && this.getDistTo(world.player)<2.8f) {
-			if(!world.player.buffs.has(Buff.shield))
-				world.player.applyDamage(damage, DamageSource.mob);
-			else
-				Ruins.glare.smallGlare();
+			world.player.applyDamage(damage, DamageSource.mob);
 			setExplosionPivot(this);
 			explosion.generate();
 			smoke.pivot.set(position);

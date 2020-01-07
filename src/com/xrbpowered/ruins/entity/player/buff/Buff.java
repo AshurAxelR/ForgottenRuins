@@ -11,7 +11,7 @@ public class Buff {
 	public static int textureSize = 0;
 
 	public static final Buff shield = new Buff(0, "Holy Shield", 1, 15, "icons/shield.png", "Prevents damage from undead");
-	public static final Buff feather = new Buff(1, "Feather Fall", 3, 30, "icons/shield.png", "Prevents damage from falling");
+	public static final Buff feather = new Buff(1, "Feather Fall", 3, 30, "icons/feather.png", "Prevents damage from falling");
 
 	public final int id;
 	public final String name;
