@@ -10,6 +10,8 @@ import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.Tile;
 import com.xrbpowered.ruins.world.TileType;
 import com.xrbpowered.ruins.world.World;
+import com.xrbpowered.ruins.world.item.Item;
+import com.xrbpowered.ruins.world.obj.Chest;
 import com.xrbpowered.ruins.world.obj.Jar;
 import com.xrbpowered.ruins.world.obj.MapObject;
 
@@ -415,6 +417,8 @@ public class WorldGenerator {
 				count.put(cls, count.get(cls)+1);
 			if(obj instanceof Jar)
 				totalCoins += ((Jar) obj).coins;
+			else if(obj instanceof Chest)
+				totalCoins += ((Chest) obj).loot.count(Item.coins);
 		}
 		System.out.print("Map objects: [");
 		for(Map.Entry<String, Integer> e : count.entrySet())

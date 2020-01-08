@@ -12,6 +12,7 @@ public class Buff {
 
 	public static final Buff shield = new Buff(0, "Holy Shield", 1, 15, "icons/shield.png", "Prevents damage from undead");
 	public static final Buff feather = new Buff(1, "Feather Fall", 3, 30, "icons/feather.png", "Prevents damage from falling");
+	public static final Buff lockpick = new Buff(2, "Lockpicking", 1, 100, "icons/lockpick.png", "Open locked chests without using keys");
 
 	public final int id;
 	public final String name;
@@ -19,7 +20,6 @@ public class Buff {
 	public final int cost;
 	public final String iconPath;
 	public final String info;
-	public int hotkey = 0;
 	
 	public Texture icon = null;
 	public UITexture ui = null;
