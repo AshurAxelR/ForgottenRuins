@@ -8,6 +8,7 @@ import java.util.Random;
 import com.xrbpowered.ruins.RandomUtils;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.player.PlayerInventory;
+import com.xrbpowered.ruins.entity.player.buff.Buff;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;
@@ -25,6 +26,8 @@ public class Chest extends TileObject {
 	private static final int minItems = 2;
 	private static final int maxItems = 4;
 	private static final int royalMultiplier = 3;
+	private static final int coinsMultiplier = 5;
+	private static final int royalCoinsMultiplier = 50;
 	
 	private static float[] witems = {0.7f, 0.1f, 0.5f, 2f, 0.5f, 0.2f};
 	private static Item[] items = {Item.key, Item.royalKey, Item.amuletOfEscape, Item.amuletOfRadiance, Item.emptyFlask, Item.healingHerbs};
@@ -37,10 +40,18 @@ public class Chest extends TileObject {
 		random.setSeed(seed);
 		locked = royal || random.nextInt(3) < 2;
 		int n = RandomUtils.random(random, minItems, maxItems);
+		int coins = random.nextInt(4);
+		if(locked)
+			coins += 2;
 		if(royal) {
 			n *= royalMultiplier;
+			coins *= royalCoinsMultiplier;
 			loot.add(Item.treasure, 1);
 		}
+		else {
+			coins *= coinsMultiplier;
+		}
+		loot.add(Item.coins, coins);
 		for(int i=0; i<n; i++) {
 			Item item = items[RandomUtils.weighted(random, witems)];
 			loot.add(item, 1);
@@ -78,7 +89,7 @@ public class Chest extends TileObject {
 			return "[Empty]";
 		else {
 			Item key = key();
-			if(locked && !world.player.inventory.has(key))
+			if(locked && !world.player.buffs.has(Buff.lockpick) && !world.player.inventory.has(key))
 				return String.format("[Requires %s]", key.name);
 			else
 				return "[Right-click to open]";
@@ -93,7 +104,9 @@ public class Chest extends TileObject {
 		Item key = key();
 		PlayerInventory inv = world.player.inventory;
 		if(locked) {
-			if(inv.has(key)) {
+			if(world.player.buffs.has(Buff.lockpick))
+				return true;
+			else if(inv.has(key)) {
 				inv.add(key, -1);
 				return true;
 			}

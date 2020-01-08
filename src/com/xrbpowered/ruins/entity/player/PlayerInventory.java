@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.world.item.Item;
 import com.xrbpowered.ruins.world.item.ItemList;
 
@@ -30,8 +31,10 @@ public class PlayerInventory extends ItemList {
 	
 	@Override
 	public void add(Item item, int count) {
-		// TODO add coins to PlayerEntity
-		super.add(item, count);
+		if(item==Item.coins)
+			Ruins.world.player.coins += count;
+		else
+			super.add(item, count);
 	}
 
 }

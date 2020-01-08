@@ -18,6 +18,12 @@ public class Item {
 	public static final Item key = new Item(5, "Key", "icons/key.png", new Color(0xb1b278), "Unlocks a Chest");
 	public static final Item royalKey = new Item(6, "Royal Key", "icons/key_gold.png", new Color(0xffe994), "Unlocks a Royal Chest");
 	public static final Item treasure = new Item(7, "Royal Treasure", "icons/treasure.png", new Color(0xfed466), "You are rich!");
+	public static final Item coins = new Item(8, "Coins", "icons/coins.png", new Color(0xffe994), "Donate at a shrine to receive a blessing") {
+		@Override
+		public boolean hasMaxCount() {
+			return false;
+		}
+	};
 	
 	public final int id;
 	public final String name;
@@ -41,6 +47,10 @@ public class Item {
 	
 	public boolean isConsumable() {
 		return false;
+	}
+	
+	public boolean hasMaxCount() {
+		return true;
 	}
 	
 	public boolean use(PlayerEntity player) {
