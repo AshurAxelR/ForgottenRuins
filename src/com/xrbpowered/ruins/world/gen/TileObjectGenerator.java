@@ -13,6 +13,7 @@ import com.xrbpowered.ruins.world.obj.DryWell;
 import com.xrbpowered.ruins.world.obj.Obelisk;
 import com.xrbpowered.ruins.world.obj.Palm;
 import com.xrbpowered.ruins.world.obj.Portal;
+import com.xrbpowered.ruins.world.obj.Shrine;
 import com.xrbpowered.ruins.world.obj.StartLocation;
 import com.xrbpowered.ruins.world.obj.Tablet;
 import com.xrbpowered.ruins.world.obj.Well;
@@ -185,6 +186,10 @@ public class TileObjectGenerator {
 			for(Token t : objTokens) {
 				if(random.nextInt(10)<4 && isAdjTop(t, 2)) {
 					new Palm(world, t).place();
+					continue;
+				}
+				if(random.nextInt(120)<1) {
+					new Shrine(world, t).place();
 					continue;
 				}
 				if(random.nextInt(12)<1) {

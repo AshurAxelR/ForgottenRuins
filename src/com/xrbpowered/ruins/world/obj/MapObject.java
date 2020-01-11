@@ -8,6 +8,7 @@ import org.joml.Vector3f;
 
 import com.xrbpowered.gl.scene.Actor;
 import com.xrbpowered.ruins.entity.WorldEntity;
+import com.xrbpowered.ruins.render.prefab.InstanceInfo;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabComponent;
 import com.xrbpowered.ruins.world.World;
@@ -18,6 +19,7 @@ public abstract class MapObject {
 	
 	public Vector3f position;
 	
+	public InstanceInfo instInfo = null; 
 	public int intractionComponentIndex = -1;
 
 	public MapObject(World world) {
@@ -37,7 +39,6 @@ public abstract class MapObject {
 	}
 	
 	public abstract Prefab getPrefab();
-	public abstract void addPrefabInstance();
 	
 	public PrefabComponent getInteractionComp() {
 		Prefab prefab = getPrefab();
