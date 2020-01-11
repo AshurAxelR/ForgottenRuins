@@ -18,6 +18,7 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 	public static Prefab portalBroken;
 	public static Prefab portalFrame;
 	public static Prefab portal;
+	public static Prefab shrine;
 
 	public static Prefab[] jars;
 	public static Prefab broken;
@@ -33,10 +34,6 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 	public PrefabRenderer() {
 		super("prefabs/");
 		
-		final PrefabComponent plot = add(new PrefabComponent(mesh("palm/plot.obj"), texture("palm/plot.png")));
-		final PrefabComponent palmT = add(new PrefabComponent(mesh("palm/palm_t3.obj"), texture("palm/palm_t.png")));
-		final PrefabComponent palm = add(new PrefabComponent(mesh("palm/palm.obj"), texture("palm/palm.png")).setCulling(false));
-
 		PrefabRenderer.well = new Prefab(true, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well.png"))));
 		PrefabRenderer.dryWell = new Prefab(false, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well_dry.png"))));
 		PrefabRenderer.tablet = new Prefab(true, add(new PrefabComponent(mesh("tablet/tablet.obj"), texture("tablet/tablet.png"))));
@@ -78,19 +75,33 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 		PrefabRenderer.portalFrame = new Prefab(true, add(new PrefabComponent(portalFrameMesh, portalTex)));
 		PrefabRenderer.portal = new Prefab() {
 			@Override
-			public void addInstance(World world, TileObject obj) {
-				portalFrameOn.addInstance(new InstanceInfo(world, obj).setRotate(obj.d));
-				portalPane.addInstance(new InstanceInfo(world, obj).setRotate(obj.d));
+			public void addInstance(World world, MapObject obj) {
+				portalFrameOn.addInstance(obj.instInfo);
+				portalPane.addInstance(obj.instInfo);
 			}
 			@Override
 			public PrefabComponent getInteractionComp() {
 				return portalInteract;
 			}
 		};
+		
+		final PrefabComponent angel = add(new PrefabComponent(mesh("shrine/angel.obj"), texture("shrine/angel.png")));
+		final PrefabComponent shrineBase = add(new PrefabComponent(mesh("shrine/base.obj"), texture("shrine/base.png")));
+		PrefabRenderer.shrine = new Prefab(true, angel) {
+			@Override
+			public void addInstance(World world, MapObject obj) {
+				super.addInstance(world, obj);
+				shrineBase.addInstance(obj.instInfo);
+			}
+		};
 
+		final PrefabComponent plot = add(new PrefabComponent(mesh("palm/plot.obj"), texture("palm/plot.png")));
+		final PrefabComponent palmT = add(new PrefabComponent(mesh("palm/palm_t3.obj"), texture("palm/palm_t.png")));
+		final PrefabComponent palm = add(new PrefabComponent(mesh("palm/palm.obj"), texture("palm/palm.png")).setCulling(false));
 		PrefabRenderer.palm = new Prefab() {
 			@Override
-			public void addInstance(World world, TileObject obj) {
+			public void addInstance(World world, MapObject mapObj) {
+				TileObject obj = (TileObject) mapObj;
 				random.setSeed(obj.seed);
 				plot.addInstance(new InstanceInfo(world, obj));
 				palmT.addInstance(new InstanceInfo(world, obj).setRotate(random.nextFloat()*2f*(float)Math.PI));
@@ -102,8 +113,11 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 	public void createInstances(World world) {
 		for(PrefabComponent comp : components)
 			comp.startCreateInstances();
-		for(MapObject obj : world.objects)
-			obj.addPrefabInstance();
+		for(MapObject obj : world.objects) {
+			Prefab prefab = obj.getPrefab();
+			if(prefab!=null)
+				prefab.addInstance(world, obj);
+		}
 		for(PrefabComponent comp : components)
 			comp.finishCreateInstances();
 		// System.gc();

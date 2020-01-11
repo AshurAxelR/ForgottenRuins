@@ -4,15 +4,12 @@ import org.joml.Vector3f;
 
 import com.xrbpowered.gl.scene.Actor;
 import com.xrbpowered.ruins.render.prefab.InstanceInfo;
-import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.world.Tile;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator;
 
 public abstract class SmallObject extends MapObject {
 
-	public InstanceInfo info = null; 
-	
 	public SmallObject(World world) {
 		super(world);
 	}
@@ -21,7 +18,7 @@ public abstract class SmallObject extends MapObject {
 	public abstract float getRadius(float scale);
 	
 	public void place(Tile tile, WorldGenerator.Token t, InstanceInfo info) {
-		this.info = info;
+		this.instInfo = info;
 		info.x += 2f*t.x;
 		info.z += 2f*t.z;
 		info.y += t.y;
@@ -32,16 +29,9 @@ public abstract class SmallObject extends MapObject {
 
 	@Override
 	public void copyToActor(Actor actor) {
-		actor.rotation.y = -info.rotate;
-		actor.scale.set(info.scale, info.scale, info.scale);
+		actor.rotation.y = -instInfo.rotate;
+		actor.scale.set(instInfo.scale, instInfo.scale, instInfo.scale);
 		super.copyToActor(actor);
-	}
-	
-	@Override
-	public void addPrefabInstance() {
-		Prefab prefab = getPrefab();
-		if(prefab!=null)
-			prefab.addInstance(world, this);
 	}
 
 }

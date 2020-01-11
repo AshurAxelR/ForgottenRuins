@@ -3,7 +3,7 @@ package com.xrbpowered.ruins.world.obj;
 import org.joml.Vector3f;
 
 import com.xrbpowered.gl.scene.Actor;
-import com.xrbpowered.ruins.render.prefab.Prefab;
+import com.xrbpowered.ruins.render.prefab.InstanceInfo;
 import com.xrbpowered.ruins.world.Direction;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator;
@@ -29,19 +29,13 @@ public abstract class TileObject extends MapObject {
 	public void place() {
 		super.place();
 		world.map[x][z][y].tileObject = this;
+		instInfo = new InstanceInfo(world, this).setRotate(d);
 	}
 	
 	@Override
 	public void copyToActor(Actor actor) {
 		actor.rotation.y = -d.rotation();
 		super.copyToActor(actor);
-	}
-	
-	@Override
-	public void addPrefabInstance() {
-		Prefab prefab = getPrefab();
-		if(prefab!=null)
-			prefab.addInstance(world, this);
 	}
 	
 }

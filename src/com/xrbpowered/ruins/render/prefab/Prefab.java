@@ -3,8 +3,7 @@ package com.xrbpowered.ruins.render.prefab;
 import java.util.Random;
 
 import com.xrbpowered.ruins.world.World;
-import com.xrbpowered.ruins.world.obj.SmallObject;
-import com.xrbpowered.ruins.world.obj.TileObject;
+import com.xrbpowered.ruins.world.obj.MapObject;
 
 public class Prefab {
 
@@ -29,14 +28,8 @@ public class Prefab {
 		return interactive ? this.comp : null;
 	}
 
-	public void addInstance(World world, TileObject obj) {
-		int index = comp.addInstance(new InstanceInfo(world, obj).setRotate(obj.d));
-		if(interactive)
-			obj.intractionComponentIndex = index;
-	}
-	
-	public void addInstance(World world, SmallObject obj) {
-		int index = comp.addInstance(obj.info);
+	public void addInstance(World world, MapObject obj) {
+		int index = comp.addInstance(obj.instInfo);
 		if(interactive)
 			obj.intractionComponentIndex = index;
 	}
