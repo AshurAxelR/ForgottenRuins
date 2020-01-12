@@ -14,6 +14,7 @@ public class PlayerBuffs {
 	public void add(Buff buff) {
 		if(buff!=null) {
 			active.put(buff, buff.duration*60f);
+			buff.activate();
 			Ruins.hud.repaint();
 		}
 	}
@@ -35,8 +36,15 @@ public class PlayerBuffs {
 				e.setValue(t);
 			else {
 				i.remove();
+				e.getKey().deactivate();
 				Ruins.hud.repaint();
 			}
 		}
+	}
+	
+	public void removeAll() {
+		for(Buff buff : active.keySet())
+			buff.deactivate();
+		active.clear();
 	}
 }

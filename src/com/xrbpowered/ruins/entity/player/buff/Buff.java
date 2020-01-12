@@ -1,18 +1,23 @@
 package com.xrbpowered.ruins.entity.player.buff;
 
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 import com.xrbpowered.gl.res.texture.Texture;
 import com.xrbpowered.gl.ui.pane.UITexture;
 
 public class Buff {
 
-	public static TreeMap<Integer, Buff> buffs = new TreeMap<>();
+	private static HashMap<Integer, Buff> buffs = new HashMap<>();
+	public static ArrayList<Buff> buffList = new ArrayList<>();
 	public static int textureSize = 0;
 
-	public static final Buff shield = new Buff(0, "Holy Shield", 1, 15, "icons/shield.png", "Prevents damage from undead");
-	public static final Buff feather = new Buff(1, "Feather Fall", 3, 30, "icons/feather.png", "Prevents damage from falling");
+	public static final Buff shield = new Buff(0, "Holy Shield", 1, 20, "icons/shield.png", "Prevents damage from undead");
+	public static final Buff feather = new Buff(1, "Feather Fall", 3, 15, "icons/feather.png", "Prevents damage from falling");
 	public static final Buff lockpick = new Buff(2, "Lockpicking", 1, 100, "icons/lockpick.png", "Open locked chests without using keys");
+	public static final Buff pathfinder = new PathfinderBuff(3);
+	public static final Buff fox = new Buff(4, "Desert Fox", 3, 15, "icons/fox.png", "Cannot die from dehydration");
 
 	public final int id;
 	public final String name;
@@ -27,6 +32,7 @@ public class Buff {
 	public Buff(int id, String name, int duration, int cost, String iconPath, String info) {
 		this.id = id;
 		buffs.put(id, this);
+		buffList.add(this);
 		this.name = name;
 		this.duration = duration;
 		this.cost = cost;
@@ -49,17 +55,20 @@ public class Buff {
 		return buffs.get(id);
 	}
 	
+	public static Buff getRandom(Random random) {
+		return buffList.get(random.nextInt(buffList.size()));
+	}
+	
 	public static void loadIcons() {
-		for(Buff buff : buffs.values()) {
+		for(Buff buff : buffList) {
 			buff.icon = new Texture(buff.iconPath, false, false);
 			textureSize = buff.icon.getWidth();
 		}
 	}
 	
 	public static void releaseResources() {
-		for(Buff buff : buffs.values())
+		for(Buff buff : buffList)
 			buff.icon.release();
 	}
-
 	
 }

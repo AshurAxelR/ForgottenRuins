@@ -188,7 +188,7 @@ public class TileObjectGenerator {
 					new Palm(world, t).place();
 					continue;
 				}
-				if(random.nextInt(120)<1) {
+				if(random.nextInt(60)<1) {
 					new Shrine(world, t).place();
 					continue;
 				}

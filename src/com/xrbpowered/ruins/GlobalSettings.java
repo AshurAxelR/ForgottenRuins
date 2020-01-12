@@ -95,7 +95,7 @@ public class GlobalSettings {
 		s.skipLoad = getBoolean(values.get("skipLoad"), s.skipLoad);
 		s.enableObserver = getBoolean(values.get("enableObserver"), s.enableObserver);
 		s.enableDebugPaths = getBoolean(values.get("enableDebugPaths"), s.enableDebugPaths);
-		s.grantBuff = Buff.buffById(getInt(values.get("grantBuff"), -1, Buff.buffs.size()-1, -1));
+		s.grantBuff = Buff.buffById(getInt(values.get("grantBuff"), -1, 99, -1));
 
 		return s;
 	}
