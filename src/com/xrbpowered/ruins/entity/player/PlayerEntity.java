@@ -37,7 +37,7 @@ public class PlayerEntity extends EntityActor {
 	public int coins = 0;
 
 	public final PlayerInventory inventory;
-	public final PlayerBuffs buffs;
+	public final PlayerBuffs buffs; // TODO save state: buffs
 	public final VerseSystem verses;
 
 	private float cameraLevel = cameraHeight;
@@ -156,6 +156,7 @@ public class PlayerEntity extends EntityActor {
 	}
 	
 	public void die() {
+		buffs.removeAll();
 		health = 0f;
 		hydration = 0f;
 		alive = false;
@@ -224,7 +225,11 @@ public class PlayerEntity extends EntityActor {
 		if(alive) {
 			buffs.update(dt);
 			if(!intangible) {
-				hydration -= hydrationLoss*dt;
+				if(!buffs.has(Buff.fox))
+					hydration -= hydrationLoss*dt;
+				else if(hydration<1f)
+					hydration = 1f;
+				
 				if(hydration<=0f) {
 					hydration = 0f;
 					Ruins.flash.daze(true);

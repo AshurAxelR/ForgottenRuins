@@ -15,9 +15,9 @@ public class UIBuffPreview extends UINode {
 	
 	public UIBuffPreview(UIContainer parent) {
 		super(parent);
-		buffIcons = new UITexture[Buff.buffs.size()];
+		buffIcons = new UITexture[Buff.buffList.size()];
 		int i = 0;
-		for(Buff buff : Buff.buffs.values()) {
+		for(Buff buff : Buff.buffList) {
 			buffIcons[i] = new UITexture(this);
 			buffIcons[i].setVisible(false);
 			buff.ui = buffIcons[i]; 
@@ -29,8 +29,8 @@ public class UIBuffPreview extends UINode {
 	public void setupResources() {
 		float s = UIIcon.pixelSize * getPixelScale();
 		float iconSize = Buff.textureSize * s;
-		setSize(Buff.buffs.size()*iconSize, iconSize);
-		for(Buff buff : Buff.buffs.values()) {
+		setSize(Buff.buffList.size()*iconSize, iconSize);
+		for(Buff buff : Buff.buffList) {
 			buff.ui.pane.setTexture(buff.icon);
 			buff.ui.setSize(iconSize, iconSize);
 		}
@@ -42,7 +42,7 @@ public class UIBuffPreview extends UINode {
 		float iconSize = Buff.textureSize * s;
 		PlayerBuffs buffs = Ruins.world.player.buffs;
 		float x = getWidth() - iconSize;
-		for(Buff buff : Buff.buffs.values()) {
+		for(Buff buff : Buff.buffList) {
 			if(buffs.has(buff)) {
 				buff.ui.setVisible(true);
 				buff.ui.setLocation(x, 0);
@@ -58,7 +58,7 @@ public class UIBuffPreview extends UINode {
 	@Override
 	public void render(RenderTarget target) {
 		PlayerBuffs buffs = Ruins.world.player.buffs;
-		for(Buff buff : Buff.buffs.values()) {
+		for(Buff buff : Buff.buffList) {
 			float t = buffs.getRemaining(buff);
 			if(t<=0f)
 				buff.ui.pane.alpha = 0f;
