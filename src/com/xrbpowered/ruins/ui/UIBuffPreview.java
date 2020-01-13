@@ -41,12 +41,12 @@ public class UIBuffPreview extends UINode {
 		float s = UIIcon.pixelSize * getPixelScale();
 		float iconSize = Buff.textureSize * s;
 		PlayerBuffs buffs = Ruins.world.player.buffs;
-		float x = getWidth() - iconSize;
+		float x = getWidth()/2f - buffs.count()*iconSize/2f;
 		for(Buff buff : Buff.buffList) {
 			if(buffs.has(buff)) {
 				buff.ui.setVisible(true);
 				buff.ui.setLocation(x, 0);
-				x -= iconSize;
+				x += iconSize;
 			}
 			else {
 				buff.ui.setVisible(false);

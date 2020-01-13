@@ -37,7 +37,7 @@ public class PlayerEntity extends EntityActor {
 	public int coins = 0;
 
 	public final PlayerInventory inventory;
-	public final PlayerBuffs buffs; // TODO save state: buffs
+	public final PlayerBuffs buffs;
 	public final VerseSystem verses;
 
 	private float cameraLevel = cameraHeight;
@@ -96,6 +96,7 @@ public class PlayerEntity extends EntityActor {
 		drowning = in.readBoolean();
 		
 		inventory.load(in);
+		buffs.load(in);
 		verses.load(in);
 		Ruins.overlayVerse.updateCompletedVerses(verses);
 		
@@ -114,6 +115,7 @@ public class PlayerEntity extends EntityActor {
 		out.writeBoolean(drowning);
 		
 		inventory.save(out);
+		buffs.save(out);
 		verses.save(out);
 		
 		out.writeFloat(cameraLevel);
