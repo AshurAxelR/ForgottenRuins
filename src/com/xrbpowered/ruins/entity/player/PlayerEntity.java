@@ -38,7 +38,7 @@ public class PlayerEntity extends EntityActor {
 
 	public final PlayerInventory inventory;
 	public final PlayerBuffs buffs;
-	public final VerseSystem verses;
+	public VerseSystem verses;
 
 	private float cameraLevel = cameraHeight;
 	public DamageSource lastDamageSource = null;

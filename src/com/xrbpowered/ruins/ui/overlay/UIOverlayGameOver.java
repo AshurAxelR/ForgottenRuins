@@ -3,6 +3,7 @@ package com.xrbpowered.ruins.ui.overlay;
 import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.world.DifficultyMode;
+import com.xrbpowered.ruins.world.VerseSystem;
 import com.xrbpowered.zoomui.UIContainer;
 
 public class UIOverlayGameOver extends UIOverlay {
@@ -45,7 +46,9 @@ public class UIOverlayGameOver extends UIOverlay {
 			Ruins.overlayNewGame.show();
 		}
 		else {
+			VerseSystem verses = Ruins.world.player.verses;
 			Ruins.ruins.restart(Ruins.world.difficulty, Ruins.world.level, null, false);
+			Ruins.world.player.verses = verses;
 			dismiss();
 		}
 	}
