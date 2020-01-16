@@ -1,5 +1,7 @@
 package com.xrbpowered.ruins.render.prefab;
 
+import java.awt.Color;
+
 import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.res.shader.Shader;
 import com.xrbpowered.gl.res.texture.Texture;
@@ -87,11 +89,13 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 		
 		final PrefabComponent angel = add(new PrefabComponent(mesh("shrine/angel.obj"), texture("shrine/angel.png")));
 		final PrefabComponent shrineBase = add(new PrefabComponent(mesh("shrine/base.obj"), texture("shrine/base.png")));
+		final PrefabComponent prism = add(new PrefabComponent(mesh("shrine/prism.obj"), new Texture(new Color(0xd0ecff))).setGlow(new Texture(new Color(0x35354d))));
 		PrefabRenderer.shrine = new Prefab(true, angel) {
 			@Override
 			public void addInstance(World world, MapObject obj) {
 				super.addInstance(world, obj);
 				shrineBase.addInstance(obj.instInfo);
+				prism.addInstance(obj.instInfo);
 			}
 		};
 
