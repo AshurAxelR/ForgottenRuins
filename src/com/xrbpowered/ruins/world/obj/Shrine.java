@@ -3,6 +3,7 @@ package com.xrbpowered.ruins.world.obj;
 import java.util.Random;
 
 import com.xrbpowered.ruins.RandomUtils;
+import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.entity.WorldEntity;
 import com.xrbpowered.ruins.entity.player.buff.Buff;
 import com.xrbpowered.ruins.render.effect.particle.Particle;
@@ -45,7 +46,7 @@ public class Shrine extends TileObject implements WorldEntity {
 	
 	@Override
 	public void interact() {
-		world.player.buffs.add(buff); // TODO shrine UI
+		Ruins.overlayShrine.show(this);
 	}
 	
 	@Override
