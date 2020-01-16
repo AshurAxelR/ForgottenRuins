@@ -23,9 +23,9 @@ import com.xrbpowered.ruins.entity.player.buff.Buff;
 import com.xrbpowered.ruins.render.TileObjectPicker;
 import com.xrbpowered.ruins.render.WallBuilder;
 import com.xrbpowered.ruins.render.WallChunk;
-import com.xrbpowered.ruins.render.effect.TracePathEffect;
 import com.xrbpowered.ruins.render.effect.FlashPane;
 import com.xrbpowered.ruins.render.effect.GlarePane;
+import com.xrbpowered.ruins.render.effect.TracePathEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.render.effect.particle.ParticleShader;
 import com.xrbpowered.ruins.render.prefab.InstanceShader;
@@ -46,6 +46,7 @@ import com.xrbpowered.ruins.ui.overlay.UIOverlayLevelStart;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayMenu;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayNewGame;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayPortal;
+import com.xrbpowered.ruins.ui.overlay.UIOverlayShrine;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVerse;
 import com.xrbpowered.ruins.ui.overlay.UIOverlayVictory;
 import com.xrbpowered.ruins.world.DifficultyMode;
@@ -96,6 +97,7 @@ public class Ruins extends UIClient {
 	public static UIOverlayInventory overlayInventory;
 	public static UIOverlayItems overlayItems;
 	public static UIOverlayVerse overlayVerse;
+	public static UIOverlayShrine overlayShrine;
 	public static UIOverlayPortal overlayPortal;
 	
 	public static UIOverlayMenu overlayMenu;
@@ -236,6 +238,7 @@ public class Ruins extends UIClient {
 
 		overlayItems = new UIOverlayItems(getContainer());
 		overlayVerse = new UIOverlayVerse(getContainer());
+		overlayShrine = new UIOverlayShrine(getContainer());
 		overlayPortal = new UIOverlayPortal(getContainer());
 
 		overlayMenu = new UIOverlayMenu(getContainer());
