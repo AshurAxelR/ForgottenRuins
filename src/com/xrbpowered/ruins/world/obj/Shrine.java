@@ -2,13 +2,20 @@ package com.xrbpowered.ruins.world.obj;
 
 import java.util.Random;
 
+import com.xrbpowered.ruins.RandomUtils;
+import com.xrbpowered.ruins.entity.WorldEntity;
 import com.xrbpowered.ruins.entity.player.buff.Buff;
+import com.xrbpowered.ruins.render.effect.particle.Particle;
+import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
+import com.xrbpowered.ruins.render.effect.particle.ParticleGenerator;
+import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
+import com.xrbpowered.ruins.render.effect.particle.Particle.GravityParticle;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
-public class Shrine extends TileObject {
+public class Shrine extends TileObject implements WorldEntity {
 
 	public final Buff buff;
 	
@@ -40,4 +47,29 @@ public class Shrine extends TileObject {
 	public void interact() {
 		world.player.buffs.add(buff); // TODO shrine UI
 	}
+	
+	@Override
+	public boolean updateTime(float dt) {
+		effect.pivot.set(position);
+		effect.pivot.x -= 0.35 * d.dx;
+		effect.pivot.z -= 0.35 * d.dz;
+		effect.pivot.y += 1.9;
+		generator.update(dt);
+		return true;
+	}
+	
+	public static ParticleEffect effect = new ParticleEffect.Up(0.15f, 0.15f, 0f) {
+		@Override
+		public void generateParticle() {
+			Particle p = new GravityParticle(0.25f, RandomUtils.random(0.5f, 0.75f));
+			assign(p);
+			ParticleRenderer.light.add(p);
+		}
+		@Override
+		public void generate() {
+			generateParticle();
+		}
+	};
+	
+	private static ParticleGenerator generator = new ParticleGenerator(effect, 0.02f, 0.04f);
 }
