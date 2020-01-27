@@ -226,6 +226,11 @@ public class PlayerEntity extends EntityActor {
 		}
 		if(alive) {
 			buffs.update(dt);
+			if(buffs.changed) {
+				Ruins.prefabs.updateAllInstances(world);
+				buffs.changed = false;
+			}
+			
 			if(!intangible) {
 				if(!buffs.has(Buff.fox))
 					hydration -= hydrationLoss*dt;

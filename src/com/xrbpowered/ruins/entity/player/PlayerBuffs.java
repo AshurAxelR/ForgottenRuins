@@ -12,6 +12,8 @@ import com.xrbpowered.ruins.entity.player.buff.Buff;
 
 public class PlayerBuffs {
 
+	public boolean changed = false;
+	
 	private HashMap<Buff, Float> active = new HashMap<>();
 	
 	public void load(DataInputStream in) throws IOException {
@@ -38,6 +40,8 @@ public class PlayerBuffs {
 	}
 	
 	private void add(Buff buff, float duration) {
+		if(!has(buff))
+			changed = true;
 		active.put(buff, duration);
 		buff.activate();
 	}
@@ -65,6 +69,7 @@ public class PlayerBuffs {
 			if(t>0f)
 				e.setValue(t);
 			else {
+				changed = true;
 				i.remove();
 				e.getKey().deactivate();
 				Ruins.hud.repaint();
@@ -73,6 +78,8 @@ public class PlayerBuffs {
 	}
 	
 	public void removeAll() {
+		if(!active.isEmpty())
+			changed = true;
 		for(Buff buff : active.keySet())
 			buff.deactivate();
 		active.clear();

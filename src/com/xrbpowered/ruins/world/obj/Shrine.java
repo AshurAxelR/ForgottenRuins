@@ -31,7 +31,7 @@ public class Shrine extends TileObject implements WorldEntity {
 
 	@Override
 	public Prefab getPrefab() {
-		return PrefabRenderer.shrine;
+		return isActive() ? PrefabRenderer.shrine : PrefabRenderer.shrineOff;
 	}
 
 	@Override
@@ -49,13 +49,19 @@ public class Shrine extends TileObject implements WorldEntity {
 		Ruins.overlayShrine.show(this);
 	}
 	
+	public boolean isActive() {
+		return !world.player.buffs.has(buff);
+	}
+	
 	@Override
 	public boolean updateTime(float dt) {
-		effect.pivot.set(position);
-		effect.pivot.x -= 0.35 * d.dx;
-		effect.pivot.z -= 0.35 * d.dz;
-		effect.pivot.y += 1.9;
-		generator.update(dt);
+		if(isActive()) {
+			effect.pivot.set(position);
+			effect.pivot.x -= 0.35 * d.dx;
+			effect.pivot.z -= 0.35 * d.dz;
+			effect.pivot.y += 1.9;
+			generator.update(dt);
+		}
 		return true;
 	}
 	

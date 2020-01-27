@@ -26,7 +26,7 @@ public class Portal extends TileObject implements WorldEntity {
 
 	@Override
 	public Prefab getPrefab() {
-		return active ? PrefabRenderer.portal : PrefabRenderer.portalFrame;
+		return active ? PrefabRenderer.portal : PrefabRenderer.portalOff;
 	}
 
 	@Override
