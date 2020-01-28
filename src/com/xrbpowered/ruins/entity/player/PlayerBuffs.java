@@ -1,5 +1,8 @@
 package com.xrbpowered.ruins.entity.player;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -9,16 +12,47 @@ import com.xrbpowered.ruins.entity.player.buff.Buff;
 
 public class PlayerBuffs {
 
-	public HashMap<Buff, Float> active = new HashMap<>();
+	public boolean changed = false;
 	
-	public void add(Buff buff) {
-		if(buff!=null) {
-			active.put(buff, buff.duration*60f);
-			buff.activate();
-			Ruins.hud.repaint();
+	private HashMap<Buff, Float> active = new HashMap<>();
+	
+	public void load(DataInputStream in) throws IOException {
+		removeAll();
+		int num = in.readInt();
+		for(int i=0; i<num; i++) {
+			Buff buff = Buff.buffById(in.readInt());
+			float t = in.readFloat();
+			if(buff!=null && t>=0)
+				add(buff, t);
 		}
 	}
 	
+	public void save(DataOutputStream out) throws IOException {
+		out.writeInt(active.size());
+		for(Map.Entry<Buff, Float> e : active.entrySet()) {
+			out.writeInt(e.getKey().id);
+			out.writeFloat(e.getValue());
+		}
+	}
+	
+	public int count() {
+		return active.size();
+	}
+	
+	private void add(Buff buff, float duration) {
+		if(!has(buff))
+			changed = true;
+		active.put(buff, duration);
+		buff.activate();
+	}
+
+	public void add(Buff buff) {
+		if(buff!=null) {
+			add(buff, buff.duration*60f);
+			Ruins.hud.repaint();
+		}
+	}
+
 	public boolean has(Buff buff) {
 		return active.containsKey(buff);
 	}
@@ -35,6 +69,7 @@ public class PlayerBuffs {
 			if(t>0f)
 				e.setValue(t);
 			else {
+				changed = true;
 				i.remove();
 				e.getKey().deactivate();
 				Ruins.hud.repaint();
@@ -43,6 +78,8 @@ public class PlayerBuffs {
 	}
 	
 	public void removeAll() {
+		if(!active.isEmpty())
+			changed = true;
 		for(Buff buff : active.keySet())
 			buff.deactivate();
 		active.clear();

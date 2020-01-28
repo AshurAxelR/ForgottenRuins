@@ -14,6 +14,7 @@ public class TileObjectPicker {
 	public static final float reach = 3.0f;
 	
 	private ActorPicker pick;
+	private StaticMeshActor objActor = new StaticMeshActor();
 
 	private World world;
 	private WallChunk[] walls;
@@ -32,7 +33,7 @@ public class TileObjectPicker {
 	public void update(RenderTarget target) {
 		update(target, false);
 	}
-	
+
 	public void update(RenderTarget target, boolean test) {
 		if(test)
 			pick.startPickingTest(target.getWidth()/2, target.getHeight()/2, target);
@@ -47,7 +48,6 @@ public class TileObjectPicker {
 		}
 		
 		int objId = 1;
-		StaticMeshActor objActor = new StaticMeshActor();
 		for(MapObject obj : world.objects) {
 			PrefabComponent comp = obj.getInteractionComp();
 			if(comp!=null) {

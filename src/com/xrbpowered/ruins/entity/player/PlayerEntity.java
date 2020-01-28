@@ -37,8 +37,8 @@ public class PlayerEntity extends EntityActor {
 	public int coins = 0;
 
 	public final PlayerInventory inventory;
-	public final PlayerBuffs buffs; // TODO save state: buffs
-	public final VerseSystem verses;
+	public final PlayerBuffs buffs;
+	public VerseSystem verses;
 
 	private float cameraLevel = cameraHeight;
 	public DamageSource lastDamageSource = null;
@@ -96,6 +96,7 @@ public class PlayerEntity extends EntityActor {
 		drowning = in.readBoolean();
 		
 		inventory.load(in);
+		buffs.load(in);
 		verses.load(in);
 		Ruins.overlayVerse.updateCompletedVerses(verses);
 		
@@ -114,6 +115,7 @@ public class PlayerEntity extends EntityActor {
 		out.writeBoolean(drowning);
 		
 		inventory.save(out);
+		buffs.save(out);
 		verses.save(out);
 		
 		out.writeFloat(cameraLevel);
@@ -224,6 +226,11 @@ public class PlayerEntity extends EntityActor {
 		}
 		if(alive) {
 			buffs.update(dt);
+			if(buffs.changed) {
+				Ruins.prefabs.updateAllInstances(world);
+				buffs.changed = false;
+			}
+			
 			if(!intangible) {
 				if(!buffs.has(Buff.fox))
 					hydration -= hydrationLoss*dt;

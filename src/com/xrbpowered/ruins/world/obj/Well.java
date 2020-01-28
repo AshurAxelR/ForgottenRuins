@@ -2,9 +2,9 @@ package com.xrbpowered.ruins.world.obj;
 
 import com.xrbpowered.ruins.RandomUtils;
 import com.xrbpowered.ruins.Ruins;
-import com.xrbpowered.ruins.entity.EntityController;
 import com.xrbpowered.ruins.entity.player.PlayerEntity;
 import com.xrbpowered.ruins.render.effect.particle.Particle;
+import com.xrbpowered.ruins.render.effect.particle.Particle.GravityParticle;
 import com.xrbpowered.ruins.render.effect.particle.ParticleEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.render.prefab.Prefab;
@@ -55,13 +55,7 @@ public class Well extends TileObject {
 	public static ParticleEffect effect = new ParticleEffect.Up(0.5f, 0.5f, 0f) {
 		@Override
 		public void generateParticle() {
-			Particle p = new Particle(RandomUtils.random(0.75f, 1.25f)) {
-				@Override
-				public boolean updateTime(float dt) {
-					speed.y -= EntityController.gravity*dt;
-					return super.updateTime(dt);
-				}
-			};
+			Particle p = new GravityParticle(1f, RandomUtils.random(0.5f, 0.75f));
 			assign(p);
 			ParticleRenderer.light.add(p);
 		}
