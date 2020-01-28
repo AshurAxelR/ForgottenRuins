@@ -134,7 +134,6 @@ public class FlashPane extends UINode {
 			dazeUpdated = 1f;
 		if(daze || dazeUpdated<1f)
 			shader.black += 0.2f * (daze ? dazeUpdated : 1f-dazeUpdated) * ((float)Math.sin(t*0.7f)*0.5f+0.5f);
-		super.updateTime(dt);
 	}
 	
 	public void render(RenderTarget target) {
@@ -143,7 +142,6 @@ public class FlashPane extends UINode {
 			PaneShader.getInstance().quad.draw();
 			shader.unuse();
 		}
-		super.render(target);
 	}
 	
 	@Override

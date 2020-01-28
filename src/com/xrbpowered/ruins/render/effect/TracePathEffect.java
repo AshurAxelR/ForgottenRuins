@@ -42,7 +42,7 @@ public class TracePathEffect {
 
 	public static void update(World world) {
 		ParticleRenderer.trace.clear();
-		if(Ruins.preview || !show)
+		if(Ruins.preview || world==null || !show)
 			return;
 
 		int min = PathFinder.maxPathDist;

@@ -1,5 +1,7 @@
 package com.xrbpowered.ruins.render.prefab;
 
+import java.awt.Color;
+
 import com.xrbpowered.gl.res.mesh.StaticMesh;
 import com.xrbpowered.gl.res.shader.Shader;
 import com.xrbpowered.gl.res.texture.Texture;
@@ -16,8 +18,9 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 	public static Prefab obelisk;
 	public static Prefab obeliskGlow;
 	public static Prefab portalBroken;
-	public static Prefab portalFrame;
+	public static Prefab portalOff;
 	public static Prefab portal;
+	public static Prefab shrineOff;
 	public static Prefab shrine;
 
 	public static Prefab[] jars;
@@ -69,14 +72,14 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 		StaticMesh portalFrameMesh =mesh("portal/portal.obj");
 		PrefabRenderer.portalBroken = new Prefab(false, add(new PrefabComponent(mesh("portal/portal_broken.obj"), portalTex)));
 		
-		final PrefabComponent portalFrameOn = add(new PrefabComponent(portalFrameMesh, portalTex).setGlow(texture("portal/portal_glow.png")));
+		final PrefabComponent portalFrame = add(new PrefabComponent(portalFrameMesh, portalTex));
 		final PrefabComponent portalPane = add(new PrefabComponent(mesh("portal/portal_pane.obj"), InstanceComponent.getBlack()).setCulling(false).setGlow(texture("portal/astral.png")));
 		final PrefabComponent portalInteract = add(new PrefabComponent(mesh("portal/portal_inter.obj"), portalTex));
-		PrefabRenderer.portalFrame = new Prefab(true, add(new PrefabComponent(portalFrameMesh, portalTex)));
+		PrefabRenderer.portalOff = new Prefab(true, portalFrame);
 		PrefabRenderer.portal = new Prefab() {
 			@Override
 			public void addInstance(World world, MapObject obj) {
-				portalFrameOn.addInstance(obj.instInfo);
+				portalFrame.addInstance(obj.instInfo);
 				portalPane.addInstance(obj.instInfo);
 			}
 			@Override
@@ -87,11 +90,20 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 		
 		final PrefabComponent angel = add(new PrefabComponent(mesh("shrine/angel.obj"), texture("shrine/angel.png")));
 		final PrefabComponent shrineBase = add(new PrefabComponent(mesh("shrine/base.obj"), texture("shrine/base.png")));
+		final PrefabComponent prism = add(new PrefabComponent(mesh("shrine/prism.obj"), new Texture(new Color(0xd0ecff))).setGlow(new Texture(new Color(0x35354d))));
+		PrefabRenderer.shrineOff = new Prefab(true, angel) {
+			@Override
+			public void addInstance(World world, MapObject obj) {
+				super.addInstance(world, obj);
+				shrineBase.addInstance(obj.instInfo);
+			}
+		};
 		PrefabRenderer.shrine = new Prefab(true, angel) {
 			@Override
 			public void addInstance(World world, MapObject obj) {
 				super.addInstance(world, obj);
 				shrineBase.addInstance(obj.instInfo);
+				prism.addInstance(obj.instInfo);
 			}
 		};
 
@@ -130,6 +142,7 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 	}
 	
 	public void updateAllInstances(World world) {
+		//System.out.println("--- updateAllInstances");
 		// FIXME optimise instance update
 		releaseInstances();
 		createInstances(world);

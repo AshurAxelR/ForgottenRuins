@@ -164,7 +164,7 @@ public class UIHud extends UINode {
 
 		obeliskDots.setLocation(getWidth()-obeliskDots.getWidth()-s*5, getHeight()-obeliskDots.getHeight()-s*5);
 		invPreview.setLocation(obeliskDots.getX()-invPreview.getWidth() - s*5, getHeight()-invPreview.getHeight()-s*5);
-		buffPreview.setLocation(getWidth()-buffPreview.getWidth()-s*4, s);
+		buffPreview.setLocation(getWidth()/2f-buffPreview.getWidth()/2f, s);
 		
 		crosshair.setLocation(getWidth()/2f-crosshair.getWidth()/2f, getHeight()/2f-crosshair.getHeight()/2f);
 		pickPane.setLocation(getWidth()/2f-pickPane.getWidth()/2f, crosshair.getY()+crosshair.getHeight()+s*3);
