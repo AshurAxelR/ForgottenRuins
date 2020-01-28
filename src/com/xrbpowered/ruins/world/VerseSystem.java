@@ -15,7 +15,7 @@ public class VerseSystem {
 		"Where can you go if you do not know where you come from",
 		"Who would you become if you do not know who you are",
 		"He looked at the stars and he saw a city full of life",
-		"She seeked justice but all she found was judgement",
+		"She seeked justice but she found only judgement",
 		"He did not know the right thing to do",
 		"When he knew what to do he had no power to do that",
 		"When he became strong it was too late",
