@@ -12,7 +12,7 @@ _Rogue-like game featuring procedurally generated maze and 90s style 3D graphics
 
 ## Download
 
-[ForgottenRuins.zip](https://github.com/ashurrafiev/ForgottenRuins/releases/download/a.0.7/ForgottenRuins.zip) (3.76 MB)
+[ForgottenRuins.zip](https://github.com/ashurrafiev/ForgottenRuins/releases/download/a.0.8/ForgottenRuins.zip) (3.84 MB)
 
 ## Game Objective
 
@@ -43,3 +43,5 @@ Item hotkeys:
 * **E** - Amulet of Escape
 * **R** - Amulet of Radiance
 * **F** - Water Flask
+
+To unlock hardcore mode, add `unlockHardcore: true` to [config](ruins.cfg).
