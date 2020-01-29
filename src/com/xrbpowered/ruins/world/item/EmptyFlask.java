@@ -5,7 +5,7 @@ import java.awt.Color;
 public class EmptyFlask extends Item {
 
 	public EmptyFlask(int id) {
-		super(id, "Empty Flask", "icons/empty_flask.png", new Color(0x959190),
+		super(id, "Empty Flask", "empty_flask.png", new Color(0x959190),
 				"Fill in a water well");
 	}
 

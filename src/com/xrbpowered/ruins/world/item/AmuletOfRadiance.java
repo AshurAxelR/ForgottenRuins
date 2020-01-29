@@ -14,7 +14,7 @@ import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 public class AmuletOfRadiance extends Amulet {
 
 	public AmuletOfRadiance(int id) {
-		super(id, "Radiance", "icons/radiance.png", new Color(0xd0ecff),
+		super(id, "Radiance", "radiance.png", new Color(0xd0ecff),
 				"Use: destroys all undead up to 4 tiles away");
 		hotkey = KeyEvent.VK_R;
 	}

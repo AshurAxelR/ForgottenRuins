@@ -12,7 +12,7 @@ public class HealingHerbs extends Item {
 	public static final int waterCost = -10;
 
 	public HealingHerbs(int id) {
-		super(id, "Healing Herbs", "icons/herbs.png", new Color(0xfab7cc),
+		super(id, "Healing Herbs", "herbs.png", new Color(0xfab7cc),
 				String.format("Use: %+d Health, %+d Water", restoreHealth, waterCost));
 		plural = name;
 		hotkey = KeyEvent.VK_Q;

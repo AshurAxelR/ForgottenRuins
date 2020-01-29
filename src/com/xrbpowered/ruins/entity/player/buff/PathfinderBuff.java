@@ -5,8 +5,8 @@ import com.xrbpowered.ruins.render.effect.TracePathEffect;
 
 public class PathfinderBuff extends Buff {
 
-	public PathfinderBuff(int id) {
-		super(id, "Pathfinder", 1, 100, "icons/pathfinder.png", "Traces path to the next obelisk");
+	public PathfinderBuff(int id, int duration, int cost) {
+		super(id, "Pathfinder", duration, cost, "pathfinder.png", "Traces path to the next obelisk");
 	}
 
 	@Override
