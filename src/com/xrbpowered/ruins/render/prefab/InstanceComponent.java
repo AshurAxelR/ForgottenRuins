@@ -52,9 +52,15 @@ public abstract class InstanceComponent extends RenderComponent<InstanceInfo> {
 			GL11.glEnable(GL11.GL_CULL_FACE);
 		else
 			GL11.glDisable(GL11.GL_CULL_FACE);
-		mesh.enableDraw(null);
 		texture.bind(0);
 		(hasGlow() ? glowTexture : getBlack()).bind(1);
+		meshDrawCallInstanced();
+	}
+	
+	public void meshDrawCallInstanced() {
+		if(instCount==0)
+			return;
+		mesh.enableDraw(null);
 		instBuffer.enable();
 		mesh.drawCallInstanced(instCount);
 		instBuffer.disable();

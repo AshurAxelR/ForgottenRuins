@@ -10,15 +10,17 @@ public class Item {
 
 	private static HashMap<Integer, Item> items = new HashMap<>();
 
+	public static final String basePath = "icons/items/";
+
 	public static final Item emptyFlask = new EmptyFlask(0);
 	public static final Item waterFlask = new WaterFlask(1);
 	public static final Item healingHerbs = new HealingHerbs(2);
 	public static final Item amuletOfEscape = new AmuletOfEscape(3);
 	public static final Item amuletOfRadiance = new AmuletOfRadiance(4);
-	public static final Item key = new Item(5, "Key", "icons/key.png", new Color(0xb1b278), "Unlocks a Chest");
-	public static final Item royalKey = new Item(6, "Royal Key", "icons/key_gold.png", new Color(0xffe994), "Unlocks a Royal Chest");
-	public static final Item treasure = new Item(7, "Royal Treasure", "icons/treasure.png", new Color(0xfed466), "You are rich!");
-	public static final Item coins = new Item(8, "Coins", "icons/coins.png", new Color(0xffe994), "Donate at a shrine to receive a blessing") {
+	public static final Item key = new Item(5, "Key", "key.png", new Color(0xb1b278), "Unlocks a Chest");
+	public static final Item royalKey = new Item(6, "Royal Key", "key_gold.png", new Color(0xffe994), "Unlocks a Royal Chest");
+	public static final Item treasure = new Item(7, "Royal Treasure", "treasure.png", new Color(0xfed466), "You are rich!");
+	public static final Item coins = new Item(8, "Coins", "coins.png", new Color(0xffe994), "Donate at a shrine to receive a blessing") {
 		@Override
 		public boolean hasMaxCount() {
 			return false;
@@ -40,7 +42,7 @@ public class Item {
 		items.put(id, this);
 		this.name = name;
 		this.plural = name+"s";
-		this.iconPath = iconPath;
+		this.iconPath = basePath + iconPath;
 		this.color = color;
 		this.info = info;
 	}

@@ -23,6 +23,7 @@ public class PlayerEntity extends EntityActor {
 	public static final int baseHealth = 100;
 	public static final int baseHydration = 100;
 	public static final float healthRegen = 0.2f;
+	public static final float healthRegenBuffed = 1f;
 	public static final float hydrationLoss = 0.2f;
 	
 	public static final float cameraHeight = 1.5f;
@@ -170,8 +171,8 @@ public class PlayerEntity extends EntityActor {
 	public void applyDamage(float damage, boolean flash, DamageSource source) {
 		if(health<=0 || damage<0.1f || intangible)
 			return;
-		if(source==DamageSource.mob && world.player.buffs.has(Buff.shield) ||
-				source==DamageSource.fall && world.player.buffs.has(Buff.feather)) {
+		if(source==DamageSource.mob && buffs.has(Buff.shield) ||
+				source==DamageSource.fall && buffs.has(Buff.feather)) {
 			if(flash)
 				Ruins.glare.smallGlare();
 			return;
@@ -252,7 +253,7 @@ public class PlayerEntity extends EntityActor {
 				Ruins.overlayGameOver.show(lastDamageSource.gameOverMessage);
 			}
 		}
-		updateHealth(hydration>0f ? healthRegen*dt : -healthRegen*dt, DamageSource.dehydrate);
+		updateHealth(hydration>0f ? (buffs.has(Buff.regen) ? healthRegenBuffed : healthRegen)*dt : -healthRegen*dt, DamageSource.dehydrate);
 		return true;
 	}
 

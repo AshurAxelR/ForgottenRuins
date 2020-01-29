@@ -13,7 +13,7 @@ import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 public class AmuletOfEscape extends Amulet {
 
 	public AmuletOfEscape(int id) {
-		super(id, "Escape", "icons/return.png", new Color(0xbaa670),
+		super(id, "Escape", "return.png", new Color(0xbaa670),
 				"Use: instantly returns you to the starting location");
 		hotkey = KeyEvent.VK_E;
 	}

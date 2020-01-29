@@ -28,6 +28,7 @@ import com.xrbpowered.ruins.render.effect.GlarePane;
 import com.xrbpowered.ruins.render.effect.TracePathEffect;
 import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.render.effect.particle.ParticleShader;
+import com.xrbpowered.ruins.render.effect.xray.UIXRayNode;
 import com.xrbpowered.ruins.render.prefab.InstanceShader;
 import com.xrbpowered.ruins.render.prefab.MobRenderer;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
@@ -92,6 +93,8 @@ public class Ruins extends UIClient {
 
 	private ShaderEnvironment environment = new ShaderEnvironment();
 
+	public static UIXRayNode xray;
+	
 	private UIOverlay activeOverlay = null;
 	
 	public static UIOverlayInventory overlayInventory;
@@ -230,6 +233,8 @@ public class Ruins extends UIClient {
 			}
 		};
 		
+		xray = new UIXRayNode(getContainer());
+		
 		glare = new GlarePane(getContainer());
 		flash = new FlashPane(getContainer());
 		
@@ -250,6 +255,10 @@ public class Ruins extends UIClient {
 		new UIFpsOverlay(this);
 		
 		UIHint.show(UIOverlayInventory.keyHint);
+	}
+	
+	public CameraActor getCamera() {
+		return camera;
 	}
 	
 	public void updatePixelSize() {
