@@ -12,9 +12,17 @@ import com.xrbpowered.ruins.entity.player.buff.Buff;
 
 public class PlayerBuffs {
 
+	private static PlayerBuffs instance = null;
+	
 	public boolean changed = false;
 	
 	private HashMap<Buff, Float> active = new HashMap<>();
+	
+	public PlayerBuffs() {
+		if(instance!=null)
+			instance.removeAll();
+		instance = this;
+	}
 	
 	public void load(DataInputStream in) throws IOException {
 		removeAll();
