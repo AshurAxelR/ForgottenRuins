@@ -33,7 +33,7 @@ public class VerseSystem {
 	
 	public HashSet<String> known = new HashSet<>();
 	
-	private Random random = new Random();
+	private static Random random = new Random();
 	
 	public String learned = null;
 	public int verse;
@@ -59,8 +59,7 @@ public class VerseSystem {
 		}
 	}
 	
-	public String access(long seed, boolean learn) {
-		random.setSeed(seed);
+	public String access(Random random, boolean learn) {
 		verse = random.nextInt(verses.length);
 		String[] words = verses[verse].toUpperCase().split("\\s+");
 		ArrayList<String> unknown = new ArrayList<>();
@@ -99,4 +98,22 @@ public class VerseSystem {
 		text.append("</p>");
 		return text.toString();
 	}
+	
+	public String access(long seed, boolean learn) {
+		random.setSeed(seed);
+		return access(random, learn);
+	}
+	
+	public void learnRandom(int count) {
+		Random random = new Random();
+		for(int i=0; i<count; i++) {
+			access(random, true);
+		}
+	}
+	
+	public static int getVerseNumber(long seed) {
+		random.setSeed(seed);
+		return random.nextInt(verses.length);
+	}
+	
 }

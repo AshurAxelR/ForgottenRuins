@@ -7,15 +7,18 @@ import java.io.IOException;
 import com.xrbpowered.ruins.Ruins;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
+import com.xrbpowered.ruins.world.VerseSystem;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
 public class Tablet extends TileObject {
 
 	public boolean visited = false;
+	public int verseNumber;
 	
 	public Tablet(World world, Token objToken) {
 		super(world, objToken);
+		verseNumber = VerseSystem.getVerseNumber(seed);
 	}
 
 	@Override
@@ -30,7 +33,7 @@ public class Tablet extends TileObject {
 	
 	@Override
 	public Prefab getPrefab() {
-		return PrefabRenderer.tablet;
+		return world.player.verses.completeVerses[verseNumber] ? PrefabRenderer.tabletGlow : PrefabRenderer.tablet;
 	}
 	
 	@Override
@@ -46,7 +49,10 @@ public class Tablet extends TileObject {
 	@Override
 	public void interact() {
 		Ruins.overlayVerse.updateAndShow(world.player.verses, this);
-		visited = true;
+		if(!visited) {
+			visited = true;
+			Ruins.prefabs.updateAllInstances(world);
+		}
 		Ruins.hud.updatePickText(getPickName());
 	}
 }

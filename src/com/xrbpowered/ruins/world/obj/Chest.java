@@ -39,23 +39,7 @@ public class Chest extends TileObject {
 		this.royal = royal;
 		random.setSeed(seed);
 		locked = royal || random.nextInt(3) < 2;
-		int n = RandomUtils.random(random, minItems, maxItems);
-		int coins = random.nextInt(4);
-		if(locked)
-			coins += 2;
-		if(royal) {
-			n *= royalMultiplier;
-			coins *= royalCoinsMultiplier;
-			loot.add(Item.treasure, 1);
-		}
-		else {
-			coins *= coinsMultiplier;
-		}
-		loot.add(Item.coins, coins);
-		for(int i=0; i<n; i++) {
-			Item item = items[RandomUtils.weighted(random, witems)];
-			loot.add(item, 1);
-		}
+		addChestItems(loot, random, royal, royal);
 	}
 	
 	public Chest addRoyalKey() {
@@ -124,6 +108,34 @@ public class Chest extends TileObject {
 			loot.addTo(world.player.inventory);
 			Ruins.prefabs.updateAllInstances(world);
 			Ruins.overlayItems.showItems(royal ? "ROYAL CHEST" : "CHEST", loot);
+		}
+	}
+	
+	private static void addChestItems(ItemList loot, Random random, boolean locked, boolean royal) {
+		int n = RandomUtils.random(random, minItems, maxItems);
+		int coins = random.nextInt(4);
+		if(locked)
+			coins += 2;
+		if(royal) {
+			n *= royalMultiplier;
+			coins *= royalCoinsMultiplier;
+			loot.add(Item.treasure, 1);
+		}
+		else {
+			coins *= coinsMultiplier;
+		}
+		loot.add(Item.coins, coins);
+		for(int i=0; i<n; i++) {
+			Item item = items[RandomUtils.weighted(random, witems)];
+			loot.add(item, 1);
+		}
+
+	}
+	
+	public static void addRandomItems(ItemList itemList, int count) {
+		Random random = new Random();
+		for(int i=0; i<count; i++) {
+			addChestItems(itemList, random, true, false);
 		}
 	}
 
