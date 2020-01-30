@@ -54,6 +54,7 @@ import com.xrbpowered.ruins.world.DifficultyMode;
 import com.xrbpowered.ruins.world.Save;
 import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.item.Item;
+import com.xrbpowered.ruins.world.obj.Chest;
 
 public class Ruins extends UIClient {
 
@@ -159,7 +160,7 @@ public class Ruins extends UIClient {
 				ParticleShader.createInstance(environment, camera);
 				particles = new ParticleRenderer();
 				
-				if(!settings.skipLoad && Save.autosave.exists()) {
+				if(!settings.debugSkipLoad && Save.autosave.exists()) {
 					preview = false;
 					world = Save.autosave.load();
 					if(world!=null) {
@@ -252,7 +253,8 @@ public class Ruins extends UIClient {
 		overlayGameOver = new UIOverlayGameOver(getContainer());
 		overlayVictory = new UIOverlayVictory(getContainer());
 		
-		new UIFpsOverlay(this);
+		if(settings.showFps)
+			new UIFpsOverlay(this);
 		
 		UIHint.show(UIOverlayInventory.keyHint);
 	}
@@ -303,16 +305,22 @@ public class Ruins extends UIClient {
 	}
 	
 	public void save() {
-		if(world!=null && !preview && !settings.skipLoad)
+		if(world!=null && !preview && !settings.debugSkipLoad)
 			Save.autosave.save(world);
 	}
 
 	public void restartPreview() {
-		restart(DifficultyMode.peaceful, settings.startLevel, null, true);
+		restart(DifficultyMode.peaceful, settings.debugStartLevel, null, true);
 	}
 	
 	public void restart(DifficultyMode difficulty) {
-		restart(difficulty, settings.startLevel, null, false);
+		restart(difficulty, settings.debugStartLevel, null, false);
+
+		Chest.addRandomItems(player.inventory, settings.debugStartBoost);
+		if(settings.debugLearnVerses>0) {
+			player.verses.learnRandom(settings.debugLearnVerses);
+			prefabs.updateAllInstances(world);
+		}
 	}
 	
 	public void restart(DifficultyMode difficulty, int level, PlayerEntity player, boolean preview) {
@@ -406,17 +414,11 @@ public class Ruins extends UIClient {
 						overlayInventory.showInventory(player);
 					break;
 				case KeyEvent.VK_F1:
-					if(settings.enableObserver)
+					if(settings.debugEnableObserver)
 						enableObserver(!observerActive);
 					break;
 				case KeyEvent.VK_F2:
-					if(settings.enableDebugPaths) {
-						TracePathEffect.show = !TracePathEffect.show;
-						TracePathEffect.update(world);
-					}
-					break;
-				case KeyEvent.VK_F3:
-					world.player.buffs.add(settings.grantBuff);
+					world.player.buffs.add(settings.debugGrantBuff);
 					break;
 				default:
 					if(!observerActive && player.alive && Item.keyPressed(code, player)) {

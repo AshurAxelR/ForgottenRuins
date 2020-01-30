@@ -24,13 +24,16 @@ public class GlobalSettings {
 	public int noVsyncSleep = 4;
 	public int fov = 75;
 	public float mouseSensitivity = 0.002f;
-	
-	public int startLevel = 0;
+	public boolean showFps = true;
+
 	public boolean unlockHardcore = false;
-	public boolean skipLoad = false;
-	public boolean enableObserver = false;
-	public boolean enableDebugPaths = false;
-	public Buff grantBuff = null;
+
+	public int debugStartLevel = 0;
+	public boolean debugSkipLoad = false;
+	public boolean debugEnableObserver = false;
+	public Buff debugGrantBuff = null;
+	public int debugStartBoost = 0;
+	public int debugLearnVerses = 0;
 	
 	public static HashMap<String, String> loadValues() {
 		try {
@@ -89,13 +92,16 @@ public class GlobalSettings {
 		s.noVsyncSleep = getInt(values.get("noVsyncSleep"), 0, 1000, s.noVsyncSleep);
 		s.fov = getInt(values.get("fov"), 40, 80, s.fov);
 		s.mouseSensitivity = getInt(values.get("mouseSensitivity"), 10, 1000, 100) / 100f * 0.002f;
+		s.showFps = getBoolean(values.get("showFps"), s.showFps);
 
-		s.startLevel = getInt(values.get("startLevel"), 0, World.maxLevel, s.startLevel);
 		s.unlockHardcore = getBoolean(values.get("unlockHardcore"), s.unlockHardcore);
-		s.skipLoad = getBoolean(values.get("skipLoad"), s.skipLoad);
-		s.enableObserver = getBoolean(values.get("enableObserver"), s.enableObserver);
-		s.enableDebugPaths = getBoolean(values.get("enableDebugPaths"), s.enableDebugPaths);
-		s.grantBuff = Buff.buffById(getInt(values.get("grantBuff"), -1, 99, -1));
+
+		s.debugStartLevel = getInt(values.get("debugStartLevel"), 0, World.maxLevel, s.debugStartLevel);
+		s.debugSkipLoad = getBoolean(values.get("debugSkipLoad"), s.debugSkipLoad);
+		s.debugEnableObserver = getBoolean(values.get("debugEnableObserver"), s.debugEnableObserver);
+		s.debugGrantBuff = Buff.buffById(getInt(values.get("debugGrantBuff"), -1, 99, -1));
+		s.debugStartBoost = getInt(values.get("debugStartBoost"), 0, 100, s.debugStartBoost);
+		s.debugLearnVerses = getInt(values.get("debugLearnVerses"), 0, 1000, s.debugLearnVerses);
 
 		return s;
 	}
