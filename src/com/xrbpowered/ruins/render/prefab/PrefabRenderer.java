@@ -15,7 +15,6 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 	public static Prefab well;
 	public static Prefab dryWell;
 	public static Prefab tablet;
-	public static Prefab tabletGlow;
 	public static Prefab obelisk;
 	public static Prefab obeliskGlow;
 	public static Prefab portalBroken;
@@ -40,6 +39,7 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 		
 		PrefabRenderer.well = new Prefab(true, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well.png"))));
 		PrefabRenderer.dryWell = new Prefab(false, add(new PrefabComponent(mesh("well/well.obj"), texture("well/well_dry.png"))));
+		PrefabRenderer.tablet = new Prefab(true, add(new PrefabComponent(mesh("tablet/tablet.obj"), texture("tablet/tablet.png"))));
 		PrefabRenderer.broken = new Prefab(false, add(new PrefabComponent(mesh("jar/broken.obj"), texture("jar/broken.png"))));
 
 		Texture jarTex = texture("jar/jar.png");
@@ -67,11 +67,6 @@ public class PrefabRenderer extends InstanceRenderer<PrefabComponent> {
 		Texture obeliskTex = texture("obelisk/obelisk.png");
 		PrefabRenderer.obelisk = new Prefab(true, add(new PrefabComponent(obeliskMesh, obeliskTex)));
 		PrefabRenderer.obeliskGlow = new Prefab(true, add(new PrefabComponent(obeliskMesh, obeliskTex).setGlow(texture("obelisk/obelisk_glow.png"))));
-
-		StaticMesh tabletMesh = mesh("tablet/tablet.obj");
-		Texture tabletTex = texture("tablet/tablet.png");
-		PrefabRenderer.tablet = new Prefab(true, add(new PrefabComponent(tabletMesh, tabletTex)));
-		PrefabRenderer.tabletGlow = new Prefab(true, add(new PrefabComponent(tabletMesh, tabletTex).setGlow(texture("tablet/tablet_glow.png"))));
 
 		Texture portalTex = texture("portal/portal.png");
 		StaticMesh portalFrameMesh =mesh("portal/portal.obj");
