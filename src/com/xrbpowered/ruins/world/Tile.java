@@ -2,6 +2,7 @@ package com.xrbpowered.ruins.world;
 
 import java.util.ArrayList;
 
+import com.xrbpowered.ruins.world.obj.CollisionObject;
 import com.xrbpowered.ruins.world.obj.SmallObject;
 import com.xrbpowered.ruins.world.obj.TileObject;
 
@@ -11,6 +12,7 @@ public class Tile {
 	public float light;
 	
 	public TileObject tileObject = null;
+	public CollisionObject collisionObject = null;
 	public ArrayList<SmallObject> smallObjects = null;
 	
 	public Direction[] pathDir = {null, null};

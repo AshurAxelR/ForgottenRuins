@@ -39,28 +39,40 @@ public class EntityCollider {
 		float sv = Math.signum(vx);
 		if(sv==0)
 			return pos.x;
-		int mx = World.mapx(pos.x+vx+r*sv);
+		float x = pos.x+vx+r*sv;
+		int mx = World.mapx(x);
 		int mz = World.mapz(pos.z);
 		int my = World.mapy(pos.y+dy);
-		hitx = map(mx, mz, my).type==TileType.solid;
+		Tile tile = map(mx, mz, my);
+		hitx = tile.type==TileType.solid;
 		if(hitx)
 			return mx*2f - sv*(1+r);
-		else
-			return pos.x + vx;
+		if(tile.collisionObject!=null) {
+			hitx = tile.collisionObject.testxz(x, pos.z);
+			if(hitx)
+				return tile.collisionObject.clipx(sv, r);
+		}
+		return pos.x + vx;
 	}
 
 	public float clipz(Vector3f pos, float vz, float dy) {
 		float sv = Math.signum(vz);
 		if(sv==0)
 			return pos.z;
+		float z = pos.z+vz+r*sv;
 		int mx = World.mapx(pos.x);
-		int mz = World.mapz(pos.z+vz+r*sv);
+		int mz = World.mapz(z);
 		int my = World.mapy(pos.y+dy);
-		hitz = map(mx, mz, my).type==TileType.solid; 
+		Tile tile = map(mx, mz, my);
+		hitz = tile.type==TileType.solid; 
 		if(hitz)
 			return mz*2f - sv*(1+r);
-		else
-			return pos.z + vz;
+		if(tile.collisionObject!=null) {
+			hitz = tile.collisionObject.testxz(pos.x, z);
+			if(hitz)
+				return tile.collisionObject.clipz(sv, r);
+		}
+		return pos.z + vz;
 	}
 	
 	private static final Vector3f v = new Vector3f();
