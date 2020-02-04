@@ -10,12 +10,14 @@ import com.xrbpowered.ruins.render.effect.particle.ParticleRenderer;
 import com.xrbpowered.ruins.render.prefab.Prefab;
 import com.xrbpowered.ruins.render.prefab.PrefabRenderer;
 import com.xrbpowered.ruins.world.ObeliskSystem;
+import com.xrbpowered.ruins.world.World;
 import com.xrbpowered.ruins.world.gen.WorldGenerator.Token;
 
 public class Portal extends TileObject implements WorldEntity {
 
 	public final ObeliskSystem system;
 	public boolean active = false;
+	private CollisionObject cobj;
 
 	public Portal(ObeliskSystem system, Token objToken) {
 		super(system.world, objToken);
@@ -24,8 +26,23 @@ public class Portal extends TileObject implements WorldEntity {
 		effect.pivot.set(position);
 	}
 
+	private static CollisionObject collision = new CollisionObject(0.3f, 0.7f, -1f, 1f);
+
+	@Override
+	public void place() {
+		super.place();
+		cobj = collision.place(this);
+		cobj.active = false;
+		world.map[x][z][y].collisionObject = cobj;
+		if(y+1<World.height)
+			world.map[x][z][y+1].collisionObject = cobj;
+		if(y+2<World.height)
+			world.map[x][z][y+2].collisionObject = cobj;
+	}
+
 	@Override
 	public Prefab getPrefab() {
+		cobj.active = active;
 		return active ? PrefabRenderer.portal : PrefabRenderer.portalOff;
 	}
 

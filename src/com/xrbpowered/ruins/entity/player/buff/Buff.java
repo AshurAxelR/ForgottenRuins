@@ -17,7 +17,7 @@ public class Buff {
 	
 	public static final Buff shield = new Buff(0, "Holy Shield", 1, 50, "shield.png", "Prevents damage from undead");
 	public static final Buff feather = new Buff(1, "Feather Fall", 3, 30, "feather.png", "Prevents damage from falling");
-	public static final Buff lockpick = new Buff(2, "Lockpicking", 1, 25, "lockpick.png", "Open locked chests without using keys");
+	public static final Buff lockpick = new Buff(2, "Keymaster", 1, 25, "lockpick.png", "Open locked chests without using keys");
 	public static final Buff pathfinder = new PathfinderBuff(3, 1, 120);
 	public static final Buff fox = new Buff(4, "Desert Fox", 3, 30, "fox.png", "Cannot die from dehydration");
 	public static final Buff regen = new Buff(5, "Lizard", 3, 45, "regen.png", "Increased health regeneration rate");
