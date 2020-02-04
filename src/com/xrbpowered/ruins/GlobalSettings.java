@@ -12,7 +12,7 @@ public class GlobalSettings {
 
 	public static final int minWindowWidth = 1600;
 	public static final int minWindowHeight = 900;
-	
+
 	public static final String path = "./ruins.cfg";
 	
 	public boolean fullscreen = false;
@@ -27,6 +27,7 @@ public class GlobalSettings {
 	public boolean showFps = true;
 
 	public boolean unlockHardcore = false;
+	public int previewLevel = 3;
 
 	public int debugStartLevel = 0;
 	public boolean debugSkipLoad = false;
@@ -66,6 +67,20 @@ public class GlobalSettings {
 		}
 	}
 	
+	private static float getFloat(String value, float min, float max, float fallback) {
+		if(value==null)
+			return fallback;
+		try {
+			float x = Float.parseFloat(value);
+			if(x<min || x>max)
+				return fallback;
+			return x;
+		}
+		catch(NumberFormatException e) {
+			return fallback;
+		}
+	}
+	
 	private static boolean getBoolean(String value, boolean fallback) {
 		if(value==null)
 			return fallback;
@@ -91,10 +106,11 @@ public class GlobalSettings {
 		s.vsync = getBoolean(values.get("vsync"), s.vsync);
 		s.noVsyncSleep = getInt(values.get("noVsyncSleep"), 0, 1000, s.noVsyncSleep);
 		s.fov = getInt(values.get("fov"), 40, 80, s.fov);
-		s.mouseSensitivity = getInt(values.get("mouseSensitivity"), 10, 1000, 100) / 100f * 0.002f;
+		s.mouseSensitivity = getFloat(values.get("mouseSensitivity"), 0.0001f, 0.01f, 0.002f);
 		s.showFps = getBoolean(values.get("showFps"), s.showFps);
 
 		s.unlockHardcore = getBoolean(values.get("unlockHardcore"), s.unlockHardcore);
+		s.previewLevel = getInt(values.get("previewLevel"), 0, World.maxLevel, s.previewLevel);
 
 		s.debugStartLevel = getInt(values.get("debugStartLevel"), 0, World.maxLevel, s.debugStartLevel);
 		s.debugSkipLoad = getBoolean(values.get("debugSkipLoad"), s.debugSkipLoad);

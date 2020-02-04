@@ -305,12 +305,15 @@ public class Ruins extends UIClient {
 	}
 	
 	public void save() {
-		if(world!=null && !preview && !settings.debugSkipLoad)
-			Save.autosave.save(world);
+		if(!settings.debugSkipLoad)
+			if(world!=null && !preview)
+				Save.autosave.save(world);
+			else
+				Save.autosave.delete();
 	}
 
 	public void restartPreview() {
-		restart(DifficultyMode.peaceful, settings.debugStartLevel, null, true);
+		restart(DifficultyMode.peaceful, settings.previewLevel, null, true);
 	}
 	
 	public void restart(DifficultyMode difficulty) {

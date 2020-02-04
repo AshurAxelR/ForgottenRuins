@@ -80,4 +80,10 @@ public class Save {
 			return false;
 		}
 	}
+	
+	public void delete() {
+		if(file.delete())
+			System.out.println("World deleted");
+	}
+	
 }
