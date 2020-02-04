@@ -8,7 +8,7 @@ public class UIOverlayVictory extends UIOverlayGameOver {
 	public UIOverlayVictory(UIContainer parent) {
 		super(parent, 640, 220, "Continue");
 		text.setHtml("<p>Congratulations!</p>"
-				+ "<p>You have completed the pre-alpha<br>preview of the game.<br>&nbsp;</p>"
+				+ "<p>You have completed the Alpha Version<br>preview of the game.<br>&nbsp;</p>"
 				+ "<p style=\"color:#aaaaaa\">Check back for the latest updates at<br>https://github.com/ashurrafiev/ForgottenRuins</p>");
 	}
 
