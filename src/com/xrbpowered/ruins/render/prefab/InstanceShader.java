@@ -2,14 +2,14 @@ package com.xrbpowered.ruins.render.prefab;
 
 import org.lwjgl.opengl.GL20;
 
-import com.xrbpowered.gl.res.shader.VertexInfo;
+import com.xrbpowered.gl.res.shader.InstanceInfo;
 import com.xrbpowered.gl.scene.CameraActor;
 import com.xrbpowered.ruins.render.shader.ShaderEnvironment;
 import com.xrbpowered.ruins.render.shader.WallShader;
 
 public class InstanceShader extends WallShader {
 	
-	public static final VertexInfo instInfo = new VertexInfo(WallShader.vertexInfo)
+	public static final InstanceInfo instInfo = new InstanceInfo(WallShader.vertexInfo)
 			.addAttrib("ins_Position", 3)
 			.addAttrib("ins_RotationY", 1)
 			.addAttrib("ins_Scale", 1)
@@ -18,7 +18,7 @@ public class InstanceShader extends WallShader {
 	private int highlightInstanceLocation;
 	
 	public InstanceShader(ShaderEnvironment env, CameraActor camera) {
-		super("shaders/tileobj_v.glsl", "shaders/tileobj_f.glsl");
+		super(instInfo, "shaders/tileobj_v.glsl", "shaders/tileobj_f.glsl");
 		setEnvironment(env);
 		setCamera(camera);
 	}
@@ -32,11 +32,6 @@ public class InstanceShader extends WallShader {
 	@Override
 	protected String[] listSamplerNames() {
 		return new String[] {"texDiffuse", "texGlow"};
-	}
-	
-	@Override
-	protected int bindAttribLocations() {
-		return instInfo.bindAttribLocations(this.pId, super.bindAttribLocations());
 	}
 	
 	public void updateHighlight(int index) {

@@ -11,7 +11,7 @@ import com.xrbpowered.ruins.render.shader.WallShader;
 public class XRayObjectShader extends WallShader {
 
 	public XRayObjectShader(CameraActor camera) {
-		super("shaders/tileobj_v.glsl", "shaders/blank_f.glsl");
+		super(InstanceShader.instInfo, "shaders/tileobj_v.glsl", "shaders/blank_f.glsl");
 		setEnvironment(InstanceShader.getInstance().environment);
 		setCamera(camera);
 	}
@@ -26,11 +26,6 @@ public class XRayObjectShader extends WallShader {
 	
 	@Override
 	protected void initSamplers(String[] names) {
-	}
-
-	@Override
-	protected int bindAttribLocations() {
-		return InstanceShader.instInfo.bindAttribLocations(this.pId, super.bindAttribLocations());
 	}
 
 }
