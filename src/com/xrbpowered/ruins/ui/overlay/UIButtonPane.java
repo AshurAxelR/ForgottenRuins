@@ -1,10 +1,13 @@
 package com.xrbpowered.ruins.ui.overlay;
 
+import static com.xrbpowered.zoomui.MouseInfo.LEFT;
+
 import java.awt.Color;
 
 import com.xrbpowered.gl.ui.pane.UIPane;
 import com.xrbpowered.ruins.ui.UIHud;
 import com.xrbpowered.zoomui.GraphAssist;
+import com.xrbpowered.zoomui.MouseInfo;
 import com.xrbpowered.zoomui.UIContainer;
 import com.xrbpowered.zoomui.UIElement;
 
@@ -31,7 +34,7 @@ public class UIButtonPane extends UIPane {
 	}
 	
 	@Override
-	protected void paintSelf(GraphAssist g) {
+	protected void paintBackground(GraphAssist g) {
 		g.setColor(!enabled ? disabledColor : down ? downColor : hover ?  hoverColor : buttonColor);
 		g.fill(this);
 		g.setColor(Color.BLACK);
@@ -64,8 +67,8 @@ public class UIButtonPane extends UIPane {
 	}
 	
 	@Override
-	public boolean onMouseDown(float x, float y, Button button, int mods) {
-		if(button==Button.left) {
+	public boolean onMouseDown(float x, float y, MouseInfo mouse) {
+		if(mouse.eventButton==LEFT) {
 			if(enabled) {
 				down = true;
 				repaint();
@@ -74,10 +77,10 @@ public class UIButtonPane extends UIPane {
 		}
 		return false;
 	}
-	
+
 	@Override
-	public boolean onMouseUp(float x, float y, Button button, int mods, UIElement initiator) {
-		if(button==Button.left) {
+	public boolean onMouseUp(float x, float y, MouseInfo mouse, UIElement initiator) {
+		if(mouse.eventButton==LEFT) {
 			if(enabled) {
 				down = false;
 				onAction();

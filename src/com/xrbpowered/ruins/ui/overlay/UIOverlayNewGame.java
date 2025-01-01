@@ -47,12 +47,12 @@ public class UIOverlayNewGame extends UIOverlay {
 	
 	@Override
 	public void layout() {
-		closeButton.setLocation(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-100);
-		title.setLocation(getWidth()/2f-title.getWidth()/2f, 100);
+		closeButton.setPosition(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-100);
+		title.setPosition(getWidth()/2f-title.getWidth()/2f, 100);
 		float h = startButtons[0].getHeight() + 20;
 		float y = getHeight()/2f - (startButtons.length*h - 20)/2f; 
 		for(UIButtonPane btn : startButtons) {
-			btn.setLocation(getWidth()/2f-btn.getWidth()/2f, y);
+			btn.setPosition(getWidth()/2f-btn.getWidth()/2f, y);
 			y += h;
 		}
 		super.layout();

@@ -22,7 +22,7 @@ public class UIItemList extends UIFill {
 		UIItemStack item = null;
 		for(ItemStack s : items.stacks.values()) {
 			item = new UIItemStack(this, infoText, s, player);
-			item.setLocation(i*item.getWidth()+20, 20);
+			item.setPosition(i*item.getWidth()+20, 20);
 			i++;
 		}
 		if(item==null)

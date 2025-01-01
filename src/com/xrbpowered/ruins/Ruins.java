@@ -152,7 +152,7 @@ public class Ruins extends UIClient {
 				groundTexture = new Texture("ground.png", true, false);
 
 				skyShader = (SkyShader) new SkyShader().setEnvironment(environment).setCamera(camera);
-				skyMesh = FastMeshBuilder.sphere(viewDist-0.1f, 64, SkyShader.vertexInfo, null);
+				skyMesh = FastMeshBuilder.sphere(viewDist-0.1f, 64, SkyShader.vertexInfo);
 				
 				InstanceShader.createInstance(environment, camera);
 				prefabs = new PrefabRenderer();

@@ -33,8 +33,8 @@ public class UIOverlayGameOver extends UIOverlay {
 
 	@Override
 	public void layout() {
-		restartButton.setLocation(getWidth()/2f-restartButton.getWidth()/2f, getHeight()-100);
-		box.setLocation(getWidth()/2f-box.getWidth()/2f, getHeight()/2f-box.getHeight()/2f);
+		restartButton.setPosition(getWidth()/2f-restartButton.getWidth()/2f, getHeight()-100);
+		box.setPosition(getWidth()/2f-box.getWidth()/2f, getHeight()/2f-box.getHeight()/2f);
 		super.layout();
 	}
 	

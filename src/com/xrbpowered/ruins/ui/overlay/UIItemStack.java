@@ -36,7 +36,7 @@ public class UIItemStack extends UINode {
 		
 		count = new UITextOnly(this, Integer.toString(stack.count));
 		count.setSize(w, 20);
-		count.setLocation(0, h);
+		count.setPosition(0, h);
 		h += count.getHeight()+4;
 		
 		hover = new UINode(this) {
@@ -70,7 +70,7 @@ public class UIItemStack extends UINode {
 			};
 			useButton.enabled = item.isConsumable();
 			useButton.setSize(w-8, useButton.getHeight());
-			useButton.setLocation(4, h);
+			useButton.setPosition(4, h);
 			h += UIButtonPane.height;
 		}
 		else
@@ -92,7 +92,7 @@ public class UIItemStack extends UINode {
 			infoText.getParent().setVisible(show);
 			if(show) {
 				infoText.setHtml(html);
-				getBase().repaint();
+				getRoot().repaint();
 			}
 		}
 	}

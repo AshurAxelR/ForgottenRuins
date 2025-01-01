@@ -90,7 +90,7 @@ public class UIHud extends UINode {
 		coinIcon = new UIIcon(this, "icons/coin.png");
 		coinsPane = new UIPane(this, false) {
 			@Override
-			protected void paintSelf(GraphAssist g) {
+			protected void paintBackground(GraphAssist g) {
 				g.graph.setBackground(clearColor);
 				g.graph.clearRect(0, 0, (int)getWidth(), (int)getHeight());
 				g.setFont(font);
@@ -105,7 +105,7 @@ public class UIHud extends UINode {
 		
 		pickPane = new UIPane(this, false) {
 			@Override
-			protected void paintSelf(GraphAssist g) {
+			protected void paintBackground(GraphAssist g) {
 				g.graph.setBackground(transparent);
 				g.graph.clearRect(0, 0, (int)getWidth(), (int)getHeight());
 				if(shownPick!=null) {
@@ -151,24 +151,24 @@ public class UIHud extends UINode {
 	
 	@Override
 	public void layout() {
-		float s = UIIcon.pixelSize * getPixelScale();
-		heartIcon.setLocation(10, getHeight()-heartIcon.getHeight()/2f-s*25);
-		waterIcon.setLocation(10, heartIcon.getY()+heartIcon.getHeight());
-		coinIcon.setLocation(10, heartIcon.getY()-heartIcon.getHeight());
+		float s = UIIcon.pixelSize * getPixelSize();
+		heartIcon.setPosition(10, getHeight()-heartIcon.getHeight()/2f-s*25);
+		waterIcon.setPosition(10, heartIcon.getY()+heartIcon.getHeight());
+		coinIcon.setPosition(10, heartIcon.getY()-heartIcon.getHeight());
 		healthBar.setSize(s*40, heartIcon.getHeight()-6*s);
-		healthBar.setLocation(10+3*s+heartIcon.getWidth(), heartIcon.getY()+3*s);
+		healthBar.setPosition(10+3*s+heartIcon.getWidth(), heartIcon.getY()+3*s);
 		waterBar.setSize(healthBar.getWidth(), healthBar.getHeight());
-		waterBar.setLocation(healthBar.getX(), waterIcon.getY()+3*s);
+		waterBar.setPosition(healthBar.getX(), waterIcon.getY()+3*s);
 		coinsPane.setSize(healthBar.getWidth(), healthBar.getHeight());
-		coinsPane.setLocation(healthBar.getX(), coinIcon.getY()+3*s);
+		coinsPane.setPosition(healthBar.getX(), coinIcon.getY()+3*s);
 
-		obeliskDots.setLocation(getWidth()-obeliskDots.getWidth()-s*5, getHeight()-obeliskDots.getHeight()-s*5);
-		invPreview.setLocation(obeliskDots.getX()-invPreview.getWidth() - s*5, getHeight()-invPreview.getHeight()-s*5);
-		buffPreview.setLocation(getWidth()/2f-buffPreview.getWidth()/2f, s);
+		obeliskDots.setPosition(getWidth()-obeliskDots.getWidth()-s*5, getHeight()-obeliskDots.getHeight()-s*5);
+		invPreview.setPosition(obeliskDots.getX()-invPreview.getWidth() - s*5, getHeight()-invPreview.getHeight()-s*5);
+		buffPreview.setPosition(getWidth()/2f-buffPreview.getWidth()/2f, s);
 		
-		crosshair.setLocation(getWidth()/2f-crosshair.getWidth()/2f, getHeight()/2f-crosshair.getHeight()/2f);
-		pickPane.setLocation(getWidth()/2f-pickPane.getWidth()/2f, crosshair.getY()+crosshair.getHeight()+s*3);
-		popup.setLocation(getWidth()/2f-popup.getWidth()/2f, getHeight()-120-popup.getHeight());
+		crosshair.setPosition(getWidth()/2f-crosshair.getWidth()/2f, getHeight()/2f-crosshair.getHeight()/2f);
+		pickPane.setPosition(getWidth()/2f-pickPane.getWidth()/2f, crosshair.getY()+crosshair.getHeight()+s*3);
+		popup.setPosition(getWidth()/2f-popup.getWidth()/2f, getHeight()-120-popup.getHeight());
 		super.layout();
 	}
 

@@ -32,7 +32,7 @@ public class UIInventoryPreview extends UIPane {
 	}
 	
 	@Override
-	protected void paintSelf(GraphAssist g) {
+	protected void paintBackground(GraphAssist g) {
 		g.graph.setBackground(UIHud.transparent);
 		g.graph.clearRect(0, 0, (int)getWidth(), (int)getHeight());
 		ItemList inventory = Ruins.world.player.inventory;

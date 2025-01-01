@@ -83,21 +83,21 @@ public class UIOverlayPortal extends UIOverlay {
 	
 	@Override
 	public void layout() {
-		closeButton.setLocation(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-100);
-		title.setLocation(getWidth()/2f-title.getWidth()/2f, 100);
+		closeButton.setPosition(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-100);
+		title.setPosition(getWidth()/2f-title.getWidth()/2f, 100);
 		float h = wealthButton.getHeight() + 20;
 		float x = getWidth()/2f-wealthButton.getWidth()/2f;
 		float y = getHeight()/2f - (5*h - 20)/2f; 
 
-		question.setLocation(x, y);
+		question.setPosition(x, y);
 		y += h;
-		wealthButton.setLocation(x, y);
+		wealthButton.setPosition(x, y);
 		y += h;
-		memoriesButton.setLocation(x, y);
+		memoriesButton.setPosition(x, y);
 		y += h;
-		bodyButton.setLocation(x, y);
+		bodyButton.setPosition(x, y);
 		y += h;
-		closeButton.setLocation(x, y);
+		closeButton.setPosition(x, y);
 
 		super.layout();
 	}

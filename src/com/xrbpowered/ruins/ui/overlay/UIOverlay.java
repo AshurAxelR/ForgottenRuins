@@ -1,11 +1,14 @@
 package com.xrbpowered.ruins.ui.overlay;
 
+import static com.xrbpowered.zoomui.MouseInfo.RIGHT;
+
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 import com.xrbpowered.gl.ui.UINode;
 import com.xrbpowered.gl.ui.pane.UITexture;
 import com.xrbpowered.ruins.Ruins;
+import com.xrbpowered.zoomui.MouseInfo;
 import com.xrbpowered.zoomui.UIContainer;
 
 public abstract class UIOverlay extends UINode {
@@ -58,8 +61,8 @@ public abstract class UIOverlay extends UINode {
 	}
 	
 	@Override
-	public boolean onMouseDown(float x, float y, Button button, int mods) {
-		if(button==Button.right && dismissOnRightClick) {
+	public boolean onMouseDown(float x, float y, MouseInfo mouse) {
+		if(mouse.eventButton==RIGHT && dismissOnRightClick) {
 			closeAction();
 		}
 		return true;

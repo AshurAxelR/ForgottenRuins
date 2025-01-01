@@ -18,7 +18,7 @@ public abstract class ComponentRenderer<C extends RenderComponent<?>> {
 	}
 	
 	public StaticMesh mesh(String path, float scale) {
-		return ObjMeshLoader.loadObj(basePath+path, 0, scale, WallShader.vertexInfo, null);
+		return ObjMeshLoader.loadObj(basePath+path, 0, scale, WallShader.vertexInfo);
 	}
 
 	public StaticMesh mesh(String path) {

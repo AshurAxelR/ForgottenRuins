@@ -64,12 +64,12 @@ public class UIOverlayMenu extends UIOverlay {
 		float top = y;
 		for(UIButtonPane btn : buttons) {
 			if(btn.isVisible()) {
-				btn.setLocation(x, y);
+				btn.setPosition(x, y);
 				y += bh + gap;
 			}
 		}
-		level.setLocation(x, top-level.getHeight());
-		help.setLocation(getWidth()-help.getWidth()-x, getHeight()/2f - help.getHeight()/2f);
+		level.setPosition(x, top-level.getHeight());
+		help.setPosition(getWidth()-help.getWidth()-x, getHeight()/2f - help.getHeight()/2f);
 		super.layout();
 	}
 

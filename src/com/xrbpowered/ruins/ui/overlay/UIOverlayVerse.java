@@ -49,7 +49,7 @@ public class UIOverlayVerse extends UIOverlay {
 			};
 			btn.enabled = false;
 			btn.setSize(48, btn.getHeight());
-			btn.setLocation(i*52, 0);
+			btn.setPosition(i*52, 0);
 			listButtons[i] = btn;
 		}
 		list.setSize(listButtons.length*52-4, listButtons[0].getHeight());
@@ -57,10 +57,10 @@ public class UIOverlayVerse extends UIOverlay {
 	
 	@Override
 	public void layout() {
-		closeButton.setLocation(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-100);
-		box.setLocation(getWidth()/2f-box.getWidth()/2f, getHeight()/2f-box.getHeight()/2f);
-		info.setLocation(getWidth()/2f-info.getWidth()/2f, getHeight()-200);
-		list.setLocation(getWidth()/2f-list.getWidth()/2f, box.getY()-list.getHeight()-30);
+		closeButton.setPosition(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-100);
+		box.setPosition(getWidth()/2f-box.getWidth()/2f, getHeight()/2f-box.getHeight()/2f);
+		info.setPosition(getWidth()/2f-info.getWidth()/2f, getHeight()-200);
+		list.setPosition(getWidth()/2f-list.getWidth()/2f, box.getY()-list.getHeight()-30);
 		super.layout();
 	}
 

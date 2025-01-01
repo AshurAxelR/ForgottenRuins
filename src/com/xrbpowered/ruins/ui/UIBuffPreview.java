@@ -27,7 +27,7 @@ public class UIBuffPreview extends UINode {
 
 	@Override
 	public void setupResources() {
-		float s = UIIcon.pixelSize * getPixelScale();
+		float s = UIIcon.pixelSize * getPixelSize();
 		float iconSize = Buff.textureSize * s;
 		setSize(Buff.buffList.size()*iconSize, iconSize);
 		for(Buff buff : Buff.buffList) {
@@ -37,22 +37,22 @@ public class UIBuffPreview extends UINode {
 	}
 	
 	@Override
-	protected void paintSelf(GraphAssist g) {
-		float s = UIIcon.pixelSize * getPixelScale();
+	protected void paintBackground(GraphAssist g) {
+		float s = UIIcon.pixelSize * getPixelSize();
 		float iconSize = Buff.textureSize * s;
 		PlayerBuffs buffs = Ruins.world.player.buffs;
 		float x = getWidth()/2f - buffs.count()*iconSize/2f;
 		for(Buff buff : Buff.buffList) {
 			if(buffs.has(buff)) {
 				buff.ui.setVisible(true);
-				buff.ui.setLocation(x, 0);
+				buff.ui.setPosition(x, 0);
 				x += iconSize;
 			}
 			else {
 				buff.ui.setVisible(false);
 			}
 		}
-		super.paintSelf(g);
+		super.paintBackground(g);
 	}
 	
 	@Override

@@ -30,8 +30,8 @@ public class UITextOnly extends UISolidPane.Clear {
 	}
 
 	@Override
-	protected void paintSelf(GraphAssist g) {
-		super.paintSelf(g);
+	protected void paintBackground(GraphAssist g) {
+		super.paintBackground(g);
 		g.setFont(font);
 		g.setColor(color);
 		g.drawString(label, getWidth()/2f, getHeight()/2f, GraphAssist.CENTER, GraphAssist.CENTER);

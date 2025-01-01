@@ -57,12 +57,12 @@ public class UIOverlayShrine extends UIOverlay {
 
 		name = new UISolidPane.Black(box);
 		name.setSize(260, 60);
-		name.setLocation(box.getWidth()/2f-name.getWidth()/2f, 10f);
+		name.setPosition(box.getWidth()/2f-name.getWidth()/2f, 10f);
 		nameText = new UIText(name, 0, 0);
 		
 		info = new UISolidPane.Black(box);
 		info.setSize(260, 80);
-		info.setLocation(box.getWidth()/2f-info.getWidth()/2f, box.getHeight()-info.getHeight());
+		info.setPosition(box.getWidth()/2f-info.getWidth()/2f, box.getHeight()-info.getHeight());
 		infoText = new UIText.Small(info, 0, 0);
 		
 		active = new UISolidPane.Clear(this);
@@ -72,11 +72,11 @@ public class UIOverlayShrine extends UIOverlay {
 
 	@Override
 	public void layout() {
-		closeButton.setLocation(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-140);
-		acceptButton.setLocation(getWidth()/2f-closeButton.getWidth()/2f, closeButton.getY()-20-acceptButton.getHeight());
-		title.setLocation(getWidth()/2f-title.getWidth()/2f, 100);
-		box.setLocation(getWidth()/2f-box.getWidth()/2f, getHeight()/2f-box.getHeight()/2f-80);
-		active.setLocation(getWidth()/2f-active.getWidth()/2f, acceptButton.getY()-active.getHeight()-10);
+		closeButton.setPosition(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-140);
+		acceptButton.setPosition(getWidth()/2f-closeButton.getWidth()/2f, closeButton.getY()-20-acceptButton.getHeight());
+		title.setPosition(getWidth()/2f-title.getWidth()/2f, 100);
+		box.setPosition(getWidth()/2f-box.getWidth()/2f, getHeight()/2f-box.getHeight()/2f-80);
+		active.setPosition(getWidth()/2f-active.getWidth()/2f, acceptButton.getY()-active.getHeight()-10);
 		super.layout();
 	}
 
@@ -118,10 +118,10 @@ public class UIOverlayShrine extends UIOverlay {
 		if(icon!=null)
 			box.removeChild(icon);
 		icon = new UITexture(box);
-		float s = UIIcon.pixelSize * getPixelScale();
+		float s = UIIcon.pixelSize * getPixelSize();
 		float iconSize = Buff.textureSize * s;
 		icon.setSize(iconSize, iconSize);
-		icon.setLocation(box.getWidth()/2f-iconSize/2f+s/2f, 20+name.getHeight());
+		icon.setPosition(box.getWidth()/2f-iconSize/2f+s/2f, 20+name.getHeight());
 		icon.pane.setTexture(buff.icon);
 		
 		Ruins.ruins.setOverlay(Ruins.overlayShrine);

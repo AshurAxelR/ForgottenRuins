@@ -45,10 +45,10 @@ public class UIOverlayItems extends UIOverlay {
 	
 	@Override
 	public void layout() {
-		closeButton.setLocation(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-100);
-		title.setLocation(getWidth()/2f-title.getWidth()/2f, 100);
-		items.setLocation(getWidth()/2f-items.getWidth()/2f, getHeight()/2f-items.getHeight()/2f);
-		info.setLocation(getWidth()/2f-info.getWidth()/2f, items.getY()-info.getHeight());
+		closeButton.setPosition(getWidth()/2f-closeButton.getWidth()/2f, getHeight()-100);
+		title.setPosition(getWidth()/2f-title.getWidth()/2f, 100);
+		items.setPosition(getWidth()/2f-items.getWidth()/2f, getHeight()/2f-items.getHeight()/2f);
+		info.setPosition(getWidth()/2f-info.getWidth()/2f, items.getY()-info.getHeight());
 		super.layout();
 	}
 	

@@ -13,7 +13,7 @@ public class UIText extends UIFormattedLabel {
 	public UIText(UIContainer parent, float marginx, float marginy) {
 		super(parent, "");
 		setSize(parent.getWidth()-marginx*2f, parent.getHeight()-marginy*2f);
-		setLocation(marginx, marginy);
+		setPosition(marginx, marginy);
 	}
 
 	public UIText(UIContainer parent) {

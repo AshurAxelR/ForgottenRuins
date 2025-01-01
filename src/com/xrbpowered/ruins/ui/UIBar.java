@@ -41,7 +41,7 @@ public abstract class UIBar extends UIPane {
 	}
 	
 	@Override
-	protected void paintSelf(GraphAssist g) {
+	protected void paintBackground(GraphAssist g) {
 		float w = getWidth();
 		float h = getHeight();
 		g.setPaint(bgPaint);

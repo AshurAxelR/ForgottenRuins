@@ -26,7 +26,7 @@ public class UIIcon extends UITexture {
 	@Override
 	protected UITexture setTexture(Texture texture) {
 		super.setTexture(texture);
-		float s = pixelSize * getPixelScale();
+		float s = pixelSize * getPixelSize();
 		setSize(pane.getTexture().getWidth()*s, pane.getTexture().getHeight()*s);
 		return this;
 	}

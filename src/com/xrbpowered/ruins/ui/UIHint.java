@@ -19,8 +19,8 @@ public class UIHint extends UIFill {
 		super(parent, UIHud.clearColor);
 		textPane = new UISolidPane.Clear(this) {
 			@Override
-			protected void paintSelf(GraphAssist g) {
-				super.paintSelf(g);
+			protected void paintBackground(GraphAssist g) {
+				super.paintBackground(g);
 				g.setColor(Color.WHITE);
 				g.setFont(UIHud.font);
 				g.drawString(text, getWidth()/2f, getHeight()/2f, GraphAssist.CENTER, GraphAssist.CENTER);
@@ -38,7 +38,7 @@ public class UIHint extends UIFill {
 	
 	@Override
 	public void layout() {
-		setLocation(getParent().getWidth()/2f-getWidth()/2f, getParent().getHeight()-getHeight()-30);
+		setPosition(getParent().getWidth()/2f-getWidth()/2f, getParent().getHeight()-getHeight()-30);
 	}
 	
 	@Override

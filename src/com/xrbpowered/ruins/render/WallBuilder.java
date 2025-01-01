@@ -25,7 +25,7 @@ public class WallBuilder extends AdvancedMeshBuilder {
 	private VertexInfo.Attribute lightAttrib;
 	
 	private WallBuilder(World map, TextureAtlas atlas, int cx, int cz) {
-		super(WallShader.vertexInfo, null);
+		super(WallShader.vertexInfo);
 		this.world = map;
 		this.atlas = atlas;
 		this.cx = cx;

@@ -21,7 +21,7 @@ public class UIPopup extends UIPane {
 	}
 	
 	@Override
-	protected void paintSelf(GraphAssist g) {
+	protected void paintBackground(GraphAssist g) {
 		g.graph.setBackground(UIHud.clearColor);
 		g.graph.clearRect(0, 0, (int)getWidth(), (int)getHeight());
 		if(message!=null) {

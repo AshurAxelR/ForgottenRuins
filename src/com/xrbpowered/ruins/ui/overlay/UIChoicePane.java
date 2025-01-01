@@ -31,7 +31,7 @@ public class UIChoicePane extends UIButtonPane {
 	}
 
 	@Override
-	protected void paintSelf(GraphAssist g) {
+	protected void paintBackground(GraphAssist g) {
 		g.setColor(down ? downColor : Color.BLACK);
 		g.fill(this);
 		g.setColor(!enabled ? disabledColor : hover ?  hoverColor : buttonColor);

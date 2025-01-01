@@ -1,12 +1,10 @@
 package com.xrbpowered.ruins.render.shader;
 
-import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
 import com.xrbpowered.gl.res.shader.CameraShader;
 import com.xrbpowered.gl.res.shader.VertexInfo;
-import com.xrbpowered.gl.scene.Actor;
 
 public class SkyShader extends CameraShader {
 
@@ -17,25 +15,22 @@ public class SkyShader extends CameraShader {
 
 	public SkyShader() {
 		super(vertexInfo, "shaders/sky_v.glsl", "shaders/sky_f.glsl");
+		followCamera = true;
 	}
 
 	public SkyShader(String pathVS, String pathFS) {
 		super(vertexInfo, pathVS, pathFS);
+		followCamera = true;
 	}
 
 	public SkyShader(VertexInfo info, String pathVS, String pathFS) {
 		super(info, pathVS, pathFS);
+		followCamera = true;
 	}
-	
-	private Matrix4f view = new Matrix4f();
 	
 	@Override
 	public void updateUniforms() {
 		super.updateUniforms();
-		view.identity();
-		Actor.rotateYawPitchRoll(camera.rotation, view);
-		view.invert();
-		uniform(viewMatrixLocation, view);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
